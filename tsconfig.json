@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "module": "esnext",
+    "target": "es2020",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "types": [
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "./src/typings/global.d.ts"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
