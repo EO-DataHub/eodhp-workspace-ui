@@ -1,37 +1,33 @@
 import { useState } from 'react';
 
-import reactLogo from './assets/react.svg';
-
+import { Content } from '@/components/Content';
+import { Sidebar } from '@/components/Sidebar';
+import { Credentials } from '@/pages/Credentials';
 import './App.scss';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [activeContent, setActiveContent] = useState('My Personal Project-Credentials');
 
-  const user: Person = {
-    firstName: 'Mark',
-    surname: 'Small',
+  const renderContent = () => {
+    // Temporary function to render content based on activeContent.
+    // This will change and be moved to a card based approach for an active workspace.
+    const [workspaceProject, workspaceArea] = activeContent.split('-');
+
+    switch (workspaceArea) {
+      case 'Credentials':
+        return <Credentials workspaceProject={workspaceProject} />;
+      case 'Workspaces':
+        return <div>Workspaces</div>;
+      default:
+        return <div>Default</div>;
+    }
   };
-  console.log('USER: ', user);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" rel="noreferrer" target="_blank">
-          <img alt="Vite logo" className="logo" src="/vite.svg" />
-        </a>
-        <a href="https://react.dev" rel="noreferrer" target="_blank">
-          <img alt="React logo" className="logo react" src={reactLogo} />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <div className="workspace">
+      <Sidebar activeContent={activeContent} setActiveContent={setActiveContent} />
+      <Content>{renderContent()}</Content>
+    </div>
   );
 }
 
