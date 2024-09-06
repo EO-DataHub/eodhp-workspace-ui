@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import { Content } from './components/Content';
-import { Sidebar } from './components/Sidebar';
-import { Credentials } from './pages/Credentials';
+import { Content } from '@/components/Content';
+import { Sidebar } from '@/components/Sidebar';
+import { Credentials } from '@/pages/Credentials';
 import './App.scss';
 
 function App() {

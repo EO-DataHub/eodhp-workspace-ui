@@ -11,17 +11,17 @@ export const Credentials = ({ workspaceProject }: CredentialsProps) => {
   const [tokens, setTokens] = useState([]);
 
   useEffect(() => {
+    const fetchTokens = async () => {
+      try {
+        const fetchedTokens = await listTokens();
+        setTokens(fetchedTokens);
+      } catch (error) {
+        console.error('Failed to fetch tokens:', error);
+      }
+    };
+
     fetchTokens();
   }, []);
-
-  const fetchTokens = async () => {
-    try {
-      const fetchedTokens = await listTokens();
-      setTokens(fetchedTokens);
-    } catch (error) {
-      console.error('Failed to fetch tokens:', error);
-    }
-  };
 
   const handleCreateToken = async () => {
     try {
