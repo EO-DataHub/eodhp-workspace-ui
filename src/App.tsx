@@ -10,6 +10,7 @@ function App() {
 
   const renderContent = () => {
     // Temporary function to render content based on activeContent.
+    // This will change and be moved to a card based approach for an active workspace.
     const [workspaceProject, workspaceArea] = activeContent.split('-');
 
     switch (workspaceArea) {
