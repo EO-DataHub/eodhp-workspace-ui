@@ -1,29 +1,37 @@
-import { useState } from 'react';
-
-import './TopBar.scss';
 import Select from 'react-select';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
+import { useWorkspace } from '@/hooks/useWorkspace';
+import './TopBar.scss';
 
 const TopBar = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const { availableWorkspaces, activeWorkspace, setActiveWorkspace } = useWorkspace();
+
   return (
     <div className="top-bar">
-      <div>
-        <p className="greeting">Good evening, James.</p>
-        <p className="date">Monday, 12th April 2021</p>
+      <div className="workspace-selection">
+        <label className="workspace-label" htmlFor="workspace-select">
+          Change Workspace
+        </label>
+        <Select
+          className="workspace-select"
+          defaultValue={{ value: activeWorkspace, label: activeWorkspace }}
+          id="workspace-select"
+          options={availableWorkspaces.map((workspace) => ({ value: workspace, label: workspace }))}
+          onChange={(selectedOption) => setActiveWorkspace(selectedOption?.value)}
+        />
       </div>
 
-      <Select
-        className="workspace-select"
-        defaultValue={selectedOption}
-        options={options}
-        onChange={setSelectedOption}
-      />
+      <div className="greeting-section">
+        <p className="greeting">Your Workspaces</p>
+        <p className="date">
+          {new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })}
+        </p>
+      </div>
     </div>
   );
 };

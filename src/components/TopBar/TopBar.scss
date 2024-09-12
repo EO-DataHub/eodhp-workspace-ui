@@ -1,4 +1,5 @@
 .top-bar {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,7 +16,19 @@
     color: #666;
   }
 
-  .workspace-select {
-    max-width: 25rem;
+  .workspace-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+
+    .workspace-label {
+      font-size: 0.875rem;
+      font-weight: bold;
+    }
+
+    .workspace-select {
+      width: 25rem;
+    }
   }
 }

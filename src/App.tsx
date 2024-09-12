@@ -15,13 +15,21 @@ const App = () => {
           <TabList>
             <Tab>Applications</Tab>
             <Tab>Settings</Tab>
+            <Tab>Manage Workspaces</Tab>
           </TabList>
 
           <TabPanel>
             <Applications />
           </TabPanel>
           <TabPanel>
-            <h2>Not Implemented Yet.</h2>
+            <div className="not-implemented">
+              <p>This page is not implemented yet.</p>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="not-implemented">
+              <p>This page is not implemented yet.</p>
+            </div>
           </TabPanel>
         </Tabs>
       </div>
