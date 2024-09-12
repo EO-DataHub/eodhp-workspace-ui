@@ -1,0 +1,53 @@
+.applications-container {
+  margin: 20px;
+
+  .header {
+    font-size: 0.875rem;
+    padding: 1rem 0;
+    font-weight: bold;
+    color: #666;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+  }
+}
+
+.application-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+  border-radius: 5px;
+
+  &:hover {
+    box-shadow: 0 2px 5px rgb(0 0 0 / 20%);
+    background-color: #f9f9f9;
+  }
+
+  .icon {
+    font-size: 40px;
+    color: #007bff;
+  }
+
+  .app-details {
+    text-align: center;
+
+    h3 {
+      margin: 10px 0 5px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    p {
+      font-size: 14px;
+      color: #666;
+    }
+  }
+}

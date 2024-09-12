@@ -1,0 +1,21 @@
+.top-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 12.5rem;
+  gap: 1rem;
+
+  .greeting {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .date {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  .workspace-select {
+    max-width: 25rem;
+  }
+}

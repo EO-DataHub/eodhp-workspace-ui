@@ -1,34 +1,32 @@
-import { useState } from 'react';
-
-import { Content } from '@/components/Content';
-import { Sidebar } from '@/components/Sidebar';
-import { Credentials } from '@/pages/Credentials';
 import './App.scss';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
-function App() {
-  const [activeContent, setActiveContent] = useState('My Personal Project-Credentials');
+import TopBar from './components/TopBar/TopBar';
+import 'react-tabs/style/react-tabs.css';
+import Applications from './pages/Applications/Applications';
 
-  const renderContent = () => {
-    // Temporary function to render content based on activeContent.
-    // This will change and be moved to a card based approach for an active workspace.
-    const [workspaceProject, workspaceArea] = activeContent.split('-');
-
-    switch (workspaceArea) {
-      case 'Credentials':
-        return <Credentials workspaceProject={workspaceProject} />;
-      case 'Workspaces':
-        return <div>Workspaces</div>;
-      default:
-        return <div>Default</div>;
-    }
-  };
-
+const App = () => {
   return (
     <div className="workspace">
-      <Sidebar activeContent={activeContent} setActiveContent={setActiveContent} />
-      <Content>{renderContent()}</Content>
+      <div className="content">
+        <TopBar />
+
+        <Tabs>
+          <TabList>
+            <Tab>Home</Tab>
+            <Tab>Settings</Tab>
+          </TabList>
+
+          <TabPanel>
+            <Applications />
+          </TabPanel>
+          <TabPanel>
+            <h2>Settings</h2>
+          </TabPanel>
+        </Tabs>
+      </div>
     </div>
   );
-}
+};
 
 export default App;

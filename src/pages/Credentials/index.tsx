@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
 import './styles.scss';
 
-type CredentialsProps = {
-  workspaceProject: string;
-};
-
-export const Credentials = ({ workspaceProject }: CredentialsProps) => {
+export const Credentials = () => {
   const [tokens, setTokens] = useState([]);
 
   useEffect(() => {
@@ -44,7 +40,6 @@ export const Credentials = ({ workspaceProject }: CredentialsProps) => {
 
   return (
     <div className="workspace__credentials">
-      <h2>API Credentials ({workspaceProject})</h2>
       <p>Manage your API tokens here. You can view your existing tokens and request new ones.</p>
 
       <div className="token-list">
