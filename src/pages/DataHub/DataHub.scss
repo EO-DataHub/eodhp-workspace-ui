@@ -18,7 +18,7 @@
     padding: 10px 20px;
     font-size: 1rem;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .disclaimer {
@@ -29,23 +29,21 @@
   .token-list {
     margin-bottom: 20px;
 
-    h3 {
-      font-size: 18px;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
     ul {
       list-style-type: none;
       padding: 0;
 
       li {
         background-color: #f4f4f4;
-        padding: 10px;
         border-radius: 4px;
-        margin-bottom: 5px;
+        margin: 5px 0;
         font-size: 14px;
         color: #333;
+        padding-left: 1rem;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
       }
     }
 

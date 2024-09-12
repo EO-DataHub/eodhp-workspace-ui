@@ -54,7 +54,7 @@ export const DataHub = () => {
         <ul>
           {tokens.map((token) => (
             <li key={token.id}>
-              Token ID: {token.id} - Created on: {new Date(token.createdAt).toLocaleString()}
+              {token.id}
               <button onClick={() => handleDeleteToken(token.id)}>Delete</button>
             </li>
           ))}
