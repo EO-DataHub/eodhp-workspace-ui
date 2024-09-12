@@ -1,10 +1,10 @@
-import React from 'react';
-
 import { GiTapir } from 'react-icons/gi';
+import { IoMdArrowRoundBack } from 'react-icons/io';
 import { SiCss3 } from 'react-icons/si';
 
-import Application from './components/Application';
+import { useWorkspace } from '@/hooks/useWorkspace';
 
+import Application from './components/Application';
 import './Applications.scss';
 
 const PLACEHOLDER_APPLICATIONS = [
@@ -21,19 +21,47 @@ const PLACEHOLDER_APPLICATIONS = [
 ];
 
 const Applications: React.FC = () => {
+  const { activeApplication, setActiveApplication } = useWorkspace();
   return (
     <div className="applications-container">
-      <p className="header">Applications</p>
-      <div className="grid">
-        {PLACEHOLDER_APPLICATIONS.map((application) => (
-          <Application
-            key={application.name}
-            description={application.description}
-            icon={application.icon}
-            name={application.name}
-          />
-        ))}
+      <div className="path">
+        {activeApplication ? (
+          <>
+            <IoMdArrowRoundBack
+              className="back-icon"
+              onClick={() => {
+                setActiveApplication(undefined);
+              }}
+            />
+
+            <p>
+              <button
+                className="root"
+                onClick={() => {
+                  setActiveApplication(undefined);
+                }}
+              >
+                Applications /
+              </button>
+              {activeApplication && <span>{` ${activeApplication}`}</span>}
+            </p>
+          </>
+        ) : (
+          <p>Applications ( {PLACEHOLDER_APPLICATIONS.length} )</p>
+        )}
       </div>
+      {!activeApplication && (
+        <div className="grid">
+          {PLACEHOLDER_APPLICATIONS.map((application) => (
+            <Application
+              key={application.name}
+              description={application.description}
+              icon={application.icon}
+              name={application.name}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React from 'react';
 
 import { IconType } from 'react-icons';
 
+import { useWorkspace } from '@/hooks/useWorkspace';
+
 interface ApplicationProps {
   name: string;
   description: string;
@@ -9,8 +11,10 @@ interface ApplicationProps {
 }
 
 const Application: React.FC<ApplicationProps> = ({ name, description, icon: Icon }) => {
+  const { setActiveApplication } = useWorkspace();
+
   return (
-    <div className="application-card">
+    <button className="application-card" onClick={() => setActiveApplication(name)}>
       <div className="icon">
         <Icon />
       </div>
@@ -18,7 +22,7 @@ const Application: React.FC<ApplicationProps> = ({ name, description, icon: Icon
         <h3>{name}</h3>
         <p>{description}</p>
       </div>
-    </div>
+    </button>
   );
 };
 
