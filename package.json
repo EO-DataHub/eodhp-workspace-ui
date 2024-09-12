@@ -7,9 +7,10 @@
     "node": "20.12.2"
   },
   "scripts": {
-    "dev": "vite",
-    "dev:msw": "tsc -b && VITE_MSW_ENABLED=enabled vite",
-    "build": "tsc -b && vite build",
+    "compile": "tsc --noEmit",
+    "dev": "npm run compile && vite",
+    "dev:msw": "npm run compile && VITE_MSW_ENABLED=enabled vite",
+    "build": "npm run compile && npm run lint && npm run lint:css && vite build",
     "test": "vitest",
     "test:ci": "vitest run",
     "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -23,7 +24,10 @@
   },
   "dependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "react-select": "^5.8.0",
+    "react-tabs": "^6.0.2"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
