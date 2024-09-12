@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
 import './DataHub.scss';
 
-export const Credentials = () => {
+export const DataHub = () => {
   const [tokens, setTokens] = useState([]);
 
   useEffect(() => {
@@ -39,11 +39,18 @@ export const Credentials = () => {
   };
 
   return (
-    <div className="workspace__credentials">
-      <p>Manage your API tokens here. You can view your existing tokens and request new ones.</p>
+    <div className="data-hub application-page">
+      {tokens.length === 0 && (
+        <p className="disclaimer">
+          You do not currently have any active tokens. Click the button below to create one.
+        </p>
+      )}
+
+      <button className="create-token" onClick={handleCreateToken}>
+        Request New Token
+      </button>
 
       <div className="token-list">
-        <h3>Existing Tokens:</h3>
         <ul>
           {tokens.map((token) => (
             <li key={token.id}>
@@ -53,8 +60,6 @@ export const Credentials = () => {
           ))}
         </ul>
       </div>
-
-      <button onClick={handleCreateToken}>Request New Token</button>
     </div>
   );
 };

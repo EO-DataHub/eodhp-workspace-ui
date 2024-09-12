@@ -5,6 +5,7 @@ import { SiCss3 } from 'react-icons/si';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import Application from './components/Application';
+import { DataHub } from '../DataHub/DataHub';
 import './Applications.scss';
 
 const PLACEHOLDER_APPLICATIONS = [
@@ -22,6 +23,7 @@ const PLACEHOLDER_APPLICATIONS = [
 
 const Applications: React.FC = () => {
   const { activeApplication, setActiveApplication } = useWorkspace();
+
   return (
     <div className="applications-container">
       <div className="path">
@@ -50,6 +52,7 @@ const Applications: React.FC = () => {
           <p>Applications ( {PLACEHOLDER_APPLICATIONS.length} )</p>
         )}
       </div>
+      {/* All Applications */}
       {!activeApplication && (
         <div className="grid">
           {PLACEHOLDER_APPLICATIONS.map((application) => (
@@ -62,6 +65,8 @@ const Applications: React.FC = () => {
           ))}
         </div>
       )}
+      {/* DataHub Application */}
+      {activeApplication === 'DataHub API' && <DataHub />}
     </div>
   );
 };
