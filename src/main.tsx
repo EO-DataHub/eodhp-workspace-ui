@@ -3,8 +3,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
-
 import './index.scss';
+import { WorkspaceProvider } from './context/WorkspaceContext/WorkspaceContext';
 
 const enableMocking = async () => {
   if (import.meta.env.MODE !== 'development' || !import.meta.env.VITE_MSW_ENABLED) {
@@ -23,7 +23,9 @@ const enableMocking = async () => {
 enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
-      <App />
+      <WorkspaceProvider>
+        <App />
+      </WorkspaceProvider>
     </StrictMode>,
   );
 });

@@ -3,7 +3,10 @@ import React from 'react';
 import { GiTapir } from 'react-icons/gi';
 import { SiCss3 } from 'react-icons/si';
 
+import { useWorkspace } from '@/hooks/useWorkspace';
+
 import Application from './components/Application';
+
 import './Applications.scss';
 
 const PLACEHOLDER_APPLICATIONS = [
@@ -20,9 +23,11 @@ const PLACEHOLDER_APPLICATIONS = [
 ];
 
 const Applications: React.FC = () => {
+  const { workspaceName } = useWorkspace();
+
   return (
     <div className="applications-container">
-      <p className="header">Quick Access</p>
+      <p className="header">Applications for {workspaceName}</p>
       <div className="grid">
         {PLACEHOLDER_APPLICATIONS.map((application) => (
           <Application

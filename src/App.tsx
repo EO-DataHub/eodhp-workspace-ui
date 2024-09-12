@@ -13,7 +13,7 @@ const App = () => {
 
         <Tabs>
           <TabList>
-            <Tab>Home</Tab>
+            <Tab>Applications</Tab>
             <Tab>Settings</Tab>
           </TabList>
 
@@ -21,7 +21,7 @@ const App = () => {
             <Applications />
           </TabPanel>
           <TabPanel>
-            <h2>Settings</h2>
+            <h2>Not Implemented Yet.</h2>
           </TabPanel>
         </Tabs>
       </div>
