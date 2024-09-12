@@ -21,9 +21,10 @@ const TopBar = () => {
         />
       </div>
 
-      <div className="greeting-section">
-        <p className="greeting">Your Workspaces</p>
+      <div>
+        <p className="heading">Your Workspace</p>
         <p className="date">
+          {activeWorkspace} -{' '}
           {new Date().toLocaleDateString('en-US', {
             weekday: 'long',
             day: 'numeric',

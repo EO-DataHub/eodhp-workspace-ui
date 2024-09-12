@@ -6,7 +6,7 @@
   height: 12.5rem;
   gap: 1rem;
 
-  .greeting {
+  .heading {
     font-size: 2rem;
     font-weight: bold;
   }
@@ -23,8 +23,9 @@
     width: 100%;
 
     .workspace-label {
-      font-size: 0.875rem;
-      font-weight: bold;
+      font-size: 0.8rem;
+      color: #666;
+      font-weight: 300;
     }
 
     .workspace-select {
