@@ -17,6 +17,15 @@ const TopBar = () => {
           defaultValue={{ value: activeWorkspace, label: activeWorkspace }}
           id="workspace-select"
           options={availableWorkspaces.map((workspace) => ({ value: workspace, label: workspace }))}
+          theme={(theme) => ({
+            ...theme,
+            borderRadius: 0,
+            colors: {
+              ...theme.colors,
+              primary: '#2a3559',
+              primary25: '#2a355930',
+            },
+          })}
           onChange={(selectedOption) => setActiveWorkspace(selectedOption?.value)}
         />
       </div>

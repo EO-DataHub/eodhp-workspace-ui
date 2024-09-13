@@ -1,3 +1,5 @@
+@import '@/styles/main';
+
 .data-hub {
   h2 {
     color: #333;
@@ -12,7 +14,7 @@
   }
 
   button.create-token {
-    background-color: #0056b3;
+    background-color: $primary-colour;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -48,7 +50,7 @@
     }
 
     button {
-      background-color: #0056b3;
+      background-color: $primary-colour;
       color: #fff;
       border: none;
       padding: 10px 20px;
