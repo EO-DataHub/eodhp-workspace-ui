@@ -13,7 +13,7 @@ export const DataHub = () => {
     const fetchTokens = async () => {
       try {
         setLoading(true);
-        const fetchedTokens = await listTokens();
+        const fetchedTokens: DataHubToken[] = await listTokens();
         setTokens(fetchedTokens);
       } catch (error) {
         console.error('Failed to fetch tokens:', error);
@@ -29,7 +29,7 @@ export const DataHub = () => {
   const handleCreateToken = async () => {
     try {
       setLoading(true);
-      const newToken = await createToken();
+      const newToken: DataHubToken = await createToken();
       const { token, ...tokenData } = newToken; // Exclude the actual token value
       setTokens([...tokens, tokenData]);
       setNewTokenValue(token);
@@ -41,7 +41,7 @@ export const DataHub = () => {
     }
   };
 
-  const handleDeleteToken = async (tokenId) => {
+  const handleDeleteToken = async (tokenId: string) => {
     try {
       setLoading(true);
       await deleteToken(tokenId);
@@ -84,9 +84,7 @@ export const DataHub = () => {
           <ul>
             {tokens.map((token) => (
               <li key={token.id}>
-                <span className="token-info">
-                  <strong>ID:</strong> {token.id}
-                </span>
+                <span className="token-info">{token.id}</span>
                 <button disabled={loading} onClick={() => handleDeleteToken(token.id)}>
                   Delete
                 </button>

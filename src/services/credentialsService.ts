@@ -41,7 +41,7 @@ export const createToken = async () => {
 };
 
 // Function to delete a token
-export const deleteToken = async ({ tokenId }) => {
+export const deleteToken = async (tokenId: string) => {
   try {
     const response = await fetch(`${API_BASE_URL}/${tokenId}`, {
       method: 'DELETE',
