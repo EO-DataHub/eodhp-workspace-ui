@@ -6,8 +6,8 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 
 import Application from './components/Application';
 import { DataHub } from '../DataHub/DataHub';
-import './Applications.scss';
 import { S3 } from '../S3/S3';
+import './Applications.scss';
 
 const PLACEHOLDER_APPLICATIONS = [
   {

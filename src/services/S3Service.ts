@@ -3,7 +3,7 @@ const API_BASE_URL = '/api/workspaces/s3/credentials';
 export const createToken = async (): Promise<S3Credentials> => {
   try {
     const response = await fetch(API_BASE_URL, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
