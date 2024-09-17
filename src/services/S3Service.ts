@@ -9,7 +9,7 @@ export const createToken = async (): Promise<S3Credentials> => {
       },
       credentials: 'include',
     });
-    if (response.status === 202) {
+    if (response.ok) {
       const newToken: S3Credentials = await response.json();
       return newToken;
     }
