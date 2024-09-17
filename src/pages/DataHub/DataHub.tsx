@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
-import './DataHub.scss';
 
 export const DataHub = () => {
   const [tokens, setTokens] = useState([]);

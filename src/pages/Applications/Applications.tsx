@@ -7,6 +7,7 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import Application from './components/Application';
 import { DataHub } from '../DataHub/DataHub';
 import './Applications.scss';
+import { S3 } from '../S3/S3';
 
 const PLACEHOLDER_APPLICATIONS = [
   {
@@ -67,6 +68,7 @@ const Applications: React.FC = () => {
       )}
       {/* DataHub Application */}
       {activeApplication === 'DataHub API' && <DataHub />}
+      {activeApplication === 'S3' && <S3 />}
     </div>
   );
 };
