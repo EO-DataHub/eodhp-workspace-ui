@@ -62,7 +62,8 @@ export const DataHub = () => {
         <div className="new-token-message">
           <p>
             <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
-            <strong>New Token:</strong> {newTokenValue}
+            <br />
+            <strong>API Key:</strong> {newTokenValue}
           </p>
           <p>This is your only chance to copy it!</p>
           <button onClick={() => setNewTokenValue('')}>Dismiss</button>
