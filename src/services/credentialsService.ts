@@ -33,6 +33,9 @@ export const createToken = async () => {
       const newToken = await response.json();
       return newToken;
     }
+    if (response.status === 401 || response.status === 403) {
+      window.location.href = '/sign_in/';
+    }
     throw new Error('Failed to create token');
   } catch (error) {
     console.error('Error creating token:', error);
