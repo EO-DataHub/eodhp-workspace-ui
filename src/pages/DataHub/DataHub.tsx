@@ -61,6 +61,7 @@ export const DataHub = () => {
       {newTokenValue && (
         <div className="new-token-message">
           <p>
+            <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
             <strong>New Token:</strong> {newTokenValue}
           </p>
           <p>This is your only chance to copy it!</p>
@@ -81,7 +82,7 @@ export const DataHub = () => {
       {tokens.length > 0 && (
         <div className="token-list">
           <ul>
-            {tokens.map((token) => (
+            {tokens.reverse().map((token) => (
               <li key={token.id}>
                 <span className="token-info">{token.id}</span>
                 <button disabled={loading} onClick={() => handleDeleteToken(token.id)}>
