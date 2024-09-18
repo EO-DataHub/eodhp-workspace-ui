@@ -1,34 +1,38 @@
-import { useState } from 'react';
-
-import { Content } from '@/components/Content';
-import { Sidebar } from '@/components/Sidebar';
-import { Credentials } from '@/pages/Credentials';
 import './App.scss';
+import 'react-tabs/style/react-tabs.css';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
-function App() {
-  const [activeContent, setActiveContent] = useState('My Personal Project-Credentials');
+import { TopBar } from '@/components/TopBar/TopBar';
+import { Applications } from '@/pages/Applications/Applications';
 
-  const renderContent = () => {
-    // Temporary function to render content based on activeContent.
-    // This will change and be moved to a card based approach for an active workspace.
-    const [workspaceProject, workspaceArea] = activeContent.split('-');
-
-    switch (workspaceArea) {
-      case 'Credentials':
-        return <Credentials workspaceProject={workspaceProject} />;
-      case 'Workspaces':
-        return <div>Workspaces</div>;
-      default:
-        return <div>Default</div>;
-    }
-  };
-
+export const App = () => {
   return (
     <div className="workspace">
-      <Sidebar activeContent={activeContent} setActiveContent={setActiveContent} />
-      <Content>{renderContent()}</Content>
+      <div className="content">
+        <TopBar />
+
+        <Tabs>
+          <TabList>
+            <Tab>Applications</Tab>
+            <Tab>Settings</Tab>
+            <Tab>Manage Workspaces</Tab>
+          </TabList>
+
+          <TabPanel>
+            <Applications />
+          </TabPanel>
+          <TabPanel>
+            <div className="not-implemented">
+              <p>This page is not implemented yet.</p>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="not-implemented">
+              <p>This page is not implemented yet.</p>
+            </div>
+          </TabPanel>
+        </Tabs>
+      </div>
     </div>
   );
-}
-
-export default App;
+};

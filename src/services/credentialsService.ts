@@ -1,14 +1,14 @@
 const API_BASE_URL = '/api/tokens';
 
 // Function to list all tokens
-export const listTokens = async () => {
+export const listTokens = async (): Promise<DataHubToken[]> => {
   try {
     const response = await fetch(API_BASE_URL, {
       credentials: 'include',
     });
 
     if (response.ok) {
-      const tokens = await response.json();
+      const tokens: DataHubToken[] = await response.json();
       return tokens;
     }
     throw new Error('Failed to fetch tokens');
@@ -19,7 +19,7 @@ export const listTokens = async () => {
 };
 
 // Function to create a new token
-export const createToken = async () => {
+export const createToken = async (): Promise<DataHubToken> => {
   try {
     const response = await fetch(API_BASE_URL, {
       method: 'POST',
@@ -30,8 +30,12 @@ export const createToken = async () => {
     });
 
     if (response.status === 202) {
-      const newToken = await response.json();
+      const newToken: DataHubToken = await response.json();
       return newToken;
+    }
+    if (response.status === 401 || response.status === 403) {
+      window.location.href = '/sign_in/';
+      throw new Error('Unauthorized or forbidden');
     }
     throw new Error('Failed to create token');
   } catch (error) {
@@ -41,12 +45,13 @@ export const createToken = async () => {
 };
 
 // Function to delete a token
-export const deleteToken = async ({ tokenId }) => {
+export const deleteToken = async (tokenId: string): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE_URL}/${tokenId}`, {
       method: 'DELETE',
       credentials: 'include',
     });
+
     if (response.status === 204) {
       return true;
     }
