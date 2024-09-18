@@ -23,10 +23,10 @@ export const S3 = () => {
 
   return (
     <div className="s3 application-page">
-      {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
+      {loading ? <p>Loading...</p> : null}
+      {error ? <p className="error">{error}</p> : null}
 
-      {newTokenValue && (
+      {newTokenValue ? (
         <div className="new-token-message">
           <p>
             <strong>Access Key ID:</strong> {newTokenValue.accessKeyId}
@@ -43,7 +43,7 @@ export const S3 = () => {
           <p>This is your only chance to copy it!</p>
           <button onClick={() => setNewTokenValue(null)}>Dismiss</button>
         </div>
-      )}
+      ) : null}
 
       <button className="create-token" disabled={loading} onClick={handleCreateToken}>
         Request Temporary AWS S3 Credentials

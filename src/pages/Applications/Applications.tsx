@@ -46,7 +46,7 @@ const Applications: React.FC = () => {
               >
                 Applications /
               </button>
-              {activeApplication && <span>{` ${activeApplication}`}</span>}
+              {activeApplication ? <span>{` ${activeApplication}`}</span> : null}
             </p>
           </>
         ) : (
@@ -54,7 +54,7 @@ const Applications: React.FC = () => {
         )}
       </div>
       {/* All Applications */}
-      {!activeApplication && (
+      {!activeApplication ? (
         <div className="grid">
           {PLACEHOLDER_APPLICATIONS.map((application) => (
             <Application
@@ -65,10 +65,10 @@ const Applications: React.FC = () => {
             />
           ))}
         </div>
-      )}
+      ) : null}
       {/* DataHub Application */}
-      {activeApplication === 'DataHub API' && <DataHub />}
-      {activeApplication === 'S3' && <S3 />}
+      {activeApplication === 'DataHub API' ? <DataHub /> : null}
+      {activeApplication === 'S3' ? <S3 /> : null}
     </div>
   );
 };

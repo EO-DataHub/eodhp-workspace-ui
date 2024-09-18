@@ -55,10 +55,10 @@ export const DataHub = () => {
 
   return (
     <div className="data-hub application-page">
-      {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
+      {loading ? <p>Loading...</p> : null}
+      {error ? <p className="error">{error}</p> : null}
 
-      {newTokenValue && (
+      {newTokenValue ? (
         <div className="new-token-message">
           <p>
             <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
@@ -68,19 +68,19 @@ export const DataHub = () => {
           <p>This is your only chance to copy it!</p>
           <button onClick={() => setNewTokenValue('')}>Dismiss</button>
         </div>
-      )}
+      ) : null}
 
-      {tokens.length === 0 && !loading && (
+      {tokens.length === 0 && !loading ? (
         <p className="disclaimer">
           You do not currently have any active tokens. Click the button below to create one.
         </p>
-      )}
+      ) : null}
 
       <button className="create-token" disabled={loading} onClick={handleCreateToken}>
         Request New Token
       </button>
 
-      {tokens.length > 0 && (
+      {tokens.length > 0 ? (
         <div className="token-list">
           <ul>
             {tokens.reverse().map((token) => (
@@ -93,7 +93,7 @@ export const DataHub = () => {
             ))}
           </ul>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
