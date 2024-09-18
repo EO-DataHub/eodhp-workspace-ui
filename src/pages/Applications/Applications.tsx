@@ -4,7 +4,7 @@ import { SiCss3 } from 'react-icons/si';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
 
-import Application from './components/Application';
+import { Application } from './components/Application';
 import { DataHub } from '../DataHub/DataHub';
 import { S3 } from '../S3/S3';
 import './Applications.scss';
@@ -22,7 +22,7 @@ const PLACEHOLDER_APPLICATIONS = [
   },
 ];
 
-const Applications: React.FC = () => {
+export const Applications: React.FC = () => {
   const { activeApplication, setActiveApplication } = useWorkspace();
 
   return (
@@ -72,5 +72,3 @@ const Applications: React.FC = () => {
     </div>
   );
 };
-
-export default Applications;

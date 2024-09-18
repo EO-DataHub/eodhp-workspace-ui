@@ -1,11 +1,11 @@
 import './App.scss';
+import 'react-tabs/style/react-tabs.css';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
-import TopBar from './components/TopBar/TopBar';
-import 'react-tabs/style/react-tabs.css';
-import Applications from './pages/Applications/Applications';
+import { TopBar } from '@/components/TopBar/TopBar';
+import { Applications } from '@/pages/Applications/Applications';
 
-const App = () => {
+export const App = () => {
   return (
     <div className="workspace">
       <div className="content">
@@ -36,5 +36,3 @@ const App = () => {
     </div>
   );
 };
-
-export default App;

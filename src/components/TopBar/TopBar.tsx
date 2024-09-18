@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import './TopBar.scss';
 
-const TopBar = () => {
+export const TopBar = () => {
   const { availableWorkspaces, activeWorkspace, setActiveWorkspace } = useWorkspace();
 
   return (
@@ -45,5 +45,3 @@ const TopBar = () => {
     </div>
   );
 };
-
-export default TopBar;

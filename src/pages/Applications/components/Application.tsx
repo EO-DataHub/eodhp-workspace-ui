@@ -10,7 +10,7 @@ interface ApplicationProps {
   icon: IconType;
 }
 
-const Application: React.FC<ApplicationProps> = ({ name, description, icon: Icon }) => {
+export const Application = ({ name, description, icon: Icon }: ApplicationProps) => {
   const { setActiveApplication } = useWorkspace();
 
   return (
@@ -25,5 +25,3 @@ const Application: React.FC<ApplicationProps> = ({ name, description, icon: Icon
     </button>
   );
 };
-
-export default Application;
