@@ -63,4 +63,4 @@ jobs:
       - name: Sync files to S3 bucket
         run: |
           echo ls
-          aws s3 cp dist s3://eodhp-static-web-artefacts/static-apps/workspace-ui/$IMAGE_TAG --recursive
+          aws s3 cp dist s3://static-web-artefacts-eodhp/static-apps/workspace-ui/$IMAGE_TAG --recursive
