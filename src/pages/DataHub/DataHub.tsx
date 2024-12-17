@@ -28,7 +28,11 @@ export const DataHub = () => {
   const handleCreateToken = async () => {
     try {
       setLoading(true);
-      const newToken: DataHubToken = await createToken();
+      // TODO: wire up to frontend form SG87 2024-12-17
+      const name = "API Token";
+      const scope = "offline_access";
+      const expires = 30;
+      const newToken: DataHubToken = await createToken(name, scope, expires);
       const { token, ...tokenData } = newToken; // Exclude the actual token value
       setTokens([...tokens, tokenData]);
       setNewTokenValue(token);
