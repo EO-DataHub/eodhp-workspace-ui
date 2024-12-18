@@ -21,7 +21,7 @@ const Accounts = () => {
   }, []);
 
   const renderError = () => {
-    return <div>{`Error retrieving accounts: ${error}`}</div>;
+    return <div>{`${error}`}</div>;
   };
   const renderLoading = () => {
     return <div>Retrieving accounts</div>;

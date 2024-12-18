@@ -54,13 +54,16 @@ const Expandable = ({ data, title, depth = 0 }: ExpandableProps) => {
 
   return (
     <div style={{ marginLeft: 10 * depth }}>
-      <div className="expandable-title-container" onClick={(e) => handleClick(e)}>
-        <h3>{title}</h3>
-        <FontAwesomeIcon
-          className={`expandable-title-chevron ${expanded ? 'expandable-title-chevron-active' : ''}`}
-          icon={faChevronRight}
-        />
-      </div>
+      {
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+        <div className="expandable-title-container" onClick={(e) => handleClick(e)}>
+          <h3>{title}</h3>
+          <FontAwesomeIcon
+            className={`expandable-title-chevron ${expanded ? 'expandable-title-chevron-active' : ''}`}
+            icon={faChevronRight}
+          />
+        </div>
+      }
       {expanded && renderData()}
     </div>
   );
