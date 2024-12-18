@@ -1,0 +1,32 @@
+.expandable {
+  &-title {
+    &-container {
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      gap: 10px;
+    }
+
+    &-chevron {
+      transition: all 0.2s ease-in-out;
+
+      &-active {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  &-item {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+
+    &__key {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    &__value {
+    }
+  }
+}
