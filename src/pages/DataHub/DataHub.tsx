@@ -1,13 +1,27 @@
 import { useEffect, useState } from 'react';
 
+import { Field } from '@/components/Form/Fields/types';
 import Form from '@/components/Form/Form';
 import Modal from '@/components/Modal/Modal';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
 
 const TOKEN_FORM_INPUTS: Field[] = [
-  { externalName: 'Name', internalName: 'name', value: 'API Token' },
-  { externalName: 'Scope', internalName: 'scope', value: 'offline_access' },
-  { externalName: 'Expires', internalName: 'expires', value: 30 },
+  {
+    externalName: 'Name',
+    internalName: 'name',
+    value: 'API Token',
+    type: 'string',
+    min: 1,
+    max: 128,
+  },
+  {
+    externalName: 'Scope',
+    internalName: 'scope',
+    value: 'offline_access',
+    readOnly: true,
+    type: 'string',
+  },
+  { externalName: 'Expires', internalName: 'expires', value: 30, type: 'number', min: 0, max: 30 },
 ];
 
 export const DataHub = () => {

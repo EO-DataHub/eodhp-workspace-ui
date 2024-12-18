@@ -29,10 +29,4 @@ declare global {
     sessionToken: string;
     expiration: string;
   };
-
-  type Field = {
-    internalName: string;
-    externalName: string;
-    value: string | number | null | undefined;
-  };
 }

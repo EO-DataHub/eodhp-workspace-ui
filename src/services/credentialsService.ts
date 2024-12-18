@@ -19,8 +19,11 @@ export const listTokens = async (): Promise<DataHubToken[]> => {
 };
 
 // Function to create a new token
-export const createToken = async (name: string, workspace: string, 
-  expires: number): Promise<DataHubToken> => {
+export const createToken = async (
+  name: string,
+  workspace: string,
+  expires: number,
+): Promise<DataHubToken> => {
   try {
     const response = await fetch(API_BASE_URL, {
       method: 'POST',
@@ -30,7 +33,7 @@ export const createToken = async (name: string, workspace: string,
         expires: expires,
       } as CreateDataHubToken),
       headers: {
-      'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       credentials: 'include',
     });

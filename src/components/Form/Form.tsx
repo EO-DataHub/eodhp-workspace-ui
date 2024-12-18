@@ -1,11 +1,20 @@
 import React, { ReactElement, useEffect, useState } from 'react';
+
 import './styles.scss';
+import NumberField from './Fields/NumberField/NumberField';
+import StringField from './Fields/StringField/StringField';
+import { Field, InputFieldProps } from './Fields/types';
 
 interface FormProps {
   fieldData: Field[];
   header: string | ReactElement;
   onChange: (formData: { [key: string]: string }) => void;
 }
+
+const FIELD_MAP: { [key: string]: React.FC<InputFieldProps> } = {
+  string: StringField,
+  number: NumberField,
+};
 
 const Form = ({ fieldData, header, onChange }: FormProps) => {
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
@@ -28,21 +37,31 @@ const Form = ({ fieldData, header, onChange }: FormProps) => {
   const constructFields = () => {
     const fields = Object.entries(formData).map(([key, value]) => {
       const field = fieldData.filter((f) => f.internalName === key)[0];
-      return (
-        <div key={key}>
-          <label>{field.externalName}</label>
-          <input
-            value={value}
-            onChange={(e) => onFieldChange(field.internalName, e.target.value)}
-          />
-        </div>
-      );
+
+      if (!FIELD_MAP[field.type]) {
+        console.error(
+          `Please add type ${field.type} to FIELD_MAP and create a valid input editor.`,
+        );
+        return;
+      }
+
+      return <div key={key}>{getEditorField(field, value)}</div>;
     });
     return fields;
   };
+  const getEditorField = (field: Field, value) => {
+    const EditorField = FIELD_MAP[field.type];
+    return (
+      <EditorField
+        field={field}
+        value={value}
+        onFieldChange={(internalName, value) => onFieldChange(internalName, value)}
+      />
+    );
+  };
 
   return (
-    <div>
+    <div className="form">
       <h2>{header}</h2>
       {constructFields()}
     </div>
