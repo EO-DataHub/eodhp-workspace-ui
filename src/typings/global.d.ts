@@ -1,4 +1,4 @@
-export { };
+export {};
 
 declare global {
   type Person = {
@@ -28,5 +28,11 @@ declare global {
     secretAccessKey: string;
     sessionToken: string;
     expiration: string;
+  };
+
+  type Field = {
+    internalName: string;
+    externalName: string;
+    value: string | number | null | undefined;
   };
 }

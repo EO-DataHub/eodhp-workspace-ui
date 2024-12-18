@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react';
 
+import Form from '@/components/Form/Form';
+import Modal from '@/components/Modal/Modal';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
+
+const TOKEN_FORM_INPUTS: Field[] = [
+  { externalName: 'Name', internalName: 'name', value: 'API Token' },
+  { externalName: 'Scope', internalName: 'scope', value: 'offline_access' },
+  { externalName: 'Expires', internalName: 'expires', value: 30 },
+];
 
 export const DataHub = () => {
   const [tokens, setTokens] = useState([]);
   const [newTokenValue, setNewTokenValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [modal, setModal] = useState<boolean>(false);
+  const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -27,12 +37,11 @@ export const DataHub = () => {
 
   const handleCreateToken = async () => {
     try {
-      setLoading(true);
-      // TODO: wire up to frontend form SG87 2024-12-17
-      const name = "API Token";
-      const scope = "offline_access";
-      const expires = 30;
-      const newToken: DataHubToken = await createToken(name, scope, expires);
+      const newToken: DataHubToken = await createToken(
+        formData['name'],
+        formData['scope'],
+        parseFloat(formData['expires']),
+      );
       const { token, ...tokenData } = newToken; // Exclude the actual token value
       setTokens([...tokens, tokenData]);
       setNewTokenValue(token);
@@ -59,6 +68,19 @@ export const DataHub = () => {
 
   return (
     <div className="data-hub application-page">
+      {modal && (
+        <Modal
+          content={
+            <Form
+              fieldData={TOKEN_FORM_INPUTS}
+              header={'Create Token'}
+              onChange={(formData) => setFormData(formData)}
+            />
+          }
+          onCancel={() => setModal(false)}
+          onSubmit={() => handleCreateToken()}
+        />
+      )}
       {loading ? <p>Loading...</p> : null}
       {error ? <p className="error">{error}</p> : null}
 
@@ -80,7 +102,7 @@ export const DataHub = () => {
         </p>
       ) : null}
 
-      <button className="create-token" disabled={loading} onClick={handleCreateToken}>
+      <button className="create-token" disabled={loading} onClick={() => setModal(true)}>
         Request New Token
       </button>
 
