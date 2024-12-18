@@ -9,8 +9,8 @@ export const getAccounts = async (): Promise<Account[]> => {
       credentials: 'include',
     });
     if (response.ok) {
-      const accounts = await response.json();
-      return accounts;
+      const json = await response.json();
+      return json.data.accounts;
     }
     throw new Error('Failed to get accounts');
   } catch (error) {
