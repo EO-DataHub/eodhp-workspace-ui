@@ -82,28 +82,34 @@ export const DataHub = () => {
     }
   };
 
+  const renderModalContent = () => {
+    if (creatingToken) return <div>Creating token</div>;
+    if (newTokenValue) {
+      return (
+        <div className="new-token-message">
+          <p>
+            <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
+            <br />
+            <strong>API Key:</strong> {newTokenValue}
+          </p>
+          <p>This is your only chance to copy it!</p>
+        </div>
+      );
+    }
+    return (
+      <Form
+        fieldData={TOKEN_FORM_INPUTS}
+        header={'Create Token'}
+        onChange={(formData) => setFormData(formData)}
+      />
+    );
+  };
+
   return (
     <div className="data-hub application-page">
       {modal && (
         <Modal
-          content={
-            newTokenValue ? (
-              <div className="new-token-message">
-                <p>
-                  <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
-                  <br />
-                  <strong>API Key:</strong> {newTokenValue}
-                </p>
-                <p>This is your only chance to copy it!</p>
-              </div>
-            ) : (
-              <Form
-                fieldData={TOKEN_FORM_INPUTS}
-                header={'Create Token'}
-                onChange={(formData) => setFormData(formData)}
-              />
-            )
-          }
+          content={renderModalContent()}
           submitDisabled={!!newTokenValue}
           onCancel={() => setModal(false)}
           onSubmit={() => handleCreateToken()}
