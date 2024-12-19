@@ -87,8 +87,15 @@ export const DataHub = () => {
       {modal && (
         <Modal
           content={
-            creatingToken ? (
-              'Creating Token'
+            newTokenValue ? (
+              <div className="new-token-message">
+                <p>
+                  <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
+                  <br />
+                  <strong>API Key:</strong> {newTokenValue}
+                </p>
+                <p>This is your only chance to copy it!</p>
+              </div>
             ) : (
               <Form
                 fieldData={TOKEN_FORM_INPUTS}
@@ -97,24 +104,13 @@ export const DataHub = () => {
               />
             )
           }
+          submitDisabled={!!newTokenValue}
           onCancel={() => setModal(false)}
           onSubmit={() => handleCreateToken()}
         />
       )}
       {loading ? <p>Loading...</p> : null}
       {error ? <p className="error">{error}</p> : null}
-
-      {newTokenValue ? (
-        <div className="new-token-message">
-          <p>
-            <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
-            <br />
-            <strong>API Key:</strong> {newTokenValue}
-          </p>
-          <p>This is your only chance to copy it!</p>
-          <button onClick={() => setNewTokenValue('')}>Dismiss</button>
-        </div>
-      ) : null}
 
       {tokens.length === 0 && !loading ? (
         <p className="disclaimer">
