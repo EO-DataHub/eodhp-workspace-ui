@@ -28,6 +28,7 @@ export const DataHub = () => {
   const [tokens, setTokens] = useState([]);
   const [newTokenValue, setNewTokenValue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [creatingToken, setCreatingToken] = useState<boolean>(false);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState<boolean>(false);
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
@@ -51,6 +52,7 @@ export const DataHub = () => {
 
   const handleCreateToken = async () => {
     try {
+      setCreatingToken(true);
       const newToken: DataHubToken = await createToken(
         formData['name'],
         formData['scope'],
@@ -63,7 +65,7 @@ export const DataHub = () => {
       console.error('Failed to create token:', error);
       setError('Failed to create token.');
     } finally {
-      setLoading(false);
+      setCreatingToken(false);
     }
   };
 
@@ -85,11 +87,15 @@ export const DataHub = () => {
       {modal && (
         <Modal
           content={
-            <Form
-              fieldData={TOKEN_FORM_INPUTS}
-              header={'Create Token'}
-              onChange={(formData) => setFormData(formData)}
-            />
+            creatingToken ? (
+              'Creating Token'
+            ) : (
+              <Form
+                fieldData={TOKEN_FORM_INPUTS}
+                header={'Create Token'}
+                onChange={(formData) => setFormData(formData)}
+              />
+            )
           }
           onCancel={() => setModal(false)}
           onSubmit={() => handleCreateToken()}
