@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles.scss';
 
 import { InputFieldProps } from '../types';
 
@@ -19,7 +20,7 @@ const StringField = ({ field, value, onFieldChange }: InputFieldProps) => {
   };
 
   return (
-    <div>
+    <div className="field">
       <label>{field.externalName}</label>
       <input
         disabled={field.readOnly}

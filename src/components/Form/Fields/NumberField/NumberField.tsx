@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles.scss';
 
 import { InputFieldProps } from '../types';
 
@@ -20,7 +21,7 @@ const NumberField = ({ field, value, onFieldChange }: InputFieldProps) => {
     onFieldChange(field.internalName, value);
   };
   return (
-    <div>
+    <div className="field">
       <label>{field.externalName}</label>
       <input
         disabled={field.readOnly}

@@ -45,7 +45,7 @@ const Form = ({ fieldData, header, onChange }: FormProps) => {
         return;
       }
 
-      return <div key={key}>{getEditorField(field, value)}</div>;
+      return getEditorField(field, value);
     });
     return fields;
   };

@@ -1,0 +1,13 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 300px;
+
+  label {
+  }
+
+  input {
+    padding: 3px 5px;
+  }
+}
