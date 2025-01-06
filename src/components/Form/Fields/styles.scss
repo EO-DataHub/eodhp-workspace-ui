@@ -4,7 +4,14 @@
   width: 80%;
   max-width: 300px;
 
+  label {
+    color: black;
+  }
+
   input {
     padding: 3px 5px;
+    background-color: white;
+    outline: none;
+    border: 1px solid lightgrey;
   }
 }
