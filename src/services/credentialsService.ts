@@ -21,7 +21,7 @@ export const listTokens = async (): Promise<DataHubToken[]> => {
 // Function to create a new token
 export const createToken = async (
   name: string,
-  workspace: string,
+  scope: string,
   expires: number,
 ): Promise<DataHubToken> => {
   try {
@@ -29,7 +29,7 @@ export const createToken = async (
       method: 'POST',
       body: JSON.stringify({
         name: name,
-        scope: `workspaces:${workspace}`,
+        scope: scope,
         expires: expires,
       } as CreateDataHubToken),
       headers: {

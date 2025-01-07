@@ -4,6 +4,7 @@ import '../../styles/main.scss';
 import { Field } from '@/components/Form/Fields/types';
 import Form from '@/components/Form/Form';
 import Modal from '@/components/Modal/Modal';
+import { useWorkspace } from '@/hooks/useWorkspace';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
 
 const TOKEN_FORM_INPUTS: Field[] = [
@@ -26,6 +27,7 @@ const TOKEN_FORM_INPUTS: Field[] = [
 ];
 
 export const DataHub = () => {
+  const { activeWorkspace } = useWorkspace();
   const [tokens, setTokens] = useState([]);
   const [newTokenValue, setNewTokenValue] = useState('');
   const [loading, setLoading] = useState(false);

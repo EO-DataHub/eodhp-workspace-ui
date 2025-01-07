@@ -27,7 +27,7 @@ const StringField = ({ field, value, onFieldChange }: InputFieldProps) => {
         value={value || field.value}
         onChange={(e) => validate(e.target.value)}
       />
-      <div>{error}</div>
+      <div className="field-error">{error}</div>
     </div>
   );
 };
