@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import '../../styles/main.scss';
 
 import { Field } from '@/components/Form/Fields/types';
 import Form from '@/components/Form/Form';
@@ -109,9 +110,13 @@ export const DataHub = () => {
     <div className="data-hub application-page">
       {modal && (
         <Modal
+          cancelText={newTokenValue ? 'Dismiss' : 'Cancel'}
           content={renderModalContent()}
-          submitDisabled={!!newTokenValue}
-          onCancel={() => setModal(false)}
+          hideSubmit={!!newTokenValue}
+          onCancel={() => {
+            setModal(false);
+            setNewTokenValue(null);
+          }}
           onSubmit={() => handleCreateToken()}
         />
       )}
@@ -124,7 +129,7 @@ export const DataHub = () => {
         </p>
       ) : null}
 
-      <button className="create-token" disabled={loading} onClick={() => setModal(true)}>
+      <button className="blue-button" disabled={loading} onClick={() => setModal(true)}>
         Request New Token
       </button>
 
@@ -133,7 +138,22 @@ export const DataHub = () => {
           <ul>
             {tokens.reverse().map((token) => (
               <li key={token.id}>
-                <span className="token-info">{token.id}</span>
+                <div>
+                  <h3>Name</h3>
+                  <span className="token-info">{token.name}</span>
+                </div>
+                <div>
+                  <h3>Scope</h3>
+                  <span className="token-info">{token.scope}</span>
+                </div>
+                <div>
+                  <h3>Created</h3>
+                  <span className="token-info">{token.created}</span>
+                </div>
+                <div>
+                  <h3>Expiry</h3>
+                  <span className="token-info">{token.expiry}</span>
+                </div>
                 <button disabled={loading} onClick={() => handleDeleteToken(token.id)}>
                   Delete
                 </button>

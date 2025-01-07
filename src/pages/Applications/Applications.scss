@@ -101,22 +101,6 @@
     margin-bottom: 20px;
   }
 
-  button.create-token {
-    background-color: $primary-colour;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    font-weight: 500;
-    margin-bottom: 20px;
-
-    &:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-  }
-
   .disclaimer {
     border: 1px solid #cccccc94;
     padding: 1rem;
@@ -128,6 +112,7 @@
   .new-token-message {
     background-color: #e6ffed;
     border: 1px solid #b7eb8f;
+    color: black;
     padding: 1rem;
     margin-bottom: 20px;
     border-radius: 4px;
@@ -149,6 +134,8 @@
   }
 
   .token-list {
+    color: black;
+
     ul {
       list-style-type: none;
       padding: 0;
