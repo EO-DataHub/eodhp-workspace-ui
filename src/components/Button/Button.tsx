@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 import './Button.scss';
 
 type ButtonProps = {
@@ -6,11 +6,11 @@ type ButtonProps = {
   children: ReactNode;
   className?: string;
   icon?: ReactNode;
-};
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Button = ({ onClick, children, className, icon }: ButtonProps) => {
+export const Button = ({ onClick, children, className, icon, ...rest }: ButtonProps) => {
   return (
-    <button className={`button ${className}`} onClick={onClick}>
+    <button className={`button ${className}`} onClick={onClick} {...rest}>
       <span className="button__icon">{icon}</span>
       {children}
     </button>

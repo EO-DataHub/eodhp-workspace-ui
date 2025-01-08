@@ -1,3 +1,4 @@
+import { Credentials } from '@/pages/Credentials/Credentials';
 import { Stores } from '@/pages/Stores/Stores';
 
 export interface NavItem {
@@ -25,5 +26,5 @@ export const navItems: NavItem[] = [
   { label: 'Linked accounts', icon: './icons/linked-accounts.svg' },
   { label: 'Invoices', icon: './icons/invoices.svg' },
   { label: 'Members', icon: './icons/members.svg' },
-  { label: 'Credentials', icon: './icons/credentials.svg' },
+  { label: 'Credentials', icon: './icons/credentials.svg', content: <Credentials /> },
 ];

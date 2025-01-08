@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { Button } from '@/components/Button/Button';
 import { createToken } from '@/services/S3Service';
 
 export const S3 = () => {
@@ -45,9 +46,12 @@ export const S3 = () => {
         </div>
       ) : null}
 
-      <button className="create-token" disabled={loading} onClick={handleCreateToken}>
+      {/* <button className="create-token" disabled={loading} onClick={handleCreateToken}>
         Request Temporary AWS S3 Credentials
-      </button>
+      </button> */}
+      <Button className="create-token" disabled={loading} onClick={handleCreateToken}>
+        Request Temporary AWS S3 Credentials
+      </Button>
     </div>
   );
 };

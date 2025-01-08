@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { Button } from '@/components/Button/Button';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
 
 export const DataHub = () => {
@@ -66,7 +67,7 @@ export const DataHub = () => {
             <strong>API Key:</strong> {newTokenValue}
           </p>
           <p>This is your only chance to copy it!</p>
-          <button onClick={() => setNewTokenValue('')}>Dismiss</button>
+          <Button onClick={() => setNewTokenValue('')}>Dismiss</Button>
         </div>
       ) : null}
 
@@ -76,9 +77,9 @@ export const DataHub = () => {
         </p>
       ) : null}
 
-      <button className="create-token" disabled={loading} onClick={handleCreateToken}>
+      <Button className="create-token" disabled={loading} onClick={handleCreateToken}>
         Request New Token
-      </button>
+      </Button>
 
       {tokens.length > 0 ? (
         <div className="token-list">
@@ -86,9 +87,13 @@ export const DataHub = () => {
             {tokens.reverse().map((token) => (
               <li key={token.id}>
                 <span className="token-info">{token.id}</span>
-                <button disabled={loading} onClick={() => handleDeleteToken(token.id)}>
+                <Button
+                  className="delete-token"
+                  disabled={loading}
+                  onClick={() => handleDeleteToken(token.id)}
+                >
                   Delete
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
