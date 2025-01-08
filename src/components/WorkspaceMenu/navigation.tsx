@@ -11,7 +11,7 @@ export const navItems: NavItem[] = [
   {
     label: 'Stores',
     icon: './icons/stores.svg',
-    content: <ComingSoon title="This is a test" />,
+    content: <ComingSoon title="Stores" />,
   },
   {
     label: 'Catalogue',

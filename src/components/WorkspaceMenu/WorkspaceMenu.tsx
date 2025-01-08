@@ -36,10 +36,13 @@ export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
   };
 
   const renderNavItems = (items: NavItem[], parentPath: string[] = []) => {
+    console.log('Selected Item Path:', selectedItemPath);
+
     return items.map((item) => {
       const currentPath = [...parentPath, item.label];
       const hasSubItems = item.subItems && item.subItems.length > 0;
       const isExpanded = hasSubItems && expandedSet.has(item.label);
+      const isSelected = selectedItemPath.join('/') === currentPath.join('/');
 
       return (
         <div
@@ -47,12 +50,13 @@ export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
           className={`workspace-menu__item ${parentPath.length > 0 ? 'workspace-menu__subitem' : ''}`}
         >
           <div
-            className={`workspace-menu__item-header ${selectedItemPath.join('/') === currentPath.join('/') ? 'active' : ''}`}
+            className={`workspace-menu__item-header ${isSelected ? 'active' : ''}`}
             onClick={() => {
-              setSelectedItemPath(currentPath);
               if (hasSubItems) {
                 handleToggle(item.label);
               } else {
+                setSelectedItemPath(currentPath);
+
                 setContent(item.content || <ComingSoon title={item.label} />);
               }
             }}
