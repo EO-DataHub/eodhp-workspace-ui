@@ -32,7 +32,6 @@ export const DataHub = () => {
   const [creatingToken, setCreatingToken] = useState<boolean>(false);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState<boolean>(false);
-  const [formData, setFormData] = useState<{ [key: string]: string }>(() => getDefaultFormValues());
 
   const getDefaultFormValues = () => {
     const data = {};
@@ -41,6 +40,8 @@ export const DataHub = () => {
     });
     return data;
   };
+
+  const [formData, setFormData] = useState<{ [key: string]: string }>(() => getDefaultFormValues());
 
   useEffect(() => {
     const fetchTokens = async () => {
