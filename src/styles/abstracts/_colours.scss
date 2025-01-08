@@ -13,10 +13,11 @@
 .light-theme {
   /* Light Theme overrides */
   --background: #fff;
-  --text-primary: #333;
-  --text-secondary: #666;
+  --text-primary: #000;
+  --text-secondary: #969696;
   --button-bg: #4c72ba;
   --button-text: #fff;
   --icon-primary: #333;
   --icon-secondary: #666;
+  --content-border: 1px solid rgb(128 128 128 / 15.8%);
 }

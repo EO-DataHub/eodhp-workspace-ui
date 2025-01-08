@@ -10,6 +10,7 @@
   justify-content: center;
   border: 0.1rem solid;
   cursor: pointer;
+  user-select: none;
 
   &:hover {
     transform: translateY(-0.15rem);
