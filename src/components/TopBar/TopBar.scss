@@ -11,18 +11,6 @@
     flex-direction: row;
     gap: 1rem;
     align-items: center;
-
-    &__profile-logo {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 20%;
-      background-color: var(--button-bg);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--button-text);
-      border: 0.15rem solid rgb(206 206 206);
-    }
   }
 
   &__right {

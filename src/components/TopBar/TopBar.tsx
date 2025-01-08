@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-
 import './TopBar.scss';
 import { useEffect, useState } from 'react';
 
@@ -9,6 +6,7 @@ import { MdPersonRemove } from 'react-icons/md';
 
 import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
 import { Button } from '../Button/Button';
+import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 export const TopBar = () => {
   const [isLightTheme, setIsLightTheme] = useState(false);
@@ -42,12 +40,12 @@ export const TopBar = () => {
   return (
     <div className="top-bar">
       <div className="top-bar__left">
-        <span
-          className="top-bar__left__profile-logo"
+        <ProfileTile
+          borderColor="lightgray"
+          color="#4c72ba"
+          username="EO"
           onClick={() => setIsLightTheme(!isLightTheme)}
-        >
-          EO
-        </span>
+        />
         <h2>EODH Workspace</h2>
       </div>
 
