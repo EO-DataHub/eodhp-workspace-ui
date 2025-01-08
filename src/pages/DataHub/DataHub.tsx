@@ -32,7 +32,13 @@ export const DataHub = () => {
   const [creatingToken, setCreatingToken] = useState<boolean>(false);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState<boolean>(false);
-  const [formData, setFormData] = useState<{ [key: string]: string }>({});
+  const [formData, setFormData] = useState<{ [key: string]: string }>(() => {
+    const data = {};
+    TOKEN_FORM_INPUTS.map((input: Field) => {
+      data[input.internalName] = input.value;
+    });
+    return data;
+  });
 
   useEffect(() => {
     const fetchTokens = async () => {
