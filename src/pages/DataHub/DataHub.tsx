@@ -32,13 +32,15 @@ export const DataHub = () => {
   const [creatingToken, setCreatingToken] = useState<boolean>(false);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState<boolean>(false);
-  const [formData, setFormData] = useState<{ [key: string]: string }>(() => {
+  const [formData, setFormData] = useState<{ [key: string]: string }>(() => getDefaultFormValues());
+
+  const getDefaultFormValues = () => {
     const data = {};
     TOKEN_FORM_INPUTS.map((input: Field) => {
       data[input.internalName] = input.value;
     });
     return data;
-  });
+  };
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -68,6 +70,7 @@ export const DataHub = () => {
       const { token, ...tokenData } = newToken; // Exclude the actual token value
       setTokens([...tokens, tokenData]);
       setNewTokenValue(token);
+      setFormData(getDefaultFormValues());
     } catch (error) {
       console.error('Failed to create token:', error);
       setError('Failed to create token.');
