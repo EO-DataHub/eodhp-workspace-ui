@@ -10,7 +10,7 @@ export const WorkspaceSelection = () => {
   const { availableWorkspaces } = useWorkspace();
 
   return (
-    <div className="workspace-selection">
+    <div className="workspace-selection content-border">
       <p className="workspace-selection__title">Other Workspaces</p>
       <div className="workspace-selection__tiles">
         {availableWorkspaces.map((workspace) => (

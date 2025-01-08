@@ -36,8 +36,6 @@ export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
   };
 
   const renderNavItems = (items: NavItem[], parentPath: string[] = []) => {
-    console.log('Selected Item Path:', selectedItemPath);
-
     return items.map((item) => {
       const currentPath = [...parentPath, item.label];
       const hasSubItems = item.subItems && item.subItems.length > 0;
@@ -82,7 +80,7 @@ export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
   };
 
   return (
-    <div className="workspace-menu">
+    <div className="workspace-menu content-border">
       <div className="workspace-menu__sidebar">{renderNavItems(navItems)}</div>
     </div>
   );

@@ -1,9 +1,9 @@
 .workspace-menu {
   display: flex;
-  margin-top: 1.75rem;
+  padding-top: 1.75rem;
 
   &__sidebar {
-    width: 240px;
+    width: 100%;
     color: var(--text-secondary);
     padding: 0 1rem;
   }
@@ -21,6 +21,7 @@
     margin-bottom: 0.5rem;
     position: relative;
     font-weight: 600;
+    width: 100%;
 
     &-header {
       cursor: pointer;
@@ -41,7 +42,7 @@
         &::before {
           content: '';
           position: absolute;
-          left: -10px;
+          left: -17px;
           top: 0;
           bottom: 0;
           width: 2px;
@@ -67,7 +68,7 @@
       &::before {
         content: '';
         position: absolute;
-        left: -10px;
+        left: -17px;
         top: 0;
         bottom: 0;
         width: 2px;

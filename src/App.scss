@@ -8,9 +8,8 @@
   height: 100%;
 
   .page-view {
-    max-width: 1200px;
+    max-width: 2400px;
     width: 100%;
-    padding: 0 20px;
     height: 100%;
 
     .content {
@@ -19,18 +18,26 @@
       height: 100%;
 
       .workspace-selection {
-        width: 10%;
-        min-width: 100px;
+        width: 80px;
+        flex-shrink: 0;
       }
 
       .workspace-menu {
-        width: 20%;
+        flex: 1;
         min-width: 225px;
       }
 
       .workspace-content {
-        width: 70%;
+        flex: 5;
+      }
+
+      .content-page {
+        padding: 2rem;
       }
     }
+  }
+
+  .content-border {
+    border: var(--content-border);
   }
 }

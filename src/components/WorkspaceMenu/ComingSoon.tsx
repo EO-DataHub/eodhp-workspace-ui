@@ -4,7 +4,7 @@ interface ComingSoonProps {
 
 const ComingSoon = ({ title }: ComingSoonProps) => {
   return (
-    <div style={{ padding: '1rem', color: '#fff' }}>
+    <div className="content-page" style={{ color: '#fff' }}>
       <h2>{title}</h2>
       <p>Coming soon...</p>
     </div>

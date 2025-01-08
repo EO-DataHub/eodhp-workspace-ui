@@ -18,7 +18,7 @@ export const App = () => {
         <div className="content">
           <WorkspaceSelection />
           <WorkspaceMenu setContent={setContent} />
-          <div className="workspace-content">{content}</div>
+          <div className="workspace-content content-border">{content}</div>
         </div>
       </div>
     </div>

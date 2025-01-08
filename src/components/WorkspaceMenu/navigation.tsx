@@ -1,4 +1,4 @@
-import ComingSoon from './ComingSoon';
+import { Stores } from '@/pages/Stores/Stores';
 
 export interface NavItem {
   label: string;
@@ -11,7 +11,7 @@ export const navItems: NavItem[] = [
   {
     label: 'Stores',
     icon: './icons/stores.svg',
-    content: <ComingSoon title="Stores" />,
+    content: <Stores />,
   },
   {
     label: 'Catalogue',

@@ -32,7 +32,7 @@ export const TopBar = () => {
     <div className="top-bar">
       <div className="top-bar__left">
         <ProfileTile
-          borderColor="lightgray"
+          borderColor="#a19d9d"
           color="#4c72ba"
           username="EO"
           onClick={() => setIsLightTheme(!isLightTheme)}
