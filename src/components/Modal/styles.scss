@@ -1,0 +1,47 @@
+@import '../../styles/main';
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background-color: rgb(59 59 59 / 62.4%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &-content {
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 50px;
+
+    &-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 90vw;
+      min-height: 200px;
+      max-width: 750px;
+      border-radius: 12px;
+      background-color: white;
+    }
+
+    &-buttons {
+      border-top: 1px solid lightgrey;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: right;
+      align-items: center;
+      height: 50px;
+      gap: 15px;
+      padding-right: 15px;
+    }
+  }
+}

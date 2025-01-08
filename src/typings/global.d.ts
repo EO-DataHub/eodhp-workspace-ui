@@ -11,6 +11,16 @@ declare global {
     id: string;
     user_id: string;
     token: string;
+    name: string;
+    scope: string;
+    created: string;
+    expiry: string;
+  };
+
+  type CreateDataHubToken = {
+    name: string;
+    scope: string;
+    expires: int;
   };
 
   type S3Credentials = {
