@@ -3,6 +3,8 @@ import 'react-tabs/style/react-tabs.css';
 
 import { TopBar } from '@/components/TopBar/TopBar';
 
+import { WorkspaceSelection } from './components/WorkspaceSelection/WorkspaceSelection';
+
 export const App = () => {
   return (
     <div className="workspace">
@@ -10,7 +12,7 @@ export const App = () => {
         <TopBar />
 
         <div className="content">
-          <div className="workspace-selection"></div>
+          <WorkspaceSelection />
           <div className="workspace-menu"></div>
           <div className="workspace-content"></div>
         </div>

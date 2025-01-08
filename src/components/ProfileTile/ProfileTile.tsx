@@ -22,12 +22,22 @@ export const ProfileTile = ({
     }
     return (firstName[0] + lastName[0]).toUpperCase();
   };
+
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       className="profile-tile"
       style={{
-        backgroundColor: color,
+        backgroundColor: color || getRandomColor(),
         borderColor: borderColor || 'none',
         border: borderColor ? undefined : 'none',
       }}

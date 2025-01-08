@@ -1,0 +1,19 @@
+.workspace-selection {
+  padding: 0.275rem;
+
+  &__title {
+    font-size: 0.75rem;
+    text-overflow: ellipsis;
+    text-align: center;
+    color: var(--text-secondary);
+    margin: 2rem 0;
+  }
+
+  &__tiles {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+  }
+}
