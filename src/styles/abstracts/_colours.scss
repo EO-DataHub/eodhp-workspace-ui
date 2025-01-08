@@ -1,6 +1,21 @@
-$primary-colour: #2a3559;
-$secondary-colour: #4c72ba;
-$primary-text-colour: black;
-$secondary-text-colour: #aaabb1;
-$sidebar-background: #efefef;
-$hover-colour: #f5f5f5;
+:root {
+  /* Dark Theme (default) */
+  --background: #000;
+  --text-primary: #fff;
+  --text-secondary: #757575;
+  --button-bg: #4c72ba;
+  --button-text: #fff;
+  --icon-primary: #fff;
+  --icon-secondary: #2c2c2c;
+}
+
+.light-theme {
+  /* Light Theme overrides */
+  --background: #fff;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --button-bg: #0275d8;
+  --button-text: #fff;
+  --icon-primary: #333;
+  --icon-secondary: #666;
+}

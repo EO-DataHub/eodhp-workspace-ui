@@ -1,0 +1,45 @@
+.workspace-members {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  &__tiles {
+    display: flex;
+    align-items: center;
+  }
+
+  &__tile {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -8px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &__tile--more {
+    background-color: #555;
+  }
+
+  &__view-all {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &__count {
+      color: var(--text-primary);
+    }
+  }
+}

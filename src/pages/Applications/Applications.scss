@@ -67,7 +67,6 @@
 
   .icon {
     font-size: 40px;
-    color: $primary-colour;
   }
 
   .app-details {
@@ -102,7 +101,7 @@
   }
 
   button.create-token {
-    background-color: $primary-colour;
+    // background-color: $primary-colour;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -140,7 +139,8 @@
 
     button {
       background-color: transparent;
-      color: $primary-colour;
+
+      // color: $primary-colour;
       border: none;
       cursor: pointer;
       font-size: 1rem;
@@ -168,7 +168,7 @@
         }
 
         button {
-          background-color: $primary-colour;
+          // background-color: $primary-colour;
           color: #fff;
           border: none;
           padding: 5px 10px;

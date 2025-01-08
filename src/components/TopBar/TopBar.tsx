@@ -1,46 +1,64 @@
-import Select from 'react-select';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 
-import { useWorkspace } from '@/hooks/useWorkspace';
 import './TopBar.scss';
+import { useEffect, useState } from 'react';
+
+import { IoMdPersonAdd } from 'react-icons/io';
+import { MdPersonRemove } from 'react-icons/md';
+
+import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
+import { Button } from '../Button/Button';
 
 export const TopBar = () => {
-  const { availableWorkspaces, activeWorkspace, setActiveWorkspace } = useWorkspace();
+  const [isLightTheme, setIsLightTheme] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light-theme', isLightTheme);
+  }, [isLightTheme]);
+
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  const users = [
+    { id: 1, name: 'Peter Newton', color: getRandomColor() },
+    { id: 2, name: 'Alice Nguyen', color: getRandomColor() },
+    { id: 3, name: 'Paul Nasser', color: getRandomColor() },
+    { id: 4, name: 'Anil Kapoor', color: getRandomColor() },
+    { id: 5, name: 'Phil Murray', color: getRandomColor() },
+    { id: 6, name: 'Bobby Fischer', color: getRandomColor() },
+    { id: 7, name: 'Carla Rossi', color: getRandomColor() },
+    { id: 8, name: 'Diane Chang', color: getRandomColor() },
+    { id: 9, name: 'Evelyn Wood', color: getRandomColor() },
+    { id: 10, name: 'Frank Black', color: getRandomColor() },
+  ];
 
   return (
     <div className="top-bar">
-      <div className="workspace-selection">
-        <label className="workspace-label" htmlFor="workspace-select">
-          Change Workspace
-        </label>
-        <Select
-          className="workspace-select"
-          defaultValue={{ value: activeWorkspace, label: activeWorkspace }}
-          id="workspace-select"
-          options={availableWorkspaces.map((workspace) => ({ value: workspace, label: workspace }))}
-          theme={(theme) => ({
-            ...theme,
-            borderRadius: 0,
-            colors: {
-              ...theme.colors,
-              primary: '#2a3559',
-              primary25: '#2a355930',
-            },
-          })}
-          onChange={(selectedOption) => setActiveWorkspace(selectedOption?.value)}
-        />
+      <div className="top-bar__left">
+        <span
+          className="top-bar__left__profile-logo"
+          onClick={() => setIsLightTheme(!isLightTheme)}
+        >
+          EO
+        </span>
+        <h2>EODH Workspace</h2>
       </div>
 
-      <div>
-        <p className="heading">Your Workspace</p>
-        <p className="date">
-          {activeWorkspace} -{' '}
-          {new Date().toLocaleDateString('en-US', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}
-        </p>
+      <div className="top-bar__right">
+        <Button icon={<IoMdPersonAdd />} onClick={() => console.log('Add member clicked')}>
+          Add Member
+        </Button>
+        <Button icon={<MdPersonRemove />} onClick={() => console.log('Remove member clicked')}>
+          Remove Member
+        </Button>
+        <WorkspaceMembers users={users} />
       </div>
     </div>
   );
