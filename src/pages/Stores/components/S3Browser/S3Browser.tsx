@@ -1,5 +1,6 @@
 import { createStorageBrowser, elementsDefault } from '@aws-amplify/ui-react-storage/browser';
 import '@aws-amplify/ui-react-storage/storage-browser-styles.css';
+import './S3Browser.scss';
 
 const { StorageBrowser } = createStorageBrowser({
   // Optional: provide custom elements or keep the default
@@ -20,11 +21,11 @@ const { StorageBrowser } = createStorageBrowser({
         locations: [
           {
             bucketName: 'workspaces-eodhp-dev3',
-            key: 'james-hinton',
-            region: 'eu-west-2', // or your region
+            key: 'sgillies-tpzuk',
+            region: 'eu-west-2',
             type: 'PREFIX',
             permission: 'READWRITE',
-            scope: 's3://workspaces-eodhp-dev3/james-hinton//', // theres a bug in the library that requires both the trailing slashes
+            scope: 's3://workspaces-eodhp-dev3/sgillies-tpzuk//', // theres a bug in the library that requires both the trailing slashes
           },
         ],
       };

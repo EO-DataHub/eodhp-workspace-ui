@@ -1,0 +1,16 @@
+.storage-browser {
+  button {
+    border: none;
+    border-radius: 10px;
+    min-width: 35px;
+    width: 100%;
+    padding: 10px 15px;
+  }
+
+  /* stylelint-disable */
+  .storage-browser__navigate__button {
+    background: none;
+    color: black;
+  }
+  /* stylelint-enable */
+}
