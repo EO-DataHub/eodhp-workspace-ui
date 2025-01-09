@@ -5,6 +5,8 @@ import { CiCloudOn } from 'react-icons/ci';
 import { FiBox } from 'react-icons/fi';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
+import storesDemo from '@/assets/stores-demo.png';
+
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
 
@@ -42,7 +44,7 @@ export const Stores = () => {
 
         <TabPanel>
           <div className="tab-content">
-            <img alt="Stores" className="stores-demo" src="./stores-demo.png" />
+            <img alt="Stores" className="stores-demo" src={storesDemo} />
           </div>
         </TabPanel>
         <TabPanel>
