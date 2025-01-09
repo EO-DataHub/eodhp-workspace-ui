@@ -1,13 +1,18 @@
 import Select from 'react-select';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
+
 import './TopBar.scss';
+import AddAccount from './AddAccount/AddAccount';
 
 export const TopBar = () => {
   const { availableWorkspaces, activeWorkspace, setActiveWorkspace } = useWorkspace();
 
   return (
     <div className="top-bar">
+      <div>
+        <AddAccount />
+      </div>
       <div className="workspace-selection">
         <label className="workspace-label" htmlFor="workspace-select">
           Change Workspace

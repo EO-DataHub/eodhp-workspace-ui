@@ -3,6 +3,7 @@ import '../../styles/main.scss';
 
 import { Field } from '@/components/Form/Fields/types';
 import Form from '@/components/Form/Form';
+import SuccessTextBox from '@/components/Info/Success/SuccessTextBox';
 import Modal from '@/components/Modal/Modal';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
 
@@ -97,14 +98,18 @@ export const DataHub = () => {
     if (creatingToken) return <div>Creating token</div>;
     if (newTokenValue) {
       return (
-        <div className="new-token-message">
-          <p>
-            <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
-            <br />
-            <strong>API Key:</strong> {newTokenValue}
-          </p>
-          <p>This is your only chance to copy it!</p>
-        </div>
+        <SuccessTextBox
+          content={
+            <div className="new-token-message">
+              <p>
+                <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
+                <br />
+                <strong>API Key:</strong> {newTokenValue}
+              </p>
+              <p>This is your only chance to copy it!</p>
+            </div>
+          }
+        />
       );
     }
     return (
