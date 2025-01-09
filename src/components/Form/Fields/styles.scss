@@ -1,0 +1,28 @@
+@import '../../../styles/main';
+
+.field {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 300px;
+
+  label {
+    color: black;
+  }
+
+  input {
+    padding: 3px 5px;
+    background-color: white;
+    color: black;
+    outline: none;
+    border: 1px solid lightgrey;
+
+    &:disabled {
+      background-color: lightgrey;
+    }
+  }
+
+  // &-error {
+  //   color: $error-colour;
+  // }
+}
