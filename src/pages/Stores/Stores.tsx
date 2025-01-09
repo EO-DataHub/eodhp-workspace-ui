@@ -46,14 +46,21 @@ export const Stores = () => {
 
         <TabPanel>
           <div className="tab-content">
+            <p className="tab-content__note">
+              We are still working on some of the backend components for the object store sessions,
+              this may not work for everyone. <br />
+              If you see an error saying &quot;Unexpected Token&quot;, then your account is not yet
+              configured to use the browser-based object store.
+              <br />
+              If you would like to try out this functionality, please get in touch with us.
+            </p>
             <S3Browser />
           </div>
         </TabPanel>
         <TabPanel>
           <div className="tab-content">
-            <p>
-              Block stores are used to store data in blocks. You can create multiple block stores
-              and use them to store data in blocks.
+            <p className="tab-content__note">
+              We have not yet implemented the block store functionality. Please check back later.
             </p>
           </div>
         </TabPanel>

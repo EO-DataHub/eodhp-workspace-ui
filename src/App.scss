@@ -113,4 +113,11 @@
       }
     }
   }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .tab-content__note {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin: 1.5rem 0;
+  }
 }

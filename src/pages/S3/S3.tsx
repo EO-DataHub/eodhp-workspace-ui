@@ -42,7 +42,6 @@ export const S3 = () => {
             <strong>Expiration:</strong> {newTokenValue.expiration}
           </p>
           <p>This is your only chance to copy it!</p>
-          <Button onClick={() => setNewTokenValue(null)}>Dismiss</Button>
         </div>
       ) : null}
 
