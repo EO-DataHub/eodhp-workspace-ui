@@ -19,12 +19,12 @@ const { StorageBrowser } = createStorageBrowser({
       return {
         locations: [
           {
-            bucketName: 'workspaces-eodhp-dev3', // e.g. "my-app-bucket"
-            key: '', // root prefix
+            bucketName: 'workspaces-eodhp-dev3',
+            key: 'james-hinton/', // root prefix
             region: 'eu-west-2', // or your region
             type: 'BUCKET',
             permission: 'READWRITE',
-            scope: 's3://workspaces-eodhp-dev3/',
+            scope: 's3://workspaces-eodhp-dev3/james-hinton/',
           },
         ],
       };
