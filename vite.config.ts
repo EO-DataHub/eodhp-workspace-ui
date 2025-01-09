@@ -6,7 +6,7 @@ import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/static-apps/workspace-ui/main/', // TODO: This will only retrieve the asset from the main branch
+  base: '/static-apps/workspace-ui/eodhp-685-new-workspace-design/', // TODO: This will only retrieve the asset from the main branch
   plugins: [react()],
   resolve: {
     alias: {
