@@ -11,7 +11,7 @@ type ButtonProps = {
 export const Button = ({ onClick, children, className, icon, ...rest }: ButtonProps) => {
   return (
     <button className={`button ${className}`} onClick={onClick} {...rest}>
-      <span className="button__icon">{icon}</span>
+      {icon && <span className="button__icon">{icon}</span>}
       {children}
     </button>
   );
