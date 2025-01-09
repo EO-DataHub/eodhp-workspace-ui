@@ -21,11 +21,11 @@ const { StorageBrowser } = createStorageBrowser({
         locations: [
           {
             bucketName: 'workspaces-eodhp-dev3',
-            key: 'sgillies-tpzuk',
+            key: 'james-hinton',
             region: 'eu-west-2',
             type: 'PREFIX',
             permission: 'READWRITE',
-            scope: 's3://workspaces-eodhp-dev3/sgillies-tpzuk//', // theres a bug in the library that requires both the trailing slashes
+            scope: 's3://workspaces-eodhp-dev3/james-hinton//', // theres a bug in the library that requires both the trailing slashes
           },
         ],
       };

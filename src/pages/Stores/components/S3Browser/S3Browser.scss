@@ -10,7 +10,19 @@
   /* stylelint-disable */
   .storage-browser__navigate__button {
     background: none;
-    color: black;
+    color: var(--text-primary);
+  }
+
+  .storage-browser__table__data {
+    text-align: center;
+  }
+
+  .storage-browser__table__data--size,
+  .storage-browser__table__data--type,
+  .storage-browser__table__data--lastModified {
+    .storage-browser__table__data__text {
+      text-align: center;
+    }
   }
   /* stylelint-enable */
 }
