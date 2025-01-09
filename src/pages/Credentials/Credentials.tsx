@@ -1,5 +1,8 @@
+import cloudIcon from '@/assets/icons/cloud.svg';
+
 import { DataHub } from '../DataHub/DataHub';
 import { S3 } from '../S3/S3';
+
 import './Credentials.scss';
 
 export const Credentials = () => {
@@ -10,7 +13,7 @@ export const Credentials = () => {
           <h2>Credentials</h2>
         </div>
         <div className="header-right">
-          <img alt="Cloud" src="./icons/cloud.svg" />
+          <img alt="Cloud" src={cloudIcon} />
           <div className="header-right-text">
             <span className="header-right-title">Credentials </span> are used as a way to
             authenticate with external services.

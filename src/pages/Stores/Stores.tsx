@@ -6,7 +6,8 @@ import { FiBox } from 'react-icons/fi';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import cloudIcon from '@/assets/icons/cloud.svg';
-import storesDemo from '@/assets/stores-demo.png';
+
+import S3Browser from './components/S3Browser/S3Browser';
 
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -45,7 +46,7 @@ export const Stores = () => {
 
         <TabPanel>
           <div className="tab-content">
-            <img alt="Stores" className="stores-demo" src={storesDemo} />
+            <S3Browser />
           </div>
         </TabPanel>
         <TabPanel>
