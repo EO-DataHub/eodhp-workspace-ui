@@ -3,44 +3,26 @@ import '@aws-amplify/ui-react-storage/storage-browser-styles.css';
 import './S3Browser.scss';
 
 const { StorageBrowser } = createStorageBrowser({
-  // Optional: provide custom elements or keep the default
   elements: elementsDefault,
 
   config: {
-    /**
-     * 1) listLocations():
-     *    Return the S3 buckets and/or prefixes (i.e. “locations”) that
-     *    the user can see in the left-hand side UI.
-     *    For example, you might want to show only one bucket,
-     *    or multiple buckets if your app logic supports that.
-     */
     listLocations: async () => {
-      // Hard-code or dynamically fetch the user’s buckets/prefixes if needed.
-      // nextToken and pageSize are available in `input` for pagination.
+      const resp = await fetch('/api/accounts');
+      const data = await resp.json();
+
       return {
-        locations: [
-          {
-            bucketName: 'workspaces-eodhp-dev3',
-            key: 'james-hinton',
-            region: 'eu-west-2',
-            type: 'PREFIX',
-            permission: 'READWRITE',
-            scope: 's3://workspaces-eodhp-dev3/james-hinton//', // theres a bug in the library that requires both the trailing slashes
-          },
-        ],
+        locations: data.data.accounts[0].workspaces.map((workspace) => ({
+          bucketName: workspace.stores[0].object[0].name,
+          key: workspace.stores[0].object[0].path,
+          region: 'eu-west-2',
+          type: 'PREFIX',
+          permission: 'READWRITE',
+          scope: `s3://${workspace.stores[0].object[0].name}/${workspace.stores[0].object[0].path}/`,
+        })),
       };
     },
 
-    /**
-     * 2) getLocationCredentials():
-     *    Called whenever the user attempts to browse or upload/download
-     *    in a particular “location.” We must return temporary S3 credentials.
-     */
     getLocationCredentials: async () => {
-      // scope => e.g. "s3://YOUR_BUCKET_NAME/"
-      // permission => e.g. "READWRITE"
-
-      // Call your /api endpoint to get fresh S3 credentials
       const resp = await fetch('/api/workspaces/s3/credentials');
       const data = await resp.json();
 
@@ -54,26 +36,12 @@ const { StorageBrowser } = createStorageBrowser({
       };
     },
 
-    /**
-     * 3) region:
-     *    The AWS region where your bucket is located.
-     */
     region: 'eu-west-2',
 
-    /**
-     * 4) registerAuthListener():
-     *    Called if you need to watch changes in user auth state.
-     *    If you don’t need this, you can leave it empty.
-     */
-    registerAuthListener: () => {
-      // e.g. on sign-out from your custom auth, call onStateChange('signedout')
-    },
+    registerAuthListener: () => {},
   },
 });
 
-/**
- * Export a simple functional component that renders the Storage Browser.
- */
 export default function S3Browser() {
   return <StorageBrowser />;
 }

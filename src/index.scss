@@ -25,6 +25,9 @@ body {
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition:
+    color 1s,
+    background-color 1s;
 }
 
 button {
