@@ -33,8 +33,9 @@ export const TopBar = () => {
 
   return (
     <div>
-      <div className="theme-switcher">
-        <Button className="theme-switcher__button" onClick={() => setIsLightTheme(!isLightTheme)}>
+      <div className="disclaimer">
+        <p>The Workspace UI is still in development. Many features are not yet implemented.</p>
+        <Button className="theme-switcher" onClick={() => setIsLightTheme(!isLightTheme)}>
           Set theme to {isLightTheme ? 'dark' : 'light'}
         </Button>
       </div>

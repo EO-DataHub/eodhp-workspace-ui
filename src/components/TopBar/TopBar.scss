@@ -7,6 +7,10 @@
   gap: 1rem;
   padding: 0 3.5rem;
 
+  button {
+    cursor: not-allowed;
+  }
+
   &__left {
     display: flex;
     flex-direction: row;
@@ -36,9 +40,16 @@
   }
 }
 
-.theme-switcher {
+.disclaimer {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  align-items: center;
+  gap: 2rem;
+  font-size: 0.75rem;
+
+  .theme-switcher {
+    margin: 0.5rem;
+  }
 }

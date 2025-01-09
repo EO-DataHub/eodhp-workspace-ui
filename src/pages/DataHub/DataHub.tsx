@@ -105,7 +105,6 @@ export const DataHub = () => {
             <strong>API Key:</strong> {newTokenValue}
           </p>
           <p>This is your only chance to copy it!</p>
-          <Button onClick={() => setNewTokenValue('')}>Dismiss</Button>
         </div>
       );
     }

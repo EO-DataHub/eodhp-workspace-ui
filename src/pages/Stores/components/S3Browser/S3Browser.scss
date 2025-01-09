@@ -11,10 +11,18 @@
   .storage-browser__navigate__button {
     background: none;
     color: var(--text-primary);
+    font-size: 14px;
   }
 
   .storage-browser__table__data {
     text-align: center;
+  }
+
+  .storage-browser__navigate__item {
+    span {
+      padding: 10px 0 !important;
+      font-size: 13px;
+    }
   }
 
   .storage-browser__table__data--size,
