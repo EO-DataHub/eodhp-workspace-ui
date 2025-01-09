@@ -1,17 +1,16 @@
-import './App.scss';
-import 'react-tabs/style/react-tabs.css';
-
 import { useState } from 'react';
 
 import { TopBar } from '@/components/TopBar/TopBar';
 
 import { WorkspaceMenu } from './components/WorkspaceMenu/WorkspaceMenu';
 import { WorkspaceSelection } from './components/WorkspaceSelection/WorkspaceSelection';
+import './App.scss';
+import 'react-tabs/style/react-tabs.css';
 
 export const App = () => {
   const [content, setContent] = useState<React.ReactNode>();
   return (
-    <div className="workspace">
+    <div className="workspace" id="workspace">
       <div className="page-view">
         <TopBar />
 

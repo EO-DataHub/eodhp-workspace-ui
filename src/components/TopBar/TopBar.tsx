@@ -12,7 +12,10 @@ export const TopBar = () => {
   const [isLightTheme, setIsLightTheme] = useState(false);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('light-theme', isLightTheme);
+    const workspace = document.getElementById('workspace');
+    if (workspace) {
+      workspace.classList.toggle('light-theme', isLightTheme);
+    }
   }, [isLightTheme]);
 
   const users = [
