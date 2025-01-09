@@ -7,6 +7,7 @@ import membersIcon from '@/assets/icons/members.svg';
 import notebooksIcon from '@/assets/icons/notebooks.svg';
 import storesIcon from '@/assets/icons/stores.svg';
 import workflowsIcon from '@/assets/icons/workflows.svg';
+import { Catalogue } from '@/pages/Catalogue/Catalogue';
 import { Credentials } from '@/pages/Credentials/Credentials';
 import { Stores } from '@/pages/Stores/Stores';
 
@@ -26,10 +27,11 @@ export const navItems: NavItem[] = [
   {
     label: 'Catalogue',
     icon: catalogueIcon,
+    content: <Catalogue />,
     subItems: [
-      { label: 'Datasets', icon: datasetsIcon },
-      { label: 'Notebooks', icon: notebooksIcon },
-      { label: 'Workflows', icon: workflowsIcon },
+      { label: 'Datasets', icon: datasetsIcon, content: <Catalogue defaultActiveTab={0} /> },
+      { label: 'Notebooks', icon: notebooksIcon, content: <Catalogue defaultActiveTab={1} /> },
+      { label: 'Workflows', icon: workflowsIcon, content: <Catalogue defaultActiveTab={2} /> },
     ],
   },
   { label: 'Linked accounts', icon: linkedAccountsIcon },

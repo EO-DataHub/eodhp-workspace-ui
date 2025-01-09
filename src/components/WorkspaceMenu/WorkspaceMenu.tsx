@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
+import { useWorkspace } from '@/hooks/useWorkspace';
+
 import ComingSoon from './ComingSoon';
 import { NavItem, navItems } from './navigation';
 import './WorkspaceMenu.scss';
@@ -13,7 +15,8 @@ type WorkspaceMenuProps = {
 };
 
 export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
-  const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
+  const { selectedItemPath, setSelectedItemPath } = useWorkspace();
+
   const [expandedSet, setExpandedSet] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -21,7 +24,7 @@ export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
       setSelectedItemPath([navItems[0].label]);
       setContent(navItems[0].content || <ComingSoon title={navItems[0].label} />);
     }
-  }, [setContent]);
+  }, [setContent, setSelectedItemPath]);
 
   const handleToggle = (label: string) => {
     setExpandedSet((prev) => {
@@ -41,6 +44,7 @@ export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
       const hasSubItems = item.subItems && item.subItems.length > 0;
       const isExpanded = hasSubItems && expandedSet.has(item.label);
       const isSelected = selectedItemPath.join('/') === currentPath.join('/');
+      const isSubItemSelected = selectedItemPath.join('/').startsWith(currentPath.join('/'));
 
       return (
         <div
@@ -50,13 +54,17 @@ export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
           <div
             className={`workspace-menu__item-header ${isSelected ? 'active' : ''}`}
             onClick={() => {
-              if (hasSubItems) {
-                handleToggle(item.label);
-              } else {
-                setSelectedItemPath(currentPath);
-
+              if (hasSubItems && isExpanded && !isSubItemSelected) {
                 setContent(item.content || <ComingSoon title={item.label} />);
+                return;
+              } else if (hasSubItems && isSubItemSelected) {
+                handleToggle(item.label);
+                return;
+              } else if (hasSubItems) {
+                handleToggle(item.label);
               }
+              setSelectedItemPath(currentPath);
+              setContent(item.content || <ComingSoon title={item.label} />);
             }}
           >
             {item.icon && (

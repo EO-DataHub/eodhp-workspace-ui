@@ -10,7 +10,7 @@ import 'react-tabs/style/react-tabs.css';
 export const App = () => {
   const [content, setContent] = useState<React.ReactNode>();
   return (
-    <div className="workspace" id="workspace">
+    <div className="workspace light-theme" id="workspace">
       <div className="page-view">
         <TopBar />
 

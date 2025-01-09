@@ -14,7 +14,12 @@ export const TopBar = () => {
   useEffect(() => {
     const workspace = document.getElementById('workspace');
     if (workspace) {
-      workspace.classList.toggle('light-theme', isLightTheme);
+      if (workspace.classList.contains('light-theme') && !isLightTheme) {
+        workspace.classList.remove('light-theme');
+      }
+      if (!workspace.classList.contains('light-theme') && isLightTheme) {
+        workspace.classList.add('light-theme');
+      }
     }
   }, [isLightTheme]);
 
