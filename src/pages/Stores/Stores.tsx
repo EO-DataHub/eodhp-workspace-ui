@@ -5,6 +5,7 @@ import { CiCloudOn } from 'react-icons/ci';
 import { FiBox } from 'react-icons/fi';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
+import cloudIcon from '@/assets/icons/cloud.svg';
 import storesDemo from '@/assets/stores-demo.png';
 
 export const Stores = () => {
@@ -17,7 +18,7 @@ export const Stores = () => {
           <h2>Stores</h2>
         </div>
         <div className="header-right">
-          <img alt="Cloud" src="./icons/cloud.svg" />
+          <img alt="Cloud" src={cloudIcon} />
           <div className="header-right-text">
             <span className="header-right-title">Object stores</span> are used to store data and
             files. You can create multiple object stores and use them to store data and files.
