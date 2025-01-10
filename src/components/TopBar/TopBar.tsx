@@ -10,10 +10,8 @@ export const TopBar = () => {
 
   return (
     <div className="top-bar">
-      <div>
-        <AddAccount />
-      </div>
       <div className="workspace-selection">
+        <AddAccount />
         <label className="workspace-label" htmlFor="workspace-select">
           Change Workspace
         </label>

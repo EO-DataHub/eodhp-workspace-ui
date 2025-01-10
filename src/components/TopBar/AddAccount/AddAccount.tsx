@@ -37,24 +37,19 @@ const AddAccount = () => {
   };
 
   const renderModalContent = () => {
-    if (status === 'running') {
-      return <div>Creating Account</div>;
-    }
     if (status === 'success') {
       return <SuccessTextBox content={'Account created'} />;
     }
-    if (status === 'error') {
-      return <div className="add-account-error">Error creating account {error}</div>;
-    }
     return (
-      <>
+      <div className="add-account-modal-container">
         <Form
           fieldData={ADD_ACCOUNT_FIELDS}
           header={'Create new workspace account'}
           onChange={(data) => setFormData(data)}
         />
+        {status === 'running' && <div className="add-account-error">Creating account</div>}
         <div className="add-account-error">{error}</div>
-      </>
+      </div>
     );
   };
 
@@ -86,27 +81,29 @@ const AddAccount = () => {
       setStatus('running');
       await addAccount();
       setStatus('success');
-    } catch (error) {
-      setStatus('success');
-      setError(error.message);
-    } finally {
       setFormData(getInitialFormValues());
+    } catch (error) {
+      setStatus('error');
+      setError(error.message);
     }
   };
 
   return (
-    <div>
+    <div className="add-account">
       {modal && (
         <Modal
           cancelText={status === 'success' ? 'Dismiss' : 'Cancel'}
           content={renderModalContent()}
           hideSubmit={status === 'success'}
+          submitDisabled={status === 'running'}
           submitText="Create"
           onCancel={() => resetState()}
           onSubmit={async () => await submit()}
         />
       )}
-      <button onClick={() => setModal(true)}>AddAccount</button>
+      <button className="blue-button" onClick={() => setModal(true)}>
+        Add Account
+      </button>
     </div>
   );
 };
