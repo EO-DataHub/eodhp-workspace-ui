@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
-import { useWorkspace } from '@/hooks/useWorkspace';
-
 import ComingSoon from './ComingSoon';
 import { NavItem, navItems } from './navigation';
+import { useWorkspace } from '../../hooks/useWorkspace';
+
 import './WorkspaceMenu.scss';
 
 type WorkspaceMenuProps = {
