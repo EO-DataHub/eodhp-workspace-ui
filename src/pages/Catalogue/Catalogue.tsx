@@ -4,6 +4,8 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
 
+import { Datasets } from './components/Datasets/Datasets';
+
 type CatalogueProps = {
   defaultActiveTab?: number;
 };
@@ -48,9 +50,7 @@ export const Catalogue = ({ defaultActiveTab = 0 }: CatalogueProps) => {
 
         <TabPanel>
           <div className="tab-content">
-            <p className="tab-content__note">
-              We have not yet implemented the saved datasets functionality. Please check back later.
-            </p>
+            <Datasets />
           </div>
         </TabPanel>
         <TabPanel>
