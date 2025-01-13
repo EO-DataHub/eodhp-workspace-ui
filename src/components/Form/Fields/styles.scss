@@ -6,6 +6,11 @@
   width: 80%;
   max-width: 300px;
 
+  &-inline {
+    flex-direction: row !important;
+    gap: 15px;
+  }
+
   label {
     color: black;
   }
@@ -16,6 +21,20 @@
     color: black;
     outline: none;
     border: 1px solid lightgrey;
+    font-size: 20px;
+
+    &:disabled {
+      background-color: lightgrey;
+    }
+  }
+
+  textarea {
+    padding: 3px 5px;
+    background-color: white;
+    color: black;
+    outline: none;
+    border: 1px solid lightgrey;
+    font-size: 20px;
 
     &:disabled {
       background-color: lightgrey;
@@ -24,5 +43,9 @@
 
   &-error {
     color: $error-colour;
+  }
+
+  &-textarea {
+    resize: vertical;
   }
 }

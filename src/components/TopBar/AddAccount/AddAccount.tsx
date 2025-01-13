@@ -13,13 +13,36 @@ const ADD_ACCOUNT_FIELDS: Field[] = [
     type: 'string',
     value: '',
   },
+  {
+    externalName: 'Organisation name',
+    internalName: 'organisation_name',
+    type: 'string',
+    value: '',
+  },
+  {
+    externalName: 'Organisation address',
+    internalName: 'organisation_address',
+    type: 'string',
+    value: '',
+  },
+  {
+    externalName: 'Reason for account opening',
+    internalName: 'account_opening_reason',
+    type: 'textarea',
+    value: '',
+  },
+  {
+    externalName: 'Accept Terms and Conditions',
+    internalName: 'terms_and_conditions',
+    type: 'boolean',
+    value: '',
+  },
 ];
 
 type Status = 'default' | 'running' | 'success' | 'error';
 
 const AddAccount = () => {
   const [modal, setModal] = useState<boolean>();
-  const [error, setError] = useState<string>('');
   const [status, setStatus] = useState<Status>('default');
 
   const getInitialFormValues = () => {
@@ -28,10 +51,13 @@ const AddAccount = () => {
     return values;
   };
   const [formData, setFormData] = useState<{ [key: string]: string }>(() => getInitialFormValues());
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+  const [requestError, setRequestError] = useState<string>();
 
   const resetState = () => {
     setStatus('default');
-    setError('');
+    setFormErrors([]);
+    setRequestError('');
     setModal(false);
     setFormData(getInitialFormValues());
   };
@@ -48,18 +74,24 @@ const AddAccount = () => {
           onChange={(data) => setFormData(data)}
         />
         {status === 'running' && <div className="add-account-error">Creating account</div>}
-        <div className="add-account-error">{error}</div>
+        {requestError && <div className="add-account-errors__error">{requestError}</div>}
+        {!!formErrors.length && (
+          <ul className="add-account-errors">
+            {formErrors.map((error) => (
+              <li key={error} className="add-account-errors__error">
+                {error}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     );
   };
 
   const addAccount = async () => {
-    const body = {
-      name: formData['name'],
-    };
     const res = await fetch(`/api/accounts`, {
       method: 'POST',
-      body: JSON.stringify(body),
+      body: JSON.stringify(formData),
     });
     if (!res.ok) {
       throw new Error('Error creating account');
@@ -67,12 +99,24 @@ const AddAccount = () => {
   };
 
   const validate = () => {
-    let valid = true;
+    const errors: string[] = [];
     if (!formData['name']) {
-      valid = false;
-      setError('Account name must not be empty');
+      errors.push('Account name must not be empty');
     }
-    return valid;
+    if (!formData['organisation_name']) {
+      errors.push('Organisation name must not be empty');
+    }
+    if (!formData['organisation_address']) {
+      errors.push('Organisation address must not be empty');
+    }
+    if (!formData['account_opening_reason']) {
+      errors.push('Please provide a reason for why you are requesting to open an account');
+    }
+    if (!formData['terms_and_conditions']) {
+      errors.push('Please accept the terms and conditions');
+    }
+    setFormErrors(errors);
+    return !errors.length;
   };
 
   const submit = async () => {
@@ -84,7 +128,7 @@ const AddAccount = () => {
       setFormData(getInitialFormValues());
     } catch (error) {
       setStatus('error');
-      setError(error.message);
+      setRequestError(error.message);
     }
   };
 

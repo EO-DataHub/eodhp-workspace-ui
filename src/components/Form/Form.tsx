@@ -1,8 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import './styles.scss';
+import BooleanField from './Fields/BooleanField/BooleanField';
 import NumberField from './Fields/NumberField/NumberField';
 import StringField from './Fields/StringField/StringField';
+import TextareaField from './Fields/TextareaField/TextareaField';
 import { Field, InputFieldProps } from './Fields/types';
 
 interface FormProps {
@@ -14,6 +16,8 @@ interface FormProps {
 const FIELD_MAP: { [key: string]: React.FC<InputFieldProps> } = {
   string: StringField,
   number: NumberField,
+  textarea: TextareaField,
+  boolean: BooleanField,
 };
 
 const Form = ({ fieldData, header, onChange }: FormProps) => {

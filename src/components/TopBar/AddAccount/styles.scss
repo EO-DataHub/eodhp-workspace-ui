@@ -1,8 +1,17 @@
 @import '../../../styles/main';
 
 .add-account {
-  &-error {
+  &-errors {
     color: $error-colour;
+    border: 1px solid $error-colour;
+    border-radius: 12px;
+    padding: 15px;
+    padding-left: 30px;
+    margin-top: 15px;
+
+    &__error {
+      color: $error-colour;
+    }
   }
 
   &-modal-container {
