@@ -2,12 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { IoMdPersonAdd } from 'react-icons/io';
 import { MdPersonRemove } from 'react-icons/md';
-import Select from 'react-select';
-
-import { useWorkspace } from '@/hooks/useWorkspace';
 
 import './TopBar.scss';
-import AddAccount from './AddAccount/AddAccount';
 import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
 import { Button } from '../Button/Button';
 import { ProfileTile } from '../ProfileTile/ProfileTile';
