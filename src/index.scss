@@ -1,4 +1,18 @@
-:root {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+.workspace {
+  background-color: var(--background);
+  color: var(--text-primary);
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -7,23 +21,29 @@
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition:
+    color 1s,
+    background-color 1s;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
 }
 
-body {
-  height: 100%;
-  width: 100%;
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  color: var(--text-primary);
 }
 
-.not-implemented {
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.icon-primary {
+  color: var(--icon-primary);
+}
+
+.icon-secondary {
+  color: var(--icon-secondary);
 }

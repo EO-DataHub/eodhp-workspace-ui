@@ -11,6 +11,9 @@ export type WorkspaceContextType = {
 
   activeApplication?: string;
   setActiveApplication?: Dispatch<SetStateAction<string>>;
+
+  selectedItemPath?: string[];
+  setSelectedItemPath?: Dispatch<SetStateAction<string[]>>;
 };
 
 type WorkspaceProviderProps = {
@@ -27,6 +30,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     AVAILABLE_WORKSPACES[0],
   );
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
+  const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
 
   return (
     <WorkspaceContext.Provider
@@ -36,6 +40,8 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         setActiveWorkspace,
         activeApplication,
         setActiveApplication,
+        selectedItemPath,
+        setSelectedItemPath,
         ...initialState,
       }}
     >

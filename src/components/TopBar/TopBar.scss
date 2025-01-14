@@ -1,35 +1,55 @@
 .top-bar {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 12.5rem;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 7rem;
   gap: 1rem;
+  padding: 0 3.5rem;
 
-  .heading {
-    font-size: 2rem;
-    font-weight: bold;
+  button {
+    cursor: not-allowed;
   }
 
-  .date {
-    font-size: 0.875rem;
-    color: #666;
-  }
-
-  .workspace-selection {
+  &__left {
     display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  @media (width <= 900px) {
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    height: auto;
+    margin: 3rem 0;
     width: 100%;
 
-    .workspace-label {
-      font-size: 0.8rem;
-      color: #666;
-      font-weight: 300;
+    &__left,
+    &__right {
+      width: 100%;
+      justify-content: center;
     }
+  }
+}
 
-    .workspace-select {
-      width: 25rem;
-    }
+.disclaimer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2rem;
+  font-size: 0.75rem;
+
+  .theme-switcher {
+    margin: 0.5rem;
   }
 }

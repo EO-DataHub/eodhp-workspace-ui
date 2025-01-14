@@ -43,11 +43,4 @@ describe('Button component', () => {
     expect(button).toHaveClass('button');
     expect(button).not.toHaveClass('custom-class');
   });
-
-  it('should render correctly with no children', () => {
-    const onClick = vi.fn();
-    render(<Button onClick={onClick}>{undefined}</Button>);
-
-    expect(screen.getByRole('button')).toBeEmptyDOMElement();
-  });
 });

@@ -1,0 +1,19 @@
+.data-hub {
+  .token-list {
+    .token {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      margin: 10px 0;
+
+      &-col {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    &-header {
+      margin-top: 3rem;
+    }
+  }
+}

@@ -1,7 +1,23 @@
-$primary-colour: #2a3559;
-$secondary-colour: #4c72ba;
-$primary-text-colour: black;
-$secondary-text-colour: #aaabb1;
-$sidebar-background: #efefef;
-$hover-colour: #f5f5f5;
-$error-colour: #df1919;
+.workspace {
+  /* Dark Theme (default) */
+  --background: #060606;
+  --text-primary: #fff;
+  --text-secondary: #757575;
+  --button-bg: #4c72ba;
+  --button-text: #fff;
+  --icon-primary: #fff;
+  --icon-secondary: #2c2c2c;
+  --content-border: 1px solid #f5f5f527;
+}
+
+.light-theme {
+  /* Light Theme overrides */
+  --background: #fff;
+  --text-primary: #000;
+  --text-secondary: #969696;
+  --button-bg: #4c72ba;
+  --button-text: #fff;
+  --icon-primary: #333;
+  --icon-secondary: #666;
+  --content-border: 1px solid rgb(128 128 128 / 15.8%);
+}
