@@ -1,30 +1,123 @@
+@import '@/styles/main';
+
 .workspace {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   height: 100%;
-  min-height: 100vh;
 
-  .content {
-    max-width: 1200px;
+  .page-view {
+    max-width: 2400px;
     width: 100%;
-    padding: 0 20px;
+    height: 100%;
+
+    .content {
+      display: flex;
+      width: 100%;
+
+      .workspace-selection {
+        width: 105px;
+        flex-shrink: 0;
+      }
+
+      .workspace-menu {
+        flex: 1;
+        min-width: 225px;
+      }
+
+      .workspace-content {
+        flex: 5;
+      }
+
+      .content-page {
+        padding: 2rem;
+        width: 90%;
+
+        .header {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: flex-start;
+          width: 100%;
+          margin-bottom: 2rem;
+
+          .header-left {
+            flex: 1 1 60%;
+            min-width: 300px;
+            margin-bottom: 1rem;
+          }
+
+          .header-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            gap: 1rem;
+            color: var(--text-secondary);
+            flex: 1 1 40%;
+            min-width: 300px;
+
+            &-title {
+              color: var(--text-primary);
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .content-border {
+    border: var(--content-border);
   }
 }
 
-.react-tabs {
-  &__tab {
-    width: 200px !important;
-    text-align: center;
+.tabs {
+  .tab-list {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    list-style: none;
 
-    &-list {
-      border-bottom: 1px solid #cfcfcf !important;
+    .active {
+      position: relative;
+      color: var(--text-primary) !important;
+
+      svg {
+        fill: var(--button-bg);
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--button-bg);
+      }
     }
 
-    &:hover {
-      background-color: #f5f5f5;
-      border-radius: 5px 5px 0 0;
+    .tab {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      user-select: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+
+      svg {
+        margin-right: 0.5rem;
+        height: 1rem;
+        width: 1rem;
+      }
     }
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .tab-content__note {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin: 1.5rem 0;
   }
 }

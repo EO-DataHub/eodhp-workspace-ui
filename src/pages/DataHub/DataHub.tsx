@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import '../../styles/main.scss';
+import './DataHub.scss';
 
+import { Button } from '@/components/Button/Button';
 import { Field } from '@/components/Form/Fields/types';
 import Form from '@/components/Form/Form';
 import SuccessTextBox from '@/components/Info/Success/SuccessTextBox';
@@ -144,34 +145,35 @@ export const DataHub = () => {
         </p>
       ) : null}
 
-      <button className="blue-button" disabled={loading} onClick={() => setModal(true)}>
+      <Button disabled={loading} onClick={() => setModal(true)}>
         Request New Token
-      </button>
+      </Button>
 
       {tokens.length > 0 ? (
         <div className="token-list">
+          <h2 className="token-list-header">Active Tokens</h2>
           <ul>
             {tokens.reverse().map((token) => (
-              <li key={token.id}>
-                <div>
-                  <h3>Name</h3>
+              <li key={token.id} className="token">
+                <div className="token-col">
+                  <strong>Name</strong>
                   <span className="token-info">{token.name}</span>
                 </div>
-                <div>
-                  <h3>Scope</h3>
+                <div className="token-col">
+                  <strong>Scope</strong>
                   <span className="token-info">{token.scope}</span>
                 </div>
-                <div>
-                  <h3>Created</h3>
+                <div className="token-col">
+                  <strong>Created</strong>
                   <span className="token-info">{token.created}</span>
                 </div>
-                <div>
-                  <h3>Expiry</h3>
+                <div className="token-col">
+                  <strong>Expiry</strong>
                   <span className="token-info">{token.expiry}</span>
                 </div>
-                <button disabled={loading} onClick={() => handleDeleteToken(token.id)}>
+                <Button disabled={loading} onClick={() => handleDeleteToken(token.id)}>
                   Delete
-                </button>
+                </Button>
               </li>
             ))}
           </ul>

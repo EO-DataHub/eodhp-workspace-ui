@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { Button } from '@/components/Button/Button';
 import { createToken } from '@/services/S3Service';
 
 export const S3 = () => {
@@ -41,13 +42,15 @@ export const S3 = () => {
             <strong>Expiration:</strong> {newTokenValue.expiration}
           </p>
           <p>This is your only chance to copy it!</p>
-          <button onClick={() => setNewTokenValue(null)}>Dismiss</button>
         </div>
       ) : null}
 
-      <button className="create-token" disabled={loading} onClick={handleCreateToken}>
+      {/* <button className="create-token" disabled={loading} onClick={handleCreateToken}>
         Request Temporary AWS S3 Credentials
-      </button>
+      </button> */}
+      <Button className="create-token" disabled={loading} onClick={handleCreateToken}>
+        Request Temporary AWS S3 Credentials
+      </Button>
     </div>
   );
 };

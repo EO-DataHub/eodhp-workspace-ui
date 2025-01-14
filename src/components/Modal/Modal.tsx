@@ -1,6 +1,8 @@
 import React, { ReactElement } from 'react';
+
 import './styles.scss';
 import '../../styles/main.scss';
+import { Button } from '../Button/Button';
 
 interface ModalProps {
   onSubmit: () => void;
@@ -28,15 +30,11 @@ const Modal = ({
       <div className="modal-content-container">
         <div className="modal-content">{content}</div>
         <div className="modal-content-buttons">
-          {!hideCancel && (
-            <button className="blue-button" onClick={() => onCancel()}>
-              {cancelText || 'Cancel'}
-            </button>
-          )}
+          {!hideCancel && <Button onClick={() => onCancel()}>{cancelText || 'Cancel'}</Button>}
           {!hideSubmit && (
-            <button className="blue-button" disabled={submitDisabled} onClick={() => onSubmit()}>
+            <Button disabled={submitDisabled} onClick={() => onSubmit()}>
               {submitText || 'Submit'}
-            </button>
+            </Button>
           )}
         </div>
       </div>

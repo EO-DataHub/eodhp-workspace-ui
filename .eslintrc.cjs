@@ -9,6 +9,10 @@ module.exports = {
         map: [
           ['@/*', 'src/*'],
           ['msw/browser', './node_modules/msw/browser'],
+          [
+            '@aws-amplify/ui-react-storage/browser',
+            'node_modules/@aws-amplify/ui-react-storage/dist/esm/browser/index.js'
+          ],
         ],
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
       },

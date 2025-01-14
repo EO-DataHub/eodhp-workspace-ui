@@ -1,49 +1,68 @@
+import { useEffect, useState } from 'react';
+
+import { IoMdPersonAdd } from 'react-icons/io';
+import { MdPersonRemove } from 'react-icons/md';
 import Select from 'react-select';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import './TopBar.scss';
 import AddAccount from './AddAccount/AddAccount';
+import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
+import { Button } from '../Button/Button';
+import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 export const TopBar = () => {
-  const { availableWorkspaces, activeWorkspace, setActiveWorkspace } = useWorkspace();
+  const [isLightTheme, setIsLightTheme] = useState(true);
+
+  useEffect(() => {
+    const workspace = document.getElementById('workspace');
+    if (workspace) {
+      if (workspace.classList.contains('light-theme') && !isLightTheme) {
+        workspace.classList.remove('light-theme');
+      }
+      if (!workspace.classList.contains('light-theme') && isLightTheme) {
+        workspace.classList.add('light-theme');
+      }
+    }
+  }, [isLightTheme]);
+
+  const users = [
+    { id: 1, name: 'Peter Newton' },
+    { id: 2, name: 'Alice Nguyen' },
+    { id: 3, name: 'Paul Nasser' },
+    { id: 4, name: 'Anil Kapoor' },
+    { id: 5, name: 'Phil Murray' },
+    { id: 6, name: 'Bobby Fischer' },
+    { id: 7, name: 'Carla Rossi' },
+    { id: 8, name: 'Diane Chang' },
+    { id: 9, name: 'Evelyn Wood' },
+    { id: 10, name: 'Frank Black' },
+  ];
 
   return (
-    <div className="top-bar">
-      <div className="workspace-selection">
-        <AddAccount />
-        <label className="workspace-label" htmlFor="workspace-select">
-          Change Workspace
-        </label>
-        <Select
-          className="workspace-select"
-          defaultValue={{ value: activeWorkspace, label: activeWorkspace }}
-          id="workspace-select"
-          options={availableWorkspaces.map((workspace) => ({ value: workspace, label: workspace }))}
-          theme={(theme) => ({
-            ...theme,
-            borderRadius: 0,
-            colors: {
-              ...theme.colors,
-              primary: '#2a3559',
-              primary25: '#2a355930',
-            },
-          })}
-          onChange={(selectedOption) => setActiveWorkspace(selectedOption?.value)}
-        />
+    <div>
+      <div className="disclaimer">
+        <p>The Workspace UI is still in development. Many features are not yet implemented.</p>
+        <Button className="theme-switcher" onClick={() => setIsLightTheme(!isLightTheme)}>
+          Set theme to {isLightTheme ? 'dark' : 'light'}
+        </Button>
       </div>
+      <div className="top-bar">
+        <div className="top-bar__left">
+          <ProfileTile borderColor="#a19d9d" color="#4c72ba" username="EO" />
+          <h2>EODH Workspace</h2>
+        </div>
 
-      <div>
-        <p className="heading">Your Workspace</p>
-        <p className="date">
-          {activeWorkspace} -{' '}
-          {new Date().toLocaleDateString('en-US', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}
-        </p>
+        <div className="top-bar__right">
+          <Button icon={<IoMdPersonAdd />} onClick={() => console.log('Add member clicked')}>
+            Add Member
+          </Button>
+          <Button icon={<MdPersonRemove />} onClick={() => console.log('Remove member clicked')}>
+            Remove Member
+          </Button>
+          <WorkspaceMembers users={users} />
+        </div>
       </div>
     </div>
   );
