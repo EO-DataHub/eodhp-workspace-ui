@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 export interface InputFieldProps {
   field: Field;
   onFieldChange: (internalName: string, value: string | number | boolean) => void;
@@ -6,7 +8,7 @@ export interface InputFieldProps {
 
 export type Field = {
   internalName: string;
-  externalName: string;
+  externalName: string | ReactElement;
   value: string | number | null | undefined;
   type: 'string' | 'number' | 'textarea' | 'boolean';
   min?: number;

@@ -32,7 +32,14 @@ const ADD_ACCOUNT_FIELDS: Field[] = [
     value: '',
   },
   {
-    externalName: 'Accept Terms and Conditions',
+    externalName: (
+      <>
+        Accept{' '}
+        <a href="/" target="_blank">
+          Terms and Conditions
+        </a>
+      </>
+    ),
     internalName: 'terms_and_conditions',
     type: 'boolean',
     value: '',
