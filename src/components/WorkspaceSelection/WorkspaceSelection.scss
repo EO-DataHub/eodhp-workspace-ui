@@ -12,9 +12,10 @@
   &__tiles {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
     justify-content: center;
     align-items: center;
     margin-bottom: 5rem;
+    overflow-y: auto;
   }
 }

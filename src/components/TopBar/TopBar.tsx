@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react';
 import { IoMdPersonAdd } from 'react-icons/io';
 import { MdPersonRemove } from 'react-icons/md';
 
+import { useWorkspace } from '@/hooks/useWorkspace';
+
 import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
 import { Button } from '../Button/Button';
 import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 export const TopBar = () => {
+  const { activeWorkspace } = useWorkspace();
   const [isLightTheme, setIsLightTheme] = useState(true);
 
   useEffect(() => {
@@ -45,10 +48,12 @@ export const TopBar = () => {
         </Button>
       </div>
       <div className="top-bar">
-        <div className="top-bar__left">
-          <ProfileTile borderColor="#a19d9d" color="#4c72ba" username="EO" />
-          <h2>EODH Workspace</h2>
-        </div>
+        {activeWorkspace && (
+          <div className="top-bar__left">
+            <ProfileTile borderColor="#a19d9d" color="#4c72ba" username={activeWorkspace.name} />
+            <h2>EODH Workspace</h2>
+          </div>
+        )}
 
         <div className="top-bar__right">
           <Button icon={<IoMdPersonAdd />} onClick={() => console.log('Add member clicked')}>
