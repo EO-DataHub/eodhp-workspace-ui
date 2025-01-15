@@ -27,7 +27,7 @@ export const WorkspaceContext = createContext<WorkspaceContextType | null>(null)
 WorkspaceContext.displayName = 'WorkspaceContext';
 
 export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProviderProps) => {
-  const [availableWorkspaces, setAvailableWorkspaces] = useState<Workspace[]>(); // eslint-disable-line
+  const [availableWorkspaces, setAvailableWorkspaces] = useState<Workspace[]>();
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace>();
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
