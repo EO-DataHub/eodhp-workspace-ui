@@ -1,19 +1,21 @@
-import { Dispatch, ReactNode, SetStateAction, createContext, useState } from 'react';
+import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
-import { AVAILABLE_WORKSPACES } from './placeholders';
+import { Workspace } from './types';
 
 export type WorkspaceContextType = {
-  availableWorkspaces: string[];
-  setAvailableWorkspaces?: Dispatch<SetStateAction<string[]>>;
+  availableWorkspaces: Workspace[];
+  setAvailableWorkspaces?: Dispatch<SetStateAction<Workspace[]>>;
 
-  activeWorkspace?: string;
-  setActiveWorkspace?: Dispatch<SetStateAction<string>>;
+  activeWorkspace?: Workspace;
+  setActiveWorkspace?: Dispatch<SetStateAction<Workspace>>;
 
   activeApplication?: string;
   setActiveApplication?: Dispatch<SetStateAction<string>>;
 
   selectedItemPath?: string[];
   setSelectedItemPath?: Dispatch<SetStateAction<string[]>>;
+
+  selectWorkspace: (workspace: Workspace) => void;
 };
 
 type WorkspaceProviderProps = {
@@ -25,12 +27,39 @@ export const WorkspaceContext = createContext<WorkspaceContextType | null>(null)
 WorkspaceContext.displayName = 'WorkspaceContext';
 
 export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProviderProps) => {
-  const [availableWorkspaces, setAvailableWorkspaces] = useState<string[]>(AVAILABLE_WORKSPACES); // eslint-disable-line
-  const [activeWorkspace, setActiveWorkspace] = useState<string | undefined>(
-    AVAILABLE_WORKSPACES[0],
-  );
+  const [availableWorkspaces, setAvailableWorkspaces] = useState<Workspace[]>();
+  const [activeWorkspace, setActiveWorkspace] = useState<Workspace>();
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
+
+  useEffect(() => {
+    const getWorkspaces = async () => {
+      const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
+      let storedWorkspace: Workspace;
+      if (storedWorkspaceStr) {
+        storedWorkspace = JSON.parse(storedWorkspaceStr);
+      }
+
+      try {
+        const res = await fetch(`/api/workspaces`);
+        if (!res.ok) {
+          throw new Error();
+        }
+        const workspaces = await res.json();
+        setAvailableWorkspaces(workspaces);
+        setActiveWorkspace(storedWorkspace || workspaces[0]);
+      } catch (error) {
+        console.error('Error retrieving workspaces');
+        if (storedWorkspace) setActiveWorkspace(storedWorkspace);
+      }
+    };
+    getWorkspaces();
+  }, []);
+
+  const selectWorkspace = (workspace: Workspace) => {
+    window.localStorage.setItem('activeWorkspace', JSON.stringify(workspace));
+    setActiveWorkspace(workspace);
+  };
 
   return (
     <WorkspaceContext.Provider
@@ -42,6 +71,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         setActiveApplication,
         selectedItemPath,
         setSelectedItemPath,
+        selectWorkspace,
         ...initialState,
       }}
     >
