@@ -1,6 +1,10 @@
 .workspace-selection {
   padding: 0.275rem;
 
+  .profile-tile {
+    cursor: pointer;
+  }
+
   &__title {
     font-size: 0.75rem;
     text-overflow: ellipsis;

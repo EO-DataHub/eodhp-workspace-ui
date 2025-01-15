@@ -9,8 +9,8 @@ export type Workspace = {
 };
 
 type Store = {
-  object: ObjectStore;
-  block: Block;
+  object: ObjectStore[];
+  block: Block[];
 };
 
 type ObjectStore = {
