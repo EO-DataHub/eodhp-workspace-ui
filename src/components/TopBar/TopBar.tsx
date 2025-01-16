@@ -5,6 +5,9 @@ import { IoMdPersonAdd } from 'react-icons/io';
 import { MdPersonRemove } from 'react-icons/md';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
+import { getMembers } from '@/services/members/members';
+import { placeholderMembers } from '@/services/members/placeholder';
+import { Member } from '@/services/members/types';
 
 import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
 import { Button } from '../Button/Button';
@@ -13,6 +16,7 @@ import { ProfileTile } from '../ProfileTile/ProfileTile';
 export const TopBar = () => {
   const { activeWorkspace } = useWorkspace();
   const [isLightTheme, setIsLightTheme] = useState(true);
+  const [members, setMembers] = useState<Member[]>();
 
   useEffect(() => {
     const workspace = document.getElementById('workspace');
@@ -26,18 +30,17 @@ export const TopBar = () => {
     }
   }, [isLightTheme]);
 
-  const users = [
-    { id: 1, name: 'Peter Newton' },
-    { id: 2, name: 'Alice Nguyen' },
-    { id: 3, name: 'Paul Nasser' },
-    { id: 4, name: 'Anil Kapoor' },
-    { id: 5, name: 'Phil Murray' },
-    { id: 6, name: 'Bobby Fischer' },
-    { id: 7, name: 'Carla Rossi' },
-    { id: 8, name: 'Diane Chang' },
-    { id: 9, name: 'Evelyn Wood' },
-    { id: 10, name: 'Frank Black' },
-  ];
+  useEffect(() => {
+    const func = async () => {
+      try {
+        const _members = await getMembers(activeWorkspace.id);
+        setMembers(_members);
+      } catch (error) {
+        setMembers(placeholderMembers);
+      }
+    };
+    func();
+  }, [activeWorkspace]);
 
   return (
     <div>
@@ -62,7 +65,7 @@ export const TopBar = () => {
           <Button icon={<MdPersonRemove />} onClick={() => console.log('Remove member clicked')}>
             Remove Member
           </Button>
-          <WorkspaceMembers users={users} />
+          {members && <WorkspaceMembers members={members} />}
         </div>
       </div>
     </div>
