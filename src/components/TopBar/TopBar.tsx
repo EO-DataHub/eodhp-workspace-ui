@@ -89,7 +89,7 @@ export const TopBar = () => {
 
   const getAndSetMembers = async () => {
     try {
-      const _members = await getMembers(activeWorkspace.id);
+      const _members = await getMembers(activeWorkspace.name);
       setMembers(_members);
     } catch (error) {
       console.error('Error getting workspace members');
@@ -187,7 +187,7 @@ export const TopBar = () => {
               id: formData.id,
             };
             try {
-              await addMember(activeWorkspace.id, member);
+              await addMember(activeWorkspace.name, member);
               await getAndSetMembers();
             } catch (error) {
               console.error(`Error adding member ${member.id}`);
