@@ -7,7 +7,6 @@ import { MdPersonRemove } from 'react-icons/md';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { addMember, getMembers } from '@/services/members/members';
-import { placeholderMembers } from '@/services/members/placeholder';
 import { Member } from '@/services/members/types';
 
 import DeleteRow from './components/DeleteRow/DeleteRow';
@@ -93,7 +92,7 @@ export const TopBar = () => {
       const _members = await getMembers(activeWorkspace.id);
       setMembers(_members);
     } catch (error) {
-      setMembers(placeholderMembers);
+      console.error('Error getting workspace members');
     }
   };
 
