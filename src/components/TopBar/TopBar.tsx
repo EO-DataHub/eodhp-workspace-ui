@@ -121,7 +121,7 @@ export const TopBar = () => {
               <DeleteRow
                 key={member.id}
                 member={member}
-                onDeleteSuccess={() => getAndSetMembers()}
+                onDeleteSuccess={async () => await getAndSetMembers()}
               />
             );
           })}
@@ -189,8 +189,10 @@ export const TopBar = () => {
             try {
               await addMember(activeWorkspace.name, member);
               await getAndSetMembers();
+              setFormData(initialFormData());
+              setModal(false);
             } catch (error) {
-              console.error(`Error adding member ${member.id}`);
+              setFormErrors(['Error adding member']);
             }
           }}
         />
