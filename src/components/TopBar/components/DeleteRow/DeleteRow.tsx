@@ -39,6 +39,7 @@ const DeleteRow = ({ member, onDeleteSuccess }: DeleteRowProps) => {
               await deleteMember(activeWorkspace.name, member.id);
               await onDeleteSuccess();
             } catch (error) {
+              console.error(error);
               console.error(`Error deleting ${member.id}`);
             }
           }}

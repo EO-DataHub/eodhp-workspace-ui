@@ -92,6 +92,7 @@ export const TopBar = () => {
       const _members = await getMembers(activeWorkspace.name);
       setMembers(_members);
     } catch (error) {
+      console.error(error);
       console.error('Error getting workspace members');
     }
   };
