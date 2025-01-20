@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import './TopBar.scss';
 import { useEffect, useState } from 'react';
 
 import { IoMdPersonAdd } from 'react-icons/io';
-import { MdDelete, MdPersonRemove } from 'react-icons/md';
+import { MdPersonRemove } from 'react-icons/md';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
-import { deleteMember, getMembers } from '@/services/members/members';
+import { addMember, getMembers } from '@/services/members/members';
 import { placeholderMembers } from '@/services/members/placeholder';
 import { Member } from '@/services/members/types';
 
+import DeleteRow from './components/DeleteRow/DeleteRow';
 import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
 import { Button } from '../Button/Button';
 import { Field } from '../Form/Fields/types';
@@ -53,11 +52,22 @@ const ADD_MEMBER_FIELDS: Field[] = [
 ];
 
 export const TopBar = () => {
-  const { activeWorkspace } = useWorkspace();
+  const { activeWorkspace, isWorkspaceOwner } = useWorkspace();
   const [isLightTheme, setIsLightTheme] = useState(true);
   const [members, setMembers] = useState<Member[]>();
   const [modal, setModal] = useState<boolean>(false);
   const [modalStatus, setModalStatus] = useState<'add' | 'remove'>();
+  const [formErrors, setFormErrors] = useState<string[]>();
+
+  const initialFormData = () => {
+    const data = {};
+    ADD_MEMBER_FIELDS.forEach((field) => {
+      data[field.internalName] = field.value;
+    });
+    return data;
+  };
+
+  const [formData, setFormData] = useState<{ [key: string]: string }>(initialFormData);
 
   useEffect(() => {
     const workspace = document.getElementById('workspace');
@@ -90,11 +100,18 @@ export const TopBar = () => {
   const renderModalContent = () => {
     if (modalStatus === 'add') {
       return (
-        <Form
-          fieldData={ADD_MEMBER_FIELDS}
-          header={'Add member'}
-          onChange={(data) => console.log(data)}
-        />
+        <div className="top-bar-form-container">
+          <Form
+            fieldData={ADD_MEMBER_FIELDS}
+            header={'Add member'}
+            onChange={(data) => setFormData(data)}
+          />
+          <ul className="top-bar-form-container__errors">
+            {formErrors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
       );
     }
     if (modalStatus === 'remove') {
@@ -102,19 +119,11 @@ export const TopBar = () => {
         <div>
           {members.map((member) => {
             return (
-              <div key={member.id} className="top-bar-remove__row">
-                <ProfileTile username={member.username} />
-                <span>{member.username}</span>
-                <div
-                  className="top-bar-remove__row-delete"
-                  onClick={async () => {
-                    await deleteMember(activeWorkspace.id, member.id);
-                    await getAndSetMembers();
-                  }}
-                >
-                  <MdDelete />
-                </div>
-              </div>
+              <DeleteRow
+                key={member.id}
+                member={member}
+                onDeleteSuccess={() => getAndSetMembers()}
+              />
             );
           })}
         </div>
@@ -122,13 +131,69 @@ export const TopBar = () => {
     }
   };
 
+  const renderMemberButtons = () => {
+    if (!isWorkspaceOwner) return null;
+    return (
+      <>
+        <Button
+          icon={<IoMdPersonAdd />}
+          onClick={() => {
+            setModalStatus('add');
+            setModal(true);
+          }}
+        >
+          Add Member
+        </Button>
+        <Button
+          icon={<MdPersonRemove />}
+          onClick={() => {
+            setModalStatus('remove');
+            setModal(true);
+          }}
+        >
+          Remove Member
+        </Button>
+      </>
+    );
+  };
+
+  const validateAddMember = () => {
+    const errors = [];
+    if (!formData['id']) {
+      errors.push("Please enter the user's Id");
+    }
+    setFormErrors(errors);
+    return !errors.length;
+  };
+
   return (
     <div>
       {modal && (
         <Modal
+          cancelText="Close"
           content={renderModalContent()}
-          onCancel={() => setModal(false)}
-          onSubmit={() => console.log('Submit')}
+          hideSubmit={modalStatus === 'add' ? false : true}
+          onCancel={() => {
+            setModal(false);
+            setFormData(initialFormData);
+            setFormErrors([]);
+          }}
+          onSubmit={async () => {
+            if (!validateAddMember()) return;
+            const member: Member = {
+              email: formData.email,
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              username: formData.username,
+              id: formData.id,
+            };
+            try {
+              await addMember(activeWorkspace.id, member);
+              await getAndSetMembers();
+            } catch (error) {
+              console.error(`Error adding member ${member.id}`);
+            }
+          }}
         />
       )}
       <div className="disclaimer">
@@ -141,29 +206,12 @@ export const TopBar = () => {
         {activeWorkspace && (
           <div className="top-bar__left">
             <ProfileTile borderColor="#a19d9d" color="#4c72ba" username={activeWorkspace.name} />
-            <h2>EODH Workspace</h2>
+            <h2>{activeWorkspace.name} Workspace</h2>
           </div>
         )}
 
         <div className="top-bar__right">
-          <Button
-            icon={<IoMdPersonAdd />}
-            onClick={() => {
-              setModalStatus('add');
-              setModal(true);
-            }}
-          >
-            Add Member
-          </Button>
-          <Button
-            icon={<MdPersonRemove />}
-            onClick={() => {
-              setModalStatus('remove');
-              setModal(true);
-            }}
-          >
-            Remove Member
-          </Button>
+          {renderMemberButtons()}
           {members && <WorkspaceMembers members={members} />}
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
-import { Workspace } from './types';
+import { Account, Workspace } from './types';
 
 export type WorkspaceContextType = {
   availableWorkspaces: Workspace[];
@@ -16,6 +16,8 @@ export type WorkspaceContextType = {
   setSelectedItemPath?: Dispatch<SetStateAction<string[]>>;
 
   selectWorkspace: (workspace: Workspace) => void;
+
+  isWorkspaceOwner: boolean;
 };
 
 type WorkspaceProviderProps = {
@@ -31,6 +33,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace>();
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
+  const [isWorkspaceOwner, setIsWorkspaceOwner] = useState<boolean>();
 
   useEffect(() => {
     const getWorkspaces = async () => {
@@ -56,6 +59,35 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     getWorkspaces();
   }, []);
 
+  useEffect(() => {
+    const checkWorkspaceOwnership = async () => {
+      try {
+        const res = await fetch(`/api/accounts`);
+        if (!res.ok) {
+          throw new Error('Error getting accounts');
+        }
+        const json = await res.json();
+        const accounts: Account[] = json.data.accounts;
+        // TODO: When we can select the account, we should not iterate through all
+        // available accounts, but only the selected one.
+        accounts.forEach((account) => {
+          if (account.workspaces.length) {
+            account.workspaces.map((workspace) => {
+              if (activeWorkspace.id === workspace.id) {
+                setIsWorkspaceOwner(true);
+              }
+            });
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching accounts');
+        //TODO: Testing only, remove in prod
+        setIsWorkspaceOwner(true);
+      }
+    };
+    checkWorkspaceOwnership();
+  }, [activeWorkspace]);
+
   const selectWorkspace = (workspace: Workspace) => {
     window.localStorage.setItem('activeWorkspace', JSON.stringify(workspace));
     setActiveWorkspace(workspace);
@@ -72,6 +104,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         selectedItemPath,
         setSelectedItemPath,
         selectWorkspace,
+        isWorkspaceOwner,
         ...initialState,
       }}
     >
