@@ -57,7 +57,7 @@ export const TopBar = () => {
   const [members, setMembers] = useState<Member[]>();
   const [modal, setModal] = useState<boolean>(false);
   const [modalStatus, setModalStatus] = useState<'add' | 'remove'>();
-  const [formErrors, setFormErrors] = useState<string[]>();
+  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   const initialFormData = () => {
     const data = {};
