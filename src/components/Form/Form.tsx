@@ -4,11 +4,13 @@ import './styles.scss';
 import NumberField from './Fields/NumberField/NumberField';
 import StringField from './Fields/StringField/StringField';
 import { Field, InputFieldProps } from './Fields/types';
+import FormErrors from './Info/Error/FormErrors';
 
 interface FormProps {
   fieldData: Field[];
   header: string | ReactElement;
   onChange: (formData: { [key: string]: string }) => void;
+  formErrors?: string[];
 }
 
 const FIELD_MAP: { [key: string]: React.FC<InputFieldProps> } = {
@@ -16,7 +18,7 @@ const FIELD_MAP: { [key: string]: React.FC<InputFieldProps> } = {
   number: NumberField,
 };
 
-const Form = ({ fieldData, header, onChange }: FormProps) => {
+const Form = ({ fieldData, header, onChange, formErrors }: FormProps) => {
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -64,6 +66,7 @@ const Form = ({ fieldData, header, onChange }: FormProps) => {
     <div className="form">
       <h2>{header}</h2>
       {constructFields()}
+      {formErrors.length ? <FormErrors errors={formErrors} /> : null}
     </div>
   );
 };

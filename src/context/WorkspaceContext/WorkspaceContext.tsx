@@ -16,6 +16,8 @@ export type WorkspaceContextType = {
   setSelectedItemPath?: Dispatch<SetStateAction<string[]>>;
 
   selectWorkspace: (workspace: Workspace) => void;
+
+  getAndSetWorkspaces: () => void;
 };
 
 type WorkspaceProviderProps = {
@@ -32,28 +34,29 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
 
-  useEffect(() => {
-    const getWorkspaces = async () => {
-      const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
-      let storedWorkspace: Workspace;
-      if (storedWorkspaceStr) {
-        storedWorkspace = JSON.parse(storedWorkspaceStr);
-      }
+  const getAndSetWorkspaces = async () => {
+    const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
+    let storedWorkspace: Workspace;
+    if (storedWorkspaceStr) {
+      storedWorkspace = JSON.parse(storedWorkspaceStr);
+    }
 
-      try {
-        const res = await fetch(`/api/workspaces`);
-        if (!res.ok) {
-          throw new Error();
-        }
-        const workspaces = await res.json();
-        setAvailableWorkspaces(workspaces);
-        setActiveWorkspace(storedWorkspace || workspaces[0]);
-      } catch (error) {
-        console.error('Error retrieving workspaces');
-        if (storedWorkspace) setActiveWorkspace(storedWorkspace);
+    try {
+      const res = await fetch(`/api/workspaces`);
+      if (!res.ok) {
+        throw new Error();
       }
-    };
-    getWorkspaces();
+      const workspaces = await res.json();
+      setAvailableWorkspaces(workspaces);
+      setActiveWorkspace(storedWorkspace || workspaces[0]);
+    } catch (error) {
+      console.error('Error retrieving workspaces');
+      if (storedWorkspace) setActiveWorkspace(storedWorkspace);
+    }
+  };
+
+  useEffect(() => {
+    getAndSetWorkspaces();
   }, []);
 
   const selectWorkspace = (workspace: Workspace) => {
@@ -72,6 +75,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         selectedItemPath,
         setSelectedItemPath,
         selectWorkspace,
+        getAndSetWorkspaces,
         ...initialState,
       }}
     >

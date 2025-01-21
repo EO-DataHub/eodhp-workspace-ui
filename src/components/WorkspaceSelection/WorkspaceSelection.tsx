@@ -1,7 +1,6 @@
-import { MdAddCircleOutline } from 'react-icons/md';
-
 import { useWorkspace } from '@/hooks/useWorkspace';
 
+import AddWorkspace from './AddWorkspace/AddWorkspace';
 import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 import './WorkspaceSelection.scss';
@@ -20,7 +19,7 @@ export const WorkspaceSelection = () => {
             onClick={() => selectWorkspace(workspace)}
           />
         ))}
-        <MdAddCircleOutline className="workspace-selection__add icon-primary" />
+        <AddWorkspace />
       </div>
     </div>
   );

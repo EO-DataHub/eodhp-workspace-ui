@@ -1,0 +1,15 @@
+@import '../../../styles/abstracts/colours';
+
+.info {
+  place-self: center center;
+  border: 1px solid var(--info-border);
+  border-radius: 12px;
+
+  &-error {
+    border-color: red;
+
+    &__item {
+      color: red;
+    }
+  }
+}
