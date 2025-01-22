@@ -3,6 +3,8 @@
 .info {
   place-self: center center;
   border: 1px solid var(--info-border);
+  padding: 10px 25px;
+  margin-top: 15px;
   border-radius: 12px;
 
   &-error {

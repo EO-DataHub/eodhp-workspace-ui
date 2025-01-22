@@ -67,7 +67,7 @@ const AddWorkspace = () => {
   const validate = () => {
     const errors = [];
     if (!formData.name) {
-      errors.push('Please add a valid name');
+      errors.push('Name cannot be empty');
     }
     setFormErrors(errors);
     return !errors.length;
@@ -85,8 +85,10 @@ const AddWorkspace = () => {
       await createWorkspace(workspaceAdd);
       await getAndSetWorkspaces();
       setShowModal(false);
+      setFormData(getInitialFormData());
+      setFormErrors([]);
     } catch (error) {
-      console.error(error);
+      setFormErrors([error.message]);
     }
   };
 
@@ -98,6 +100,7 @@ const AddWorkspace = () => {
           onCancel={() => {
             setShowModal(false);
             setFormData(getInitialFormData());
+            setFormErrors([]);
           }}
           onSubmit={async () => await onSubmit()}
         />
