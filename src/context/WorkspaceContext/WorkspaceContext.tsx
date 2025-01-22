@@ -1,5 +1,8 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
+import { getMembers } from '@/services/members/members';
+import { Member } from '@/services/members/types';
+
 import { Account, Workspace } from './types';
 
 export type WorkspaceContextType = {
@@ -18,6 +21,9 @@ export type WorkspaceContextType = {
   selectWorkspace: (workspace: Workspace) => void;
 
   isWorkspaceOwner: boolean;
+
+  getAndSetMembers: () => void;
+  members: Member[];
 };
 
 type WorkspaceProviderProps = {
@@ -34,6 +40,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
   const [isWorkspaceOwner, setIsWorkspaceOwner] = useState<boolean>();
+  const [members, setMembers] = useState<Member[]>([]);
 
   useEffect(() => {
     const getWorkspaces = async () => {
@@ -88,6 +95,24 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     checkWorkspaceOwnership();
   }, [activeWorkspace]);
 
+  useEffect(() => {
+    const func = async () => {
+      await getAndSetMembers();
+    };
+    func();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeWorkspace]);
+
+  const getAndSetMembers = async () => {
+    try {
+      const _members = await getMembers(activeWorkspace.name);
+      setMembers(_members);
+    } catch (error) {
+      console.error(error);
+      console.error('Error getting workspace members');
+    }
+  };
+
   const selectWorkspace = (workspace: Workspace) => {
     window.localStorage.setItem('activeWorkspace', JSON.stringify(workspace));
     setActiveWorkspace(workspace);
@@ -105,6 +130,8 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         setSelectedItemPath,
         selectWorkspace,
         isWorkspaceOwner,
+        getAndSetMembers,
+        members,
         ...initialState,
       }}
     >
