@@ -99,10 +99,10 @@ const MemberButtons = () => {
 
   const validateAddMember = () => {
     const errors = [];
-    if (!formData['id']) {
-      errors.push("Please enter the user's Id");
-    }
-    setFormErrors(errors);
+    // if (!formData['id']) {
+    //   errors.push("Please enter the user's Id");
+    // }
+    // setFormErrors(errors);
     return !errors.length;
   };
 
