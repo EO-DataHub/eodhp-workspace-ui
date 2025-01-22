@@ -1,0 +1,48 @@
+.members {
+  &-header {
+    display: flex;
+    justify-content: space-between;
+
+    &-paragraph {
+      width: 40%;
+
+      img {
+        padding: 3px;
+      }
+
+      span {
+        font-weight: 700;
+      }
+    }
+  }
+
+  &-table {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    &-header {
+      display: flex;
+      align-items: center;
+    }
+
+    &-column {
+      width: 100%;
+      height: 100%;
+
+      :nth-child(1) {
+        background-color: #ffffff0f;
+
+        img {
+          height: 32px;
+        }
+      }
+
+      :nth-child(n) {
+        padding: 10px;
+        border-bottom: 1px solid #2c2c2c;
+        height: 60px;
+      }
+    }
+  }
+}

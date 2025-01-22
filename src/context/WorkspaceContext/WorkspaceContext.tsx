@@ -1,6 +1,7 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
 import { getMembers } from '@/services/members/members';
+import { placeholderMembers } from '@/services/members/placeholder';
 import { Member } from '@/services/members/types';
 
 import { Account, Workspace } from './types';
@@ -110,6 +111,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     } catch (error) {
       console.error(error);
       console.error('Error getting workspace members');
+      setMembers(placeholderMembers);
     }
   };
 

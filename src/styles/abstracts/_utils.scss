@@ -1,0 +1,19 @@
+.flex {
+  display: flex;
+}
+
+.gap-small {
+  gap: $base-spacing;
+}
+
+.gap-large {
+  gap: $large-spacing;
+}
+
+.margin-small {
+  margin: $base-spacing;
+}
+
+.margin-large {
+  margin: $large-spacing;
+}

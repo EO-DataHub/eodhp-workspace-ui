@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import '../../../../styles/main.scss';
 
+import { IoMdPersonAdd } from 'react-icons/io';
 import { MdPersonRemove } from 'react-icons/md';
 
 import { Button } from '@/components/Button/Button';
@@ -10,7 +12,6 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import { addMember } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
-import AddMember from './AddMember/AddMember';
 import DeleteRow from '../DeleteRow/DeleteRow';
 
 const ADD_MEMBER_FIELDS: Field[] = [
@@ -99,10 +100,10 @@ const MemberButtons = () => {
 
   const validateAddMember = () => {
     const errors = [];
-    // if (!formData['id']) {
-    //   errors.push("Please enter the user's Id");
-    // }
-    // setFormErrors(errors);
+    if (!formData['id']) {
+      errors.push("Please enter the user's Id");
+    }
+    setFormErrors(errors);
     return !errors.length;
   };
 
@@ -138,21 +139,26 @@ const MemberButtons = () => {
           }}
         />
       )}
-      <AddMember
-        onClick={() => {
-          setModalStatus('add');
-          setModal(true);
-        }}
-      />
-      <Button
-        icon={<MdPersonRemove />}
-        onClick={() => {
-          setModalStatus('remove');
-          setModal(true);
-        }}
-      >
-        Remove Member
-      </Button>
+      <div className="flex gap-small margin-small">
+        <Button
+          icon={<IoMdPersonAdd />}
+          onClick={() => {
+            setModalStatus('add');
+            setModal(true);
+          }}
+        >
+          Add Member
+        </Button>
+        <Button
+          icon={<MdPersonRemove />}
+          onClick={() => {
+            setModalStatus('remove');
+            setModal(true);
+          }}
+        >
+          Remove Member
+        </Button>
+      </div>
     </>
   );
 };
