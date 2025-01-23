@@ -35,7 +35,7 @@ const AddWorkspace = () => {
       },
       {
         externalName: 'Member group',
-        internalName: 'memberGroup',
+        internalName: 'member_group',
         type: 'string',
         value: '',
       },
