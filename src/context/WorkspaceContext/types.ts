@@ -27,3 +27,10 @@ type Block = {
   access_point_id: string;
   fs_id: string;
 };
+
+export type Account = {
+  id: string;
+  name: string;
+  accountOwner: string;
+  workspaces: Workspace[];
+};

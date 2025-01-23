@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import './styles.scss';
+import DropdownField from './Fields/DropdownField/DropdownField';
 import NumberField from './Fields/NumberField/NumberField';
 import StringField from './Fields/StringField/StringField';
 import { Field, InputFieldProps } from './Fields/types';
@@ -16,6 +17,7 @@ interface FormProps {
 const FIELD_MAP: { [key: string]: React.FC<InputFieldProps> } = {
   string: StringField,
   number: NumberField,
+  dropdown: DropdownField,
 };
 
 const Form = ({ fieldData, header, onChange, formErrors }: FormProps) => {

@@ -9,37 +9,30 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import { WorkspaceAdd } from '@/services/workspaces/types';
 import { createWorkspace } from '@/services/workspaces/workspaces';
 
-const ADD_WORKSPACE_FIELDS: Field[] = [
-  {
-    externalName: 'Name',
-    internalName: 'name',
-    type: 'string',
-    value: '',
-  },
-  {
-    externalName: 'Account',
-    internalName: 'account',
-    type: 'string',
-    value: '',
-  },
-
-  {
-    externalName: 'Member group',
-    internalName: 'memberGroup',
-    type: 'string',
-    value: '',
-  },
-
-  {
-    externalName: 'Status',
-    internalName: 'status',
-    type: 'string',
-    value: '',
-  },
-];
-
 const AddWorkspace = () => {
-  const { getAndSetWorkspaces } = useWorkspace();
+  const { getAndSetWorkspaces, accounts } = useWorkspace();
+  const ADD_WORKSPACE_FIELDS: Field[] = [
+    {
+      externalName: 'Name',
+      internalName: 'name',
+      type: 'string',
+      value: '',
+    },
+    {
+      externalName: 'Account',
+      internalName: 'account',
+      type: 'dropdown',
+      value: '',
+      options: accounts.map((account) => account.id),
+    },
+    {
+      externalName: 'Member group',
+      internalName: 'memberGroup',
+      type: 'string',
+      value: '',
+    },
+  ];
+
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const getInitialFormData = () => {

@@ -1,6 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
-import { Workspace } from './types';
+import { Account, Workspace } from './types';
 
 export type WorkspaceContextType = {
   availableWorkspaces: Workspace[];
@@ -18,6 +18,8 @@ export type WorkspaceContextType = {
   selectWorkspace: (workspace: Workspace) => void;
 
   getAndSetWorkspaces: () => void;
+
+  accounts: Account[];
 };
 
 type WorkspaceProviderProps = {
@@ -33,6 +35,16 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace>();
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+
+  useEffect(() => {
+    const func = async () => {
+      const res = await fetch(`api/accounts`);
+      const accounts: Account[] = await res.json();
+      setAccounts(accounts);
+    };
+    func();
+  }, []);
 
   const getAndSetWorkspaces = async () => {
     const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
@@ -76,6 +88,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         setSelectedItemPath,
         selectWorkspace,
         getAndSetWorkspaces,
+        accounts,
         ...initialState,
       }}
     >
