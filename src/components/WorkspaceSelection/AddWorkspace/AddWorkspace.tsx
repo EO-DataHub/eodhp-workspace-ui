@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { MdAddCircleOutline } from 'react-icons/md';
 
@@ -11,38 +11,43 @@ import { createWorkspace } from '@/services/workspaces/workspaces';
 
 const AddWorkspace = () => {
   const { getAndSetWorkspaces, accounts } = useWorkspace();
-  const ADD_WORKSPACE_FIELDS: Field[] = [
-    {
-      externalName: 'Name',
-      internalName: 'name',
-      type: 'string',
-      value: '',
-    },
-    {
-      externalName: 'Account',
-      internalName: 'account',
-      type: 'dropdown',
-      value: '',
-      options: accounts.map((account) => {
-        return {
-          externalName: account.name,
-          internalName: account.id,
-        };
-      }),
-    },
-    {
-      externalName: 'Member group',
-      internalName: 'memberGroup',
-      type: 'string',
-      value: '',
-    },
-  ];
+  const [addWorkspaceFields, setAddWorkspaceFields] = useState<Field[]>([]);
+
+  useEffect(() => {
+    const ADD_WORKSPACE_FIELDS: Field[] = [
+      {
+        externalName: 'Name',
+        internalName: 'name',
+        type: 'string',
+        value: '',
+      },
+      {
+        externalName: 'Account',
+        internalName: 'account',
+        type: 'dropdown',
+        value: '',
+        options: accounts.map((account) => {
+          return {
+            externalName: account.name,
+            internalName: account.id,
+          };
+        }),
+      },
+      {
+        externalName: 'Member group',
+        internalName: 'memberGroup',
+        type: 'string',
+        value: '',
+      },
+    ];
+    setAddWorkspaceFields(ADD_WORKSPACE_FIELDS);
+  }, [accounts]);
 
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const getInitialFormData = () => {
     const data = {};
-    ADD_WORKSPACE_FIELDS.forEach((field) => {
+    addWorkspaceFields.forEach((field) => {
       data[field.internalName] = field.value;
     });
     return data;
@@ -54,7 +59,7 @@ const AddWorkspace = () => {
   const renderModalContent = () => {
     return (
       <Form
-        fieldData={ADD_WORKSPACE_FIELDS}
+        fieldData={addWorkspaceFields}
         formErrors={formErrors}
         header={'Add new workspace'}
         onChange={(data) => setFormData(data)}
@@ -77,7 +82,6 @@ const AddWorkspace = () => {
       account: formData.account,
       memberGroup: formData.memberGroup,
       name: formData.name,
-      status: formData.status,
     };
     try {
       await createWorkspace(workspaceAdd);

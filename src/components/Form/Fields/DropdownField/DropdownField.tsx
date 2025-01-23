@@ -15,20 +15,21 @@ const DropdownField = ({ field, value, onFieldChange }: InputFieldProps) => {
     onFieldChange(field.internalName, value);
   };
 
+  const selectValue = value || field.value || '';
   return (
     <div className="field">
       <label>{field.externalName}</label>
       <select
         disabled={field.readOnly}
-        value={value || field.value || ''}
+        value={selectValue}
         onChange={(e) => validate(e.target.value)}
       >
         <option disabled value="">
           Select an option
         </option>
         {field.options &&
-          field.options.map((option: Option, index: number) => (
-            <option key={index} value={option.internalName}>
+          field.options.map((option: Option) => (
+            <option key={option.internalName} value={option.internalName}>
               {option.externalName}
             </option>
           ))}
