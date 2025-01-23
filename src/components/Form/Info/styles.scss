@@ -1,4 +1,4 @@
-@import '../../../styles/abstracts/colours';
+@import '../../../styles/main';
 
 .info {
   place-self: center center;
@@ -9,6 +9,8 @@
 
   &-error {
     border-color: red;
+    width: 50%;
+    min-width: 300px;
 
     &__item {
       color: red;

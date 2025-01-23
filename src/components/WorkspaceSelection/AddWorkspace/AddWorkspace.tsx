@@ -33,12 +33,6 @@ const AddWorkspace = () => {
           };
         }),
       },
-      {
-        externalName: 'Member group',
-        internalName: 'memberGroup',
-        type: 'string',
-        value: '',
-      },
     ];
     setAddWorkspaceFields(ADD_WORKSPACE_FIELDS);
   }, [accounts]);
@@ -83,11 +77,8 @@ const AddWorkspace = () => {
     if (!formData.account) {
       errors.push('Account cannot be empty');
     }
-    if (!formData.memberGroup) {
-      errors.push('Member group cannot be empty');
-    }
     if (formData.name && !isDnsCompliant(formData.name)) {
-      errors.push('Name must be DNS compliant');
+      errors.push('Name must be DNS compliant. e.g workspace_name not workspace name');
     }
     setFormErrors(errors);
     return !errors.length;
@@ -97,7 +88,6 @@ const AddWorkspace = () => {
     if (!validate()) return;
     const workspaceAdd: WorkspaceAdd = {
       account: formData.account,
-      member_group: formData.memberGroup,
       name: formData.name,
     };
     try {
@@ -113,7 +103,7 @@ const AddWorkspace = () => {
 
   return (
     <>
-      {showModal && (
+      {showModal ? (
         <Modal
           content={renderModalContent()}
           onCancel={() => {
@@ -123,7 +113,7 @@ const AddWorkspace = () => {
           }}
           onSubmit={async () => await onSubmit()}
         />
-      )}
+      ) : null}
       <MdAddCircleOutline
         className="workspace-selection__add icon-primary"
         onClick={() => {
