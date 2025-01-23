@@ -1,4 +1,5 @@
 import './TopBar.scss';
+
 import { useEffect, useState } from 'react';
 
 import { IoMdPersonAdd } from 'react-icons/io';
@@ -12,7 +13,7 @@ import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 export const TopBar = () => {
   const { activeWorkspace } = useWorkspace();
-  const [isLightTheme, setIsLightTheme] = useState(true);
+  const [isLightTheme, setIsLightTheme] = useState(false);
 
   useEffect(() => {
     const workspace = document.getElementById('workspace');
@@ -43,15 +44,23 @@ export const TopBar = () => {
     <div>
       <div className="disclaimer">
         <p>The Workspace UI is still in development. Many features are not yet implemented.</p>
-        <Button className="theme-switcher" onClick={() => setIsLightTheme(!isLightTheme)}>
-          Set theme to {isLightTheme ? 'dark' : 'light'}
-        </Button>
+        {import.meta.env.VITE_WORKSPACE_LOCAL ? (
+          <Button className="theme-switcher" onClick={() => setIsLightTheme(!isLightTheme)}>
+            Set theme to {isLightTheme ? 'dark' : 'light'}
+          </Button>
+        ) : null}
       </div>
       <div className="top-bar">
-        {activeWorkspace && (
+        {activeWorkspace ? (
           <div className="top-bar__left">
             <ProfileTile borderColor="#a19d9d" color="#4c72ba" username={activeWorkspace.name} />
             <h2>EODH Workspace</h2>
+          </div>
+        ) : (
+          <div className="top-bar__left">
+            <ProfileTile borderColor="#a19d9d" color="#4c72ba" username={'EO'} />
+
+            <h2>EODH Workspace Management</h2>
           </div>
         )}
 
