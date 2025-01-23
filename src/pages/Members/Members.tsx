@@ -6,7 +6,7 @@ import MemberButtons from '@/components/TopBar/components/MemberButtons/MemberBu
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 const Members = () => {
-  const { members, isWorkspaceOwner } = useWorkspace();
+  const { members, isWorkspaceOwner, activeWorkspace } = useWorkspace();
 
   const renderHeader = () => {
     return (
@@ -38,7 +38,7 @@ const Members = () => {
     members.forEach((member) => {
       columns.email.push(<div>{member.email}</div>);
       columns.name.push(<div>{`${member.firstName} ${member.lastName}`}</div>);
-      const role = isWorkspaceOwner ? 'Admin' : 'Member';
+      const role = activeWorkspace.account === member.id ? 'Admin' : 'Member';
       columns.role.push(<div>{role}</div>);
     });
     return (

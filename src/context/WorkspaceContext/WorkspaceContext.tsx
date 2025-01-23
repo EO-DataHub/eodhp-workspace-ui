@@ -111,7 +111,6 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     } catch (error) {
       console.error(error);
       console.error('Error getting workspace members');
-      setMembers(placeholderMembers);
     }
   };
 
