@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
+
 import './styles.scss';
+import ResponsivePagination from 'react-responsive-pagination';
+import 'react-responsive-pagination/themes/classic.css';
 
 import memberGroupIcon from '@/assets/icons/member-group.svg';
 import MemberButtons from '@/components/TopBar/components/MemberButtons/MemberButtons';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
+const MAX_MEMBERS_PER_PAGE = 10;
+
 const Members = () => {
   const { members, activeWorkspace } = useWorkspace();
+  const [selectedPage, setSelectedPage] = useState<number>(0);
 
   const renderHeader = () => {
     return (
@@ -35,7 +41,13 @@ const Members = () => {
       email: [constructTableHeader('Email')],
       role: [constructTableHeader('Role')],
     };
-    members.forEach((member) => {
+
+    const membersSegment = members.slice(
+      MAX_MEMBERS_PER_PAGE * selectedPage - MAX_MEMBERS_PER_PAGE,
+      MAX_MEMBERS_PER_PAGE * selectedPage,
+    );
+
+    membersSegment.forEach((member) => {
       columns.email.push(<div>{member.email}</div>);
       columns.name.push(<div>{`${member.firstName} ${member.lastName}`}</div>);
       const role = activeWorkspace.account === member.id ? 'Admin' : 'Member';
@@ -55,6 +67,11 @@ const Members = () => {
       {renderHeader()}
       {renderButtons()}
       {renderTable()}
+      <ResponsivePagination
+        current={selectedPage}
+        total={Math.ceil(members.length / MAX_MEMBERS_PER_PAGE)}
+        onPageChange={(e) => setSelectedPage(e)}
+      />
     </div>
   );
 };
