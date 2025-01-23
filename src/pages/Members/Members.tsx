@@ -6,7 +6,7 @@ import MemberButtons from '@/components/TopBar/components/MemberButtons/MemberBu
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 const Members = () => {
-  const { members, isWorkspaceOwner, activeWorkspace } = useWorkspace();
+  const { members, activeWorkspace } = useWorkspace();
 
   const renderHeader = () => {
     return (

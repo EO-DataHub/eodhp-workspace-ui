@@ -1,7 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
 import { getMembers } from '@/services/members/members';
-import { placeholderMembers } from '@/services/members/placeholder';
 import { Member } from '@/services/members/types';
 
 import { Account, Workspace } from './types';
