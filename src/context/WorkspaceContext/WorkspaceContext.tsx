@@ -3,6 +3,7 @@ import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState
 import { getMembers } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
+import { accountsPlaceholder, workspacesPlaceholder } from './placeholder';
 import { Account, Workspace } from './types';
 
 export type WorkspaceContextType = {
@@ -51,11 +52,17 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
       }
 
       try {
-        const res = await fetch(`/api/workspaces`);
-        if (!res.ok) {
-          throw new Error();
+        let workspaces: Workspace[];
+        if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+          workspaces = workspacesPlaceholder;
+        } else {
+          const res = await fetch(`/api/workspaces`);
+          if (!res.ok) {
+            throw new Error();
+          }
+          workspaces = await res.json();
         }
-        const workspaces = await res.json();
+
         setAvailableWorkspaces(workspaces);
         setActiveWorkspace(storedWorkspace || workspaces[0]);
       } catch (error) {
@@ -69,12 +76,18 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   useEffect(() => {
     const checkWorkspaceOwnership = async () => {
       try {
-        const res = await fetch(`/api/accounts`);
-        if (!res.ok) {
-          throw new Error('Error getting accounts');
+        let accounts: Account[];
+        if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+          accounts = accountsPlaceholder.data.accounts;
+        } else {
+          const res = await fetch(`/api/accounts`);
+          if (!res.ok) {
+            throw new Error('Error getting accounts');
+          }
+          const json = await res.json();
+          accounts = json.data.accounts;
         }
-        const json = await res.json();
-        const accounts: Account[] = json.data.accounts;
+
         // TODO: When we can select the account, we should not iterate through all
         // available accounts, but only the selected one.
         accounts.forEach((account) => {

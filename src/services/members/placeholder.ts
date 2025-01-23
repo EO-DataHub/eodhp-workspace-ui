@@ -1,6 +1,6 @@
 import { Member } from './types';
 
-export const placeholderMembers: Member[] = [
+export const membersPlaceholder: Member[] = [
   {
     id: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6',
     username: 'john_doe123',
