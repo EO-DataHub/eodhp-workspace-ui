@@ -1,5 +1,5 @@
 export type WorkspaceAdd = {
   name: string;
   account: string;
-  memberGroup: string;
+  member_group: string;
 };

@@ -35,7 +35,7 @@ const AddWorkspace = () => {
       },
       {
         externalName: 'Member group',
-        internalName: 'member_group',
+        internalName: 'memberGroup',
         type: 'string',
         value: '',
       },
@@ -97,7 +97,7 @@ const AddWorkspace = () => {
     if (!validate()) return;
     const workspaceAdd: WorkspaceAdd = {
       account: formData.account,
-      memberGroup: formData.memberGroup,
+      member_group: formData.memberGroup,
       name: formData.name,
     };
     try {
