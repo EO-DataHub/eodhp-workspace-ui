@@ -67,10 +67,27 @@ const AddWorkspace = () => {
     );
   };
 
+  const isDnsCompliant = (domain: string) => {
+    const domainRegex = /^(?!-)[a-zA-Z0-9-]{1,63}(?<!-)$/;
+    if (domain.length > 253) return false;
+
+    const labels = domain.split('.');
+    return labels.every((label) => domainRegex.test(label));
+  };
+
   const validate = () => {
     const errors = [];
     if (!formData.name) {
       errors.push('Name cannot be empty');
+    }
+    if (!formData.account) {
+      errors.push('Account cannot be empty');
+    }
+    if (!formData.memberGroup) {
+      errors.push('Member group cannot be empty');
+    }
+    if (formData.name && !isDnsCompliant(formData.name)) {
+      errors.push('Name must be DNS compliant');
     }
     setFormErrors(errors);
     return !errors.length;
