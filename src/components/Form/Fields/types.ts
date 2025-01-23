@@ -12,5 +12,10 @@ export type Field = {
   min?: number;
   max?: number;
   readOnly?: boolean;
-  options?: string[];
+  options?: Option[];
+};
+
+export type Option = {
+  internalName: string;
+  externalName: string;
 };

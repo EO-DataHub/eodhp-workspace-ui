@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles.scss';
 
-import { InputFieldProps } from '../types';
+import { InputFieldProps, Option } from '../types';
 
 const DropdownField = ({ field, value, onFieldChange }: InputFieldProps) => {
   const [error, setError] = useState<string>('');
@@ -10,10 +10,6 @@ const DropdownField = ({ field, value, onFieldChange }: InputFieldProps) => {
     setError('');
     if (!field.options || field.options.length === 0) {
       setError(`${field.externalName} has no options available`);
-      return;
-    }
-    if (!field.options.includes(value)) {
-      setError(`${value} is not a valid option for ${field.externalName}`);
       return;
     }
     onFieldChange(field.internalName, value);
@@ -31,9 +27,9 @@ const DropdownField = ({ field, value, onFieldChange }: InputFieldProps) => {
           Select an option
         </option>
         {field.options &&
-          field.options.map((option: string, index: number) => (
-            <option key={index} value={option}>
-              {option}
+          field.options.map((option: Option, index: number) => (
+            <option key={index} value={option.internalName}>
+              {option.externalName}
             </option>
           ))}
       </select>
