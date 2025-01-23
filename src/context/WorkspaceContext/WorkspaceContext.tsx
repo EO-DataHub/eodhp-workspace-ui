@@ -39,7 +39,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
 
   useEffect(() => {
     const func = async () => {
-      const res = await fetch(`api/accounts`);
+      const res = await fetch(`/api/accounts`);
       const accounts: Account[] = await res.json();
       setAccounts(accounts);
     };
