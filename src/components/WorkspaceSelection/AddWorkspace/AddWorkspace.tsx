@@ -55,7 +55,7 @@ const AddWorkspace = () => {
       <Form
         fieldData={addWorkspaceFields}
         formErrors={formErrors}
-        header={'Add new workspace'}
+        header={'Add new Workspace'}
         onChange={(data) => setFormData(data)}
       />
     );
