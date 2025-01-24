@@ -47,7 +47,11 @@ const ADD_MEMBER_FIELDS: Field[] = [
   },
 ];
 
-const MemberButtons = () => {
+interface MemberButtonsProps {
+  hideRemoveButton?: boolean;
+}
+
+const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
   const { activeWorkspace, members, getAndSetMembers } = useWorkspace();
 
   const [modal, setModal] = useState<boolean>(false);
@@ -149,15 +153,17 @@ const MemberButtons = () => {
         >
           Add Member
         </Button>
-        <Button
-          icon={<MdPersonRemove />}
-          onClick={() => {
-            setModalStatus('remove');
-            setModal(true);
-          }}
-        >
-          Remove Member
-        </Button>
+        {hideRemoveButton ? null : (
+          <Button
+            icon={<MdPersonRemove />}
+            onClick={() => {
+              setModalStatus('remove');
+              setModal(true);
+            }}
+          >
+            Remove Member
+          </Button>
+        )}
       </div>
     </>
   );

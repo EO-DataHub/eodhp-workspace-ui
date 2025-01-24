@@ -21,6 +21,7 @@ export type WorkspaceContextType = {
 
   selectWorkspace: (workspace: Workspace) => void;
 
+  workspaceOwner: string;
   isWorkspaceOwner: boolean;
 
   getAndSetMembers: () => void;
@@ -41,6 +42,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
   const [isWorkspaceOwner, setIsWorkspaceOwner] = useState<boolean>();
+  const [workspaceOwner, setWorkspaceOwner] = useState<string>();
   const [members, setMembers] = useState<Member[]>([]);
 
   useEffect(() => {
@@ -95,6 +97,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
             account.workspaces.map((workspace) => {
               if (activeWorkspace.id === workspace.id) {
                 setIsWorkspaceOwner(true);
+                setWorkspaceOwner(account.accountOwner);
               }
             });
           }
@@ -142,6 +145,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         selectedItemPath,
         setSelectedItemPath,
         selectWorkspace,
+        workspaceOwner,
         isWorkspaceOwner,
         getAndSetMembers,
         members,
