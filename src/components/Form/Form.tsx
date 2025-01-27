@@ -68,7 +68,7 @@ const Form = ({ fieldData, header, onChange, formErrors }: FormProps) => {
     <div className="form">
       <h2>{header}</h2>
       {constructFields()}
-      {formErrors.length ? <FormErrors errors={formErrors} /> : null}
+      {formErrors?.length ? <FormErrors errors={formErrors} /> : null}
     </div>
   );
 };
