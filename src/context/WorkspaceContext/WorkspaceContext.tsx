@@ -1,5 +1,9 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
+import { getMembers } from '@/services/members/members';
+import { Member } from '@/services/members/types';
+
+import { accountsPlaceholder, workspacesPlaceholder } from './placeholder';
 import { Account, Workspace } from './types';
 
 export type WorkspaceContextType = {
@@ -17,6 +21,11 @@ export type WorkspaceContextType = {
 
   selectWorkspace: (workspace: Workspace) => void;
 
+  workspaceOwner: string;
+  isWorkspaceOwner: boolean;
+
+  getAndSetMembers: () => void;
+  members: Member[];
   getAndSetWorkspaces: () => void;
 
   accounts: Account[];
@@ -35,6 +44,39 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace>();
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
+  const [isWorkspaceOwner, setIsWorkspaceOwner] = useState<boolean>();
+  const [workspaceOwner, setWorkspaceOwner] = useState<string>();
+  const [members, setMembers] = useState<Member[]>([]);
+
+  useEffect(() => {
+    const getWorkspaces = async () => {
+      const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
+      let storedWorkspace: Workspace;
+      if (storedWorkspaceStr) {
+        storedWorkspace = JSON.parse(storedWorkspaceStr);
+      }
+
+      try {
+        let workspaces: Workspace[];
+        if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+          workspaces = workspacesPlaceholder;
+        } else {
+          const res = await fetch(`/api/workspaces`);
+          if (!res.ok) {
+            throw new Error();
+          }
+          workspaces = await res.json();
+        }
+
+        setAvailableWorkspaces(workspaces);
+        setActiveWorkspace(storedWorkspace || workspaces[0]);
+      } catch (error) {
+        console.error('Error retrieving workspaces');
+        if (storedWorkspace) setActiveWorkspace(storedWorkspace);
+      }
+    };
+    getWorkspaces();
+  }, []);
   const [accounts, setAccounts] = useState<Account[]>([]);
 
   useEffect(() => {
@@ -71,6 +113,60 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     getAndSetWorkspaces();
   }, []);
 
+  useEffect(() => {
+    const checkWorkspaceOwnership = async () => {
+      try {
+        let accounts: Account[];
+        if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+          accounts = accountsPlaceholder.data.accounts;
+        } else {
+          const res = await fetch(`/api/accounts`);
+          if (!res.ok) {
+            throw new Error('Error getting accounts');
+          }
+          const json = await res.json();
+          accounts = json.data.accounts;
+        }
+
+        // TODO: When we can select the account, we should not iterate through all
+        // available accounts, but only the selected one.
+        accounts.forEach((account) => {
+          if (account.workspaces.length) {
+            account.workspaces.map((workspace) => {
+              if (activeWorkspace.id === workspace.id) {
+                setIsWorkspaceOwner(true);
+                setWorkspaceOwner(account.accountOwner);
+              }
+            });
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching accounts');
+        //TODO: Testing only, remove in prod
+        setIsWorkspaceOwner(true);
+      }
+    };
+    checkWorkspaceOwnership();
+  }, [activeWorkspace]);
+
+  useEffect(() => {
+    const func = async () => {
+      await getAndSetMembers();
+    };
+    func();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeWorkspace]);
+
+  const getAndSetMembers = async () => {
+    try {
+      const _members = await getMembers(activeWorkspace.name);
+      setMembers(_members);
+    } catch (error) {
+      console.error(error);
+      console.error('Error getting workspace members');
+    }
+  };
+
   const selectWorkspace = (workspace: Workspace) => {
     window.localStorage.setItem('activeWorkspace', JSON.stringify(workspace));
     setActiveWorkspace(workspace);
@@ -87,6 +183,10 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         selectedItemPath,
         setSelectedItemPath,
         selectWorkspace,
+        workspaceOwner,
+        isWorkspaceOwner,
+        getAndSetMembers,
+        members,
         getAndSetWorkspaces,
         accounts,
         ...initialState,

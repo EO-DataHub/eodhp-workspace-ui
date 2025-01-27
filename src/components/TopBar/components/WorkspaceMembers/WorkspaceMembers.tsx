@@ -1,26 +1,21 @@
 import { ProfileTile } from '@/components/ProfileTile/ProfileTile';
 import './WorkspaceMembers.scss';
-
-interface User {
-  id: string | number;
-  name: string;
-  color?: string;
-}
+import { Member } from '@/services/members/types';
 
 interface WorkspaceMembersProps {
-  users: User[];
+  members: Member[];
   maxVisible?: number;
 }
 
-export const WorkspaceMembers = ({ users, maxVisible = 5 }: WorkspaceMembersProps) => {
-  const visibleUsers = users.slice(0, maxVisible);
-  const remainingCount = users.length - maxVisible;
+export const WorkspaceMembers = ({ members, maxVisible = 5 }: WorkspaceMembersProps) => {
+  const visibleUsers = members.slice(0, maxVisible);
+  const remainingCount = members.length - maxVisible;
 
   return (
     <div className="workspace-members">
       <div className="workspace-members__tiles">
         {visibleUsers.map((user) => (
-          <ProfileTile key={user.id} color={user.color} username={user.name} />
+          <ProfileTile key={user.id} username={user.username} />
         ))}
 
         {remainingCount > 0 && (
@@ -29,7 +24,7 @@ export const WorkspaceMembers = ({ users, maxVisible = 5 }: WorkspaceMembersProp
       </div>
       <span className="workspace-members__view-all">
         View all
-        <span className="workspace-members__view-all__count"> {users.length} members</span>
+        <span className="workspace-members__view-all__count"> {members.length} members</span>
       </span>
     </div>
   );

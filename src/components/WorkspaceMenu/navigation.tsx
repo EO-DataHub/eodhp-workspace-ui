@@ -9,6 +9,7 @@ import storesIcon from '@/assets/icons/stores.svg';
 import workflowsIcon from '@/assets/icons/workflows.svg';
 import { Catalogue } from '@/pages/Catalogue/Catalogue';
 import { Credentials } from '@/pages/Credentials/Credentials';
+import Members from '@/pages/Members/Members';
 import { Stores } from '@/pages/Stores/Stores';
 
 export interface NavItem {
@@ -36,6 +37,6 @@ export const navItems: NavItem[] = [
   },
   { label: 'Linked accounts', icon: linkedAccountsIcon },
   { label: 'Invoices', icon: invoicesIcon },
-  { label: 'Members', icon: membersIcon },
+  { label: 'Members', icon: membersIcon, content: <Members /> },
   { label: 'Credentials', icon: credentialsIcon, content: <Credentials /> },
 ];

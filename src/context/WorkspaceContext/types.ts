@@ -33,4 +33,5 @@ export type Account = {
   name: string;
   accountOwner: string;
   workspaces: Workspace[];
+  last_updated: string;
 };

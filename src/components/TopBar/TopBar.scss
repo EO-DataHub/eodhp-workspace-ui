@@ -8,7 +8,7 @@
   padding: 0 3.5rem;
 
   button {
-    cursor: not-allowed;
+    cursor: pointer;
   }
 
   &__left {
@@ -23,6 +23,40 @@
     flex-direction: row;
     gap: 1rem;
     align-items: center;
+  }
+
+  &-remove {
+    &__row {
+      display: flex;
+      border: 1px solid grey;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 20px;
+      margin: 2px;
+      border-radius: 12px;
+
+      &-delete {
+        border-radius: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+
+        &:hover {
+          background-color: lightgrey;
+        }
+      }
+    }
+  }
+
+  &-form-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__errors {
+      align-self: center;
+    }
   }
 
   @media (width <= 900px) {
