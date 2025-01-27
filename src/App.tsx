@@ -10,7 +10,10 @@ import 'react-tabs/style/react-tabs.css';
 export const App = () => {
   const [content, setContent] = useState<React.ReactNode>();
   return (
-    <div className="workspace light-theme" id="workspace">
+    <div
+      className={`workspace ${import.meta.env.VITE_WORKSPACE_LOCAL ? 'dark-theme' : ''}`}
+      id="workspace"
+    >
       <div className="page-view">
         <TopBar />
 

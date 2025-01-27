@@ -22,7 +22,10 @@
     }
   }
 
-  // &-error {
-  //   color: $error-colour;
-  // }
+  &-dropdown {
+    outline: none;
+    height: 24px;
+    border: 1px solid lightgrey;
+    background-color: white;
+  }
 }

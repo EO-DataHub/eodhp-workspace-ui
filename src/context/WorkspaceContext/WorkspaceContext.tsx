@@ -1,9 +1,12 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
+<<<<<<< HEAD
 import { getMembers } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
 import { accountsPlaceholder, workspacesPlaceholder } from './placeholder';
+=======
+>>>>>>> main
 import { Account, Workspace } from './types';
 
 export type WorkspaceContextType = {
@@ -21,11 +24,17 @@ export type WorkspaceContextType = {
 
   selectWorkspace: (workspace: Workspace) => void;
 
+<<<<<<< HEAD
   workspaceOwner: string;
   isWorkspaceOwner: boolean;
 
   getAndSetMembers: () => void;
   members: Member[];
+=======
+  getAndSetWorkspaces: () => void;
+
+  accounts: Account[];
+>>>>>>> main
 };
 
 type WorkspaceProviderProps = {
@@ -41,6 +50,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace>();
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
   const [selectedItemPath, setSelectedItemPath] = useState<string[]>([]);
+<<<<<<< HEAD
   const [isWorkspaceOwner, setIsWorkspaceOwner] = useState<boolean>();
   const [workspaceOwner, setWorkspaceOwner] = useState<string>();
   const [members, setMembers] = useState<Member[]>([]);
@@ -71,8 +81,42 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         console.error('Error retrieving workspaces');
         if (storedWorkspace) setActiveWorkspace(storedWorkspace);
       }
+=======
+  const [accounts, setAccounts] = useState<Account[]>([]);
+
+  useEffect(() => {
+    const func = async () => {
+      const res = await fetch(`/api/accounts`);
+      const accounts: Account[] = await res.json();
+      setAccounts(accounts);
+>>>>>>> main
     };
-    getWorkspaces();
+    func();
+  }, []);
+
+  const getAndSetWorkspaces = async () => {
+    const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
+    let storedWorkspace: Workspace;
+    if (storedWorkspaceStr) {
+      storedWorkspace = JSON.parse(storedWorkspaceStr);
+    }
+
+    try {
+      const res = await fetch(`/api/workspaces`);
+      if (!res.ok) {
+        throw new Error();
+      }
+      const workspaces = await res.json();
+      setAvailableWorkspaces(workspaces);
+      setActiveWorkspace(storedWorkspace || workspaces[0]);
+    } catch (error) {
+      console.error('Error retrieving workspaces');
+      if (storedWorkspace) setActiveWorkspace(storedWorkspace);
+    }
+  };
+
+  useEffect(() => {
+    getAndSetWorkspaces();
   }, []);
 
   useEffect(() => {
@@ -145,10 +189,15 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         selectedItemPath,
         setSelectedItemPath,
         selectWorkspace,
+<<<<<<< HEAD
         workspaceOwner,
         isWorkspaceOwner,
         getAndSetMembers,
         members,
+=======
+        getAndSetWorkspaces,
+        accounts,
+>>>>>>> main
         ...initialState,
       }}
     >
