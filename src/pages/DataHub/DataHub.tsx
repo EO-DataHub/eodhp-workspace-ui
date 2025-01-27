@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import './DataHub.scss';
 
@@ -5,44 +6,60 @@ import { Button } from '@/components/Button/Button';
 import { Field } from '@/components/Form/Fields/types';
 import Form from '@/components/Form/Form';
 import Modal from '@/components/Modal/Modal';
+import { useWorkspace } from '@/hooks/useWorkspace';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
 
-const TOKEN_FORM_INPUTS: Field[] = [
-  {
-    externalName: 'Name',
-    internalName: 'name',
-    value: 'API Token',
-    type: 'string',
-    min: 1,
-    max: 128,
-  },
-  {
-    externalName: 'Scope',
-    internalName: 'scope',
-    value: 'offline_access',
-    readOnly: true,
-    type: 'string',
-  },
-  { externalName: 'Expires', internalName: 'expires', value: 30, type: 'number', min: 0, max: 30 },
-];
-
 export const DataHub = () => {
+  const { activeWorkspace } = useWorkspace();
+
   const [tokens, setTokens] = useState([]);
   const [newTokenValue, setNewTokenValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [creatingToken, setCreatingToken] = useState<boolean>(false);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState<boolean>(false);
+  const [tokenFormInputs, setTokenFormInputs] = useState<Field[]>([]);
 
-  const getDefaultFormValues = () => {
+  useEffect(() => {
+    const TOKEN_FORM_INPUTS: Field[] = [
+      {
+        externalName: 'Name',
+        internalName: 'name',
+        value: 'API Token',
+        type: 'string',
+        min: 1,
+        max: 128,
+      },
+      {
+        externalName: 'Scope',
+        internalName: 'scope',
+        value: `offline_access workspace:${activeWorkspace.name}`,
+        readOnly: true,
+        type: 'string',
+      },
+      {
+        externalName: 'Expires (days)',
+        internalName: 'expires',
+        value: 30,
+        type: 'number',
+        min: 0,
+        max: 30,
+      },
+    ];
+    setTokenFormInputs(TOKEN_FORM_INPUTS);
+    setFormData(getDefaultFormValues(TOKEN_FORM_INPUTS));
+  }, [activeWorkspace]);
+
+  const getDefaultFormValues = (initialInputs?: Field[]) => {
+    const inputs = initialInputs || tokenFormInputs;
     const data = {};
-    TOKEN_FORM_INPUTS.map((input: Field) => {
+    inputs.map((input: Field) => {
       data[input.internalName] = input.value;
     });
     return data;
   };
 
-  const [formData, setFormData] = useState<{ [key: string]: string }>(() => getDefaultFormValues());
+  const [formData, setFormData] = useState<{ [key: string]: string }>({ asd: '123' });
 
   useEffect(() => {
     const fetchTokens = async () => {
@@ -75,6 +92,7 @@ export const DataHub = () => {
       setFormData(getDefaultFormValues());
     } catch (error) {
       console.error('Failed to create token:', error);
+      setFormData(getDefaultFormValues());
       setError('Failed to create token.');
     } finally {
       setCreatingToken(false);
@@ -110,7 +128,7 @@ export const DataHub = () => {
     }
     return (
       <Form
-        fieldData={TOKEN_FORM_INPUTS}
+        fieldData={tokenFormInputs}
         header={'Create Token'}
         onChange={(formData) => setFormData(formData)}
       />
