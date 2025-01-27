@@ -59,7 +59,7 @@ export const DataHub = () => {
     return data;
   };
 
-  const [formData, setFormData] = useState<{ [key: string]: string }>({ asd: '123' });
+  const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const fetchTokens = async () => {
