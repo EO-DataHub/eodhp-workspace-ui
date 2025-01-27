@@ -57,7 +57,7 @@ const Members = () => {
       email: [constructTableHeader('Email', emailIcon)],
       role: [constructTableHeader('Role')],
       date: [constructTableHeader('Date added', calendarIcon)],
-      delete: [constructTableHeader('Delete')],
+      delete: [constructTableHeader('')],
     };
 
     const membersSegment = members.slice(

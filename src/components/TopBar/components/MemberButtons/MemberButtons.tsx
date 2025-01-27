@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import '../../../../styles/main.scss';
+import '@/styles/main.scss';
+import './styles.scss';
 
 import { IoMdPersonAdd } from 'react-icons/io';
 import { MdPersonRemove } from 'react-icons/md';
@@ -143,7 +144,7 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
           }}
         />
       )}
-      <div className="flex gap-small margin-small">
+      <div className="member-buttons">
         <Button
           icon={<IoMdPersonAdd />}
           onClick={() => {

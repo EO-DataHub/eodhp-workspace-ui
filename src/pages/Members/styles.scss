@@ -23,12 +23,7 @@
 
     &-header {
       display: flex;
-      align-items: center;
       gap: 5px;
-
-      img {
-        width: 20px;
-      }
     }
 
     &-column {
@@ -42,14 +37,26 @@
         border-bottom: 1px solid #2c2c2c;
         height: 60px;
         display: flex;
-        justify-content: center;
+        justify-content: left;
         align-items: center;
       }
+    }
+
+    &-column:last-of-type {
+      div {
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    &-header:first-of-type {
+      background-color: #ffffff0f;
     }
   }
 
   &-pagination {
     justify-self: right;
+    margin-top: 16px !important;
 
     .page-item {
       a {
