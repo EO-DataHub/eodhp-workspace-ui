@@ -7,6 +7,7 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import cloudIcon from '@/assets/icons/cloud.svg';
 
+import BlockStore from './components/BlockStore/BlockStore';
 import S3Browser from './components/S3Browser/S3Browser';
 
 export const Stores = () => {
@@ -58,11 +59,7 @@ export const Stores = () => {
           </div>
         </TabPanel>
         <TabPanel>
-          <div className="tab-content">
-            <p className="tab-content__note">
-              We have not yet implemented the block store functionality. Please check back later.
-            </p>
-          </div>
+          <BlockStore />
         </TabPanel>
       </Tabs>
     </div>

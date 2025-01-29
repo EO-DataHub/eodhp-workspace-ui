@@ -8,7 +8,7 @@ export type Workspace = {
   last_updated: string;
 };
 
-type Store = {
+export type Store = {
   object: ObjectStore[];
   block: Block[];
 };

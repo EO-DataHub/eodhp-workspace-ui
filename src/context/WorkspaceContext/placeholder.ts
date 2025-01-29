@@ -179,6 +179,13 @@ export const workspacesPlaceholder: Workspace[] = [
             env_var: 'S3_BUCKET_WORKSPACE',
             access_point_arn: 'arn:aws:s3:eu-west-2:875338691264:accesspoint/fbdca5-boeing-s3',
           },
+          {
+            store_id: '756f0d3e-72cd-4455-8caa-37e38ff38136',
+            name: 'configs-e5ceb9-dev',
+            path: 'lockheed/',
+            env_var: 'S3_BUCKET_WORKSPACE',
+            access_point_arn: 'arn:aws:s3:us-east-1:263549561627:accesspoint/f9953c-spacex-s3',
+          },
         ],
         block: [
           {
@@ -186,6 +193,12 @@ export const workspacesPlaceholder: Workspace[] = [
             name: '508173-dev-spacex-pv',
             access_point_id: 'fsap-c4507ae3ec62',
             fs_id: 'fs-50f097842d05',
+          },
+          {
+            store_id: '8c90e639-4641-43f6-9166-c1a84b860fd2',
+            name: '843474-dev-boeing-pv',
+            access_point_id: 'fsap-ed7aa5eee7ca',
+            fs_id: 'fs-ebd19ab2e3b1',
           },
         ],
       },
