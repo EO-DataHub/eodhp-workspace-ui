@@ -1,25 +1,22 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React from 'react';
 
 import './styles.scss';
-import ResponsivePagination from 'react-responsive-pagination';
-import 'react-responsive-pagination/themes/classic.css';
 
 import calendarIcon from '@/assets/icons/calendar.svg';
 import deleteIcon from '@/assets/icons/Delete.svg';
 import emailIcon from '@/assets/icons/email.svg';
 import memberGroupIcon from '@/assets/icons/member-group.svg';
 import memberIcon from '@/assets/icons/members.svg';
+import Table from '@/components/Table/Table';
 import MemberButtons from '@/components/TopBar/components/MemberButtons/MemberButtons';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { deleteMember } from '@/services/members/members';
-
-const MAX_MEMBERS_PER_PAGE = 10;
+import { Member } from '@/services/members/types';
 
 const Members = () => {
   const { members, workspaceOwner, activeWorkspace, getAndSetMembers } = useWorkspace();
-  const [selectedPage, setSelectedPage] = useState<number>(1);
 
   const renderHeader = () => {
     return (
@@ -42,60 +39,67 @@ const Members = () => {
     return <MemberButtons hideRemoveButton />;
   };
 
-  const constructTableHeader = (name: string, iconSrc?: string) => {
+  const renderDelete = (role: 'Admin' | 'Member', member: Member) => {
+    if (role === 'Admin') return '';
     return (
-      <div className="members-table-header">
-        {iconSrc ? <img alt={`${name} icon`} src={iconSrc} /> : null}
-        {name}
+      <div
+        onClick={async () => {
+          try {
+            await deleteMember(activeWorkspace.name, member.id);
+            await getAndSetMembers();
+          } catch (error) {
+            console.error(error);
+          }
+        }}
+      >
+        <img alt="delete" className="members-table-column-delete" src={deleteIcon} />
       </div>
     );
   };
 
   const renderTable = () => {
-    const columns = {
-      name: [constructTableHeader('Name', memberIcon)],
-      email: [constructTableHeader('Email', emailIcon)],
-      role: [constructTableHeader('Role')],
-      date: [constructTableHeader('Date added', calendarIcon)],
-      delete: [constructTableHeader('')],
-    };
-
-    const membersSegment = members.slice(
-      MAX_MEMBERS_PER_PAGE * selectedPage - MAX_MEMBERS_PER_PAGE,
-      MAX_MEMBERS_PER_PAGE * selectedPage,
-    );
-
-    membersSegment.forEach((member) => {
-      columns.email.push(<div>{member.email}</div>);
-      columns.name.push(<div>{`${member.firstName} ${member.lastName}`}</div>);
+    const rows = members.map((member) => {
       const role = workspaceOwner === member.id ? 'Admin' : 'Member';
-      columns.role.push(<div>{role}</div>);
-      columns.date.push(<div>{new Date().toDateString()}</div>);
-      if (role === 'Member') {
-        columns.delete.push(
-          <div
-            onClick={async () => {
-              try {
-                await deleteMember(activeWorkspace.name, member.id);
-                await getAndSetMembers();
-              } catch (error) {
-                console.error(error);
-              }
-            }}
-          >
-            <img alt="delete" className="members-table-column-delete" src={deleteIcon} />
-          </div>,
-        );
-      }
+
+      return {
+        email: member.email,
+        name: `${member.firstName} ${member.lastName}`,
+        role: role,
+        date: new Date().toDateString(),
+        delete: renderDelete(role, member),
+      };
     });
+
     return (
-      <div className="members-table">
-        <div className="members-table-column">{columns.name}</div>
-        <div className="members-table-column">{columns.email}</div>
-        <div className="members-table-column">{columns.role}</div>
-        <div className="members-table-column">{columns.date}</div>
-        <div className="members-table-column">{columns.delete}</div>
-      </div>
+      <Table
+        headers={[
+          {
+            externalName: 'Email',
+            internalName: 'email',
+            icon: emailIcon,
+          },
+          {
+            externalName: 'Name',
+            internalName: 'name',
+            icon: memberIcon,
+          },
+          {
+            externalName: 'Role',
+            internalName: 'role',
+          },
+          {
+            externalName: 'Date added',
+            internalName: 'date',
+            icon: calendarIcon,
+          },
+          {
+            externalName: '',
+            internalName: 'delete',
+          },
+        ]}
+        maxRowsPerPage={10}
+        rows={rows}
+      />
     );
   };
 
@@ -104,12 +108,6 @@ const Members = () => {
       {renderHeader()}
       {renderButtons()}
       {renderTable()}
-      <ResponsivePagination
-        className="pagination members-pagination"
-        current={selectedPage}
-        total={Math.ceil(members.length / MAX_MEMBERS_PER_PAGE)}
-        onPageChange={(e) => setSelectedPage(e)}
-      />
     </div>
   );
 };
