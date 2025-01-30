@@ -13,6 +13,27 @@ import S3Browser from './components/S3Browser/S3Browser';
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
 
+  const renderTabDescription = () => {
+    if (activeTab === 1) {
+      return (
+        <div className="header-right-text">
+          <span className="header-right-title">Object stores</span> To browse the contents of these
+          stores please use{' '}
+          <a href="https://dev.eodatahub.org.uk/apphub" rel="noreferrer" target="_blank">
+            Jupyter
+          </a>
+        </div>
+      );
+    } else {
+      return (
+        <div className="header-right-text">
+          <span className="header-right-title">Object stores</span> are used to store data and
+          files. You can create multiple object stores and use them to store data and files.
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="content-page stores">
       <div className="header">
@@ -21,10 +42,7 @@ export const Stores = () => {
         </div>
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />
-          <div className="header-right-text">
-            <span className="header-right-title">Object stores</span> are used to store data and
-            files. You can create multiple object stores and use them to store data and files.
-          </div>
+          {renderTabDescription()}
         </div>
       </div>
 
