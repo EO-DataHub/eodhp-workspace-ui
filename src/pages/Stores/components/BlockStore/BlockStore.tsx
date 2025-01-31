@@ -38,7 +38,9 @@ const BlockStore = () => {
   };
 
   return (
-    <div className="block-store">{activeWorkspace.stores.map((store) => renderBlocks(store))}</div>
+    <div className="block-store">
+      {activeWorkspace?.stores?.map((store) => renderBlocks(store))}
+    </div>
   );
 };
 
