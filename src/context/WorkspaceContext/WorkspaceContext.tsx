@@ -47,36 +47,6 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [isWorkspaceOwner, setIsWorkspaceOwner] = useState<boolean>();
   const [workspaceOwner, setWorkspaceOwner] = useState<string>();
   const [members, setMembers] = useState<Member[]>([]);
-
-  useEffect(() => {
-    const getWorkspaces = async () => {
-      const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
-      let storedWorkspace: Workspace;
-      if (storedWorkspaceStr) {
-        storedWorkspace = JSON.parse(storedWorkspaceStr);
-      }
-
-      try {
-        let workspaces: Workspace[];
-        if (import.meta.env.VITE_WORKSPACE_LOCAL) {
-          workspaces = workspacesPlaceholder;
-        } else {
-          const res = await fetch(`/api/workspaces`);
-          if (!res.ok) {
-            throw new Error();
-          }
-          workspaces = await res.json();
-        }
-
-        setAvailableWorkspaces(workspaces);
-        setActiveWorkspace(storedWorkspace || workspaces[0]);
-      } catch (error) {
-        console.error('Error retrieving workspaces');
-        if (storedWorkspace) setActiveWorkspace(storedWorkspace);
-      }
-    };
-    getWorkspaces();
-  }, []);
   const [accounts, setAccounts] = useState<Account[]>([]);
 
   useEffect(() => {
@@ -96,13 +66,25 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     }
 
     try {
-      const res = await fetch(`/api/workspaces`);
-      if (!res.ok) {
-        throw new Error();
+      let workspaces: Workspace[];
+      if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+        workspaces = workspacesPlaceholder;
+      } else {
+        const res = await fetch(`/api/workspaces`);
+        if (!res.ok) {
+          throw new Error();
+        }
+        workspaces = await res.json();
       }
-      const workspaces = await res.json();
+
       setAvailableWorkspaces(workspaces);
-      setActiveWorkspace(storedWorkspace || workspaces[0]);
+
+      const newWorkspace =
+        workspaces.filter((workspace) => {
+          return storedWorkspace?.id === workspace.id;
+        })[0] || workspaces[0];
+
+      setActiveWorkspace(newWorkspace);
     } catch (error) {
       console.error('Error retrieving workspaces');
       if (storedWorkspace) setActiveWorkspace(storedWorkspace);
@@ -159,7 +141,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
 
   const getAndSetMembers = async () => {
     try {
-      const _members = await getMembers(activeWorkspace.name);
+      const _members = await getMembers(activeWorkspace?.name);
       setMembers(_members);
     } catch (error) {
       console.error(error);
