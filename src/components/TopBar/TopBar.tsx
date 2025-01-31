@@ -11,7 +11,7 @@ import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 export const TopBar = () => {
   const { activeWorkspace, isWorkspaceOwner, members } = useWorkspace();
-  const [isLightTheme, setIsLightTheme] = useState(true);
+  const [isLightTheme, setIsLightTheme] = useState(false);
 
   useEffect(() => {
     const workspace = document.getElementById('workspace');
