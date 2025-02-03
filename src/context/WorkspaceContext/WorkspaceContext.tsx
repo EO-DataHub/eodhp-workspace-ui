@@ -140,6 +140,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   }, [activeWorkspace]);
 
   const getAndSetMembers = async () => {
+    if (!activeWorkspace) return;
     try {
       const _members = await getMembers(activeWorkspace?.name);
       setMembers(_members);
