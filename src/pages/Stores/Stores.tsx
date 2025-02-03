@@ -17,7 +17,7 @@ export const Stores = () => {
     if (activeTab === 1) {
       return (
         <div className="header-right-text">
-          <span className="header-right-title">Object stores</span> To browse the contents of these
+          <span className="header-right-title">Block stores</span> To browse the contents of these
           stores please use{' '}
           <a href="https://dev.eodatahub.org.uk/apphub" rel="noreferrer" target="_blank">
             Jupyter

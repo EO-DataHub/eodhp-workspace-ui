@@ -37,6 +37,8 @@ const BlockStore = () => {
     return <Table headers={headers} maxRowsPerPage={10} rows={rows} />;
   };
 
+  if (!activeWorkspace) return;
+  if (!activeWorkspace.stores) return;
   return (
     <div className="block-store">
       {activeWorkspace?.stores?.map((store) => renderBlocks(store))}

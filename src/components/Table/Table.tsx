@@ -32,10 +32,10 @@ const Table = ({ maxRowsPerPage, headers, rows }: TableProps) => {
       });
     });
     return (
-      <div className="members-table">
+      <div className="table">
         {Object.keys(columns).map((column) => {
           return (
-            <div key={column} className="members-table-column">
+            <div key={column} className="table-column">
               {columns[column]}
             </div>
           );
@@ -46,7 +46,7 @@ const Table = ({ maxRowsPerPage, headers, rows }: TableProps) => {
 
   const constructTableHeader = (name: string, iconSrc?: string) => {
     return (
-      <div className="members-table-header">
+      <div className="table-header">
         {iconSrc ? <img alt={`${name} icon`} src={iconSrc} /> : null}
         {name}
       </div>

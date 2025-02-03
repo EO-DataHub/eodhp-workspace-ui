@@ -52,7 +52,7 @@ const Members = () => {
           }
         }}
       >
-        <img alt="delete" className="members-table-column-delete" src={deleteIcon} />
+        <img alt="delete" className="table-column-delete" src={deleteIcon} />
       </div>
     );
   };
