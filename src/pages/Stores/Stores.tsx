@@ -9,9 +9,8 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import cloudIcon from '@/assets/icons/cloud.svg';
 import { Button } from '@/components/Button/Button';
 import { useWorkspace } from '@/hooks/useWorkspace';
+
 import S3Browser from './components/S3Browser/S3Browser';
-
-
 
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -31,10 +30,10 @@ export const Stores = () => {
           </div>
           <div className="header-right-workspace-file-harvester">
             <Button
-              onClick={()=> {
-                  fetch(`/api/workspaces/${activeWorkspace.name}/harvest`, { method: "POST" })
-                  alert('Harvesting started');
-                  }
+              onClick={() => {
+                fetch(`/api/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' })
+                alert('Harvesting started');
+                }
               }>
               <LuCopyPlus />
             </Button>
