@@ -34,7 +34,7 @@ export const Stores = () => {
                 fetch(`/api/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
                 alert('Harvesting started');
               }}
-              >
+            >
               <LuCopyPlus />
             </Button>
           </div>
