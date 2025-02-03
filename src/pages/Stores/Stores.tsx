@@ -7,8 +7,31 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import cloudIcon from '@/assets/icons/cloud.svg';
 
+import BlockStore from './components/BlockStore/BlockStore';
+
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
+
+  const renderTabDescription = () => {
+    if (activeTab === 1) {
+      return (
+        <div className="header-right-text">
+          <span className="header-right-title">Block stores</span> To browse the contents of these
+          stores please use{' '}
+          <a href="https://dev.eodatahub.org.uk/apphub" rel="noreferrer" target="_blank">
+            Jupyter
+          </a>
+        </div>
+      );
+    } else {
+      return (
+        <div className="header-right-text">
+          <span className="header-right-title">Object stores</span> are used to store data and
+          files. You can create multiple object stores and use them to store data and files.
+        </div>
+      );
+    }
+  };
 
   return (
     <div className="content-page stores">
@@ -18,10 +41,7 @@ export const Stores = () => {
         </div>
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />
-          <div className="header-right-text">
-            <span className="header-right-title">Object stores</span> are used to store data and
-            files. You can create multiple object stores and use them to store data and files.
-          </div>
+          {renderTabDescription()}
         </div>
       </div>
 
@@ -52,11 +72,7 @@ export const Stores = () => {
           </div>
         </TabPanel>
         <TabPanel>
-          <div className="tab-content">
-            <p className="tab-content__note">
-              We have not yet implemented the block store functionality. Please check back later.
-            </p>
-          </div>
+          <BlockStore />
         </TabPanel>
       </Tabs>
     </div>

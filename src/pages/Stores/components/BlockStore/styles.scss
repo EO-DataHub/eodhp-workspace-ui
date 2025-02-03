@@ -1,0 +1,26 @@
+.block-store {
+  margin: 16px 0;
+
+  &__block {
+    h2 {
+      border-bottom: 1px solid lightgrey;
+    }
+
+    &-row {
+      display: flex;
+      margin: 5px 0;
+
+      &:hover {
+        background-color: rgb(97 97 97 / 10%);
+      }
+
+      &__label {
+        flex: 1;
+      }
+
+      &__value {
+        flex: 1;
+      }
+    }
+  }
+}

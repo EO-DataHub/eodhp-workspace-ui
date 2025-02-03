@@ -5,8 +5,22 @@ import './S3Browser.scss';
 import { Workspace } from '@/context/WorkspaceContext/types';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
-const createStorageBrowserWithWorkspace = (activeWorkspace: Workspace) =>
-  createStorageBrowser({
+const createStorageBrowserWithWorkspace = (activeWorkspace: Workspace) => {
+  const locations = [];
+  activeWorkspace.stores.forEach((store) => {
+    store.object.forEach((object) => {
+      locations.push({
+        bucketName: object.name,
+        key: object.path,
+        region: 'eu-west-2',
+        type: 'PREFIX',
+        permission: 'READWRITE',
+        scope: `s3://${object.name}/${object.path}/`,
+      });
+    });
+  });
+
+  return createStorageBrowser({
     elements: elementsDefault,
 
     config: {
@@ -14,14 +28,7 @@ const createStorageBrowserWithWorkspace = (activeWorkspace: Workspace) =>
         console.log('activeWorkspace', activeWorkspace);
 
         return {
-          locations: activeWorkspace.stores.map((store) => ({
-            bucketName: store.object[0].name,
-            key: store.object[0].path,
-            region: 'eu-west-2',
-            type: 'PREFIX',
-            permission: 'READWRITE',
-            scope: `s3://${store.object[0].name}/${store.object[0].path}/`,
-          })),
+          locations,
         };
       },
 
@@ -44,6 +51,7 @@ const createStorageBrowserWithWorkspace = (activeWorkspace: Workspace) =>
       registerAuthListener: () => {},
     },
   });
+};
 
 export default function S3Browser() {
   const { activeWorkspace } = useWorkspace();

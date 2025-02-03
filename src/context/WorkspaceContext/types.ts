@@ -8,7 +8,7 @@ export type Workspace = {
   last_updated: string;
 };
 
-type Store = {
+export type Store = {
   object: ObjectStore[];
   block: Block[];
 };
@@ -25,7 +25,7 @@ type Block = {
   store_id: string;
   name: string;
   access_point_id: string;
-  fs_id: string;
+  mount_point: string;
 };
 
 export type Account = {
