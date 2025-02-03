@@ -7,8 +7,6 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import cloudIcon from '@/assets/icons/cloud.svg';
 
-import S3Browser from './components/S3Browser/S3Browser';
-
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
 
@@ -47,14 +45,10 @@ export const Stores = () => {
         <TabPanel>
           <div className="tab-content">
             <p className="tab-content__note">
-              We are still working on some of the backend components for the object store sessions,
-              this may not work for everyone. <br />
-              If you see an error saying &quot;Unexpected Token&quot;, then your account is not yet
-              configured to use the browser-based object store.
-              <br />
-              If you would like to try out this functionality, please get in touch with us.
+              Use the credentials tab to create temporary S3 credentials to access your Object
+              Store. <br />
+              We are working on documentation to help you get started with the Object Store.
             </p>
-            <S3Browser />
           </div>
         </TabPanel>
         <TabPanel>
