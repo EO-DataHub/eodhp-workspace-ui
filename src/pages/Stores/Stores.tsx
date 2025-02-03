@@ -3,15 +3,14 @@ import { useState } from 'react';
 
 import { CiCloudOn } from 'react-icons/ci';
 import { FiBox } from 'react-icons/fi';
-import { LuCopyPlus } from "react-icons/lu";
+import { LuCopyPlus } from 'react-icons/lu';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import cloudIcon from '@/assets/icons/cloud.svg';
-
 import { Button } from '@/components/Button/Button';
+import { useWorkspace } from '@/hooks/useWorkspace';
 import S3Browser from './components/S3Browser/S3Browser';
 
-import { useWorkspace } from '@/hooks/useWorkspace';
 
 
 export const Stores = () => {
@@ -32,12 +31,12 @@ export const Stores = () => {
           </div>
           <div className="header-right-workspace-file-harvester">
             <Button
-                onClick={()=> {
-                    fetch(`/api/workspaces/${activeWorkspace.name}/harvest`, { method: "POST" })
-                    alert('Harvesting started');
-                    }
-                }>
-                <LuCopyPlus />
+              onClick={()=> {
+                  fetch(`/api/workspaces/${activeWorkspace.name}/harvest`, { method: "POST" })
+                  alert('Harvesting started');
+                  }
+              }>
+              <LuCopyPlus />
             </Button>
           </div>
 
