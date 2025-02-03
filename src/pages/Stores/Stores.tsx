@@ -31,14 +31,12 @@ export const Stores = () => {
           <div className="header-right-workspace-file-harvester">
             <Button
               onClick={() => {
-                fetch(`/api/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' })
+                fetch(`/api/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
                 alert('Harvesting started');
-                }
-              }>
+              }}>
               <LuCopyPlus />
             </Button>
           </div>
-
         </div>
       </div>
 
