@@ -35,7 +35,7 @@ export const Stores = () => {
                 alert('Harvesting started');
               }}
             >
-              <LuCopyPlus />
+              <LuCopyPlus /> Harvest
             </Button>
           </div>
         </div>
