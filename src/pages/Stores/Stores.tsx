@@ -31,7 +31,7 @@ export const Stores = () => {
           <div className="header-right-workspace-file-harvester">
             <Button
               onClick={() => {
-                fetch(`/api/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
+                fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
                 alert('Harvesting started');
               }}
             >
