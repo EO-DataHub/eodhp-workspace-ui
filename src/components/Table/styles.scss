@@ -2,10 +2,15 @@
   display: flex;
   width: 100%;
   justify-content: space-between;
+  font-size: 0.9rem;
 
   &-header {
     display: flex;
     gap: 5px;
+
+    img {
+      margin-right: 0.5rem;
+    }
   }
 
   &-column {
@@ -32,6 +37,6 @@
   }
 
   &-header:first-of-type {
-    background-color: #ffffff0f;
+    background-color: var(--header-background);
   }
 }
