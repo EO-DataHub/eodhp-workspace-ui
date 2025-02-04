@@ -54,6 +54,8 @@ const Table = ({ maxRowsPerPage, headers, rows }: TableProps) => {
     );
   };
 
+  if (!rows) return;
+  if (!rows.length) return;
   return (
     <div>
       {renderTable()}
