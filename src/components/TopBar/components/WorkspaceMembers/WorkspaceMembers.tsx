@@ -8,6 +8,8 @@ interface WorkspaceMembersProps {
 }
 
 export const WorkspaceMembers = ({ members, maxVisible = 5 }: WorkspaceMembersProps) => {
+  if (!members) return;
+  if (!members.length) return;
   const visibleUsers = members.slice(0, maxVisible);
   const remainingCount = members.length - maxVisible;
 

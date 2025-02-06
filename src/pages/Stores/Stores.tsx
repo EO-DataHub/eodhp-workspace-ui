@@ -10,11 +10,32 @@ import cloudIcon from '@/assets/icons/cloud.svg';
 import { Button } from '@/components/Button/Button';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
-import S3Browser from './components/S3Browser/S3Browser';
+import BlockStore from './components/BlockStore/BlockStore';
 
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
   const { activeWorkspace } = useWorkspace();
+
+  const renderTabDescription = () => {
+    if (activeTab === 1) {
+      return (
+        <div className="header-right-text">
+          <span className="header-right-title">Block stores</span> To browse the contents of these
+          stores please use{' '}
+          <a href="https://dev.eodatahub.org.uk/apphub" rel="noreferrer" target="_blank">
+            Jupyter
+          </a>
+        </div>
+      );
+    } else {
+      return (
+        <div className="header-right-text">
+          <span className="header-right-title">Object stores</span> are used to store data and
+          files. You can create multiple object stores and use them to store data and files.
+        </div>
+      );
+    }
+  };
 
   return (
     <div className="content-page stores">
@@ -28,6 +49,7 @@ export const Stores = () => {
             <span className="header-right-title">Object stores</span> are used to store data and
             files. You can create multiple object stores and use them to store data and files.
           </div>
+          {renderTabDescription()}
           <div className="header-right-workspace-file-harvester">
             <Button
               onClick={() => {
@@ -62,22 +84,14 @@ export const Stores = () => {
         <TabPanel>
           <div className="tab-content">
             <p className="tab-content__note">
-              We are still working on some of the backend components for the object store sessions,
-              this may not work for everyone. <br />
-              If you see an error saying &quot;Unexpected Token&quot;, then your account is not yet
-              configured to use the browser-based object store.
-              <br />
-              If you would like to try out this functionality, please get in touch with us.
+              Use the credentials tab to create temporary S3 credentials to access your Object
+              Store. <br />
+              We are working on documentation to help you get started with the Object Store.
             </p>
-            <S3Browser />
           </div>
         </TabPanel>
         <TabPanel>
-          <div className="tab-content">
-            <p className="tab-content__note">
-              We have not yet implemented the block store functionality. Please check back later.
-            </p>
-          </div>
+          <BlockStore />
         </TabPanel>
       </Tabs>
     </div>
