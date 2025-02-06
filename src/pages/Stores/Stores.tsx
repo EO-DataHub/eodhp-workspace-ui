@@ -45,10 +45,6 @@ export const Stores = () => {
         </div>
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />
-          <div className="header-right-text">
-            <span className="header-right-title">Object stores</span> are used to store data and
-            files. You can create multiple object stores and use them to store data and files.
-          </div>
           {renderTabDescription()}
           <div className="header-right-workspace-file-harvester">
             <Button
