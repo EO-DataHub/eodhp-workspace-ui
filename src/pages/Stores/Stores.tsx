@@ -3,14 +3,18 @@ import { useState } from 'react';
 
 import { CiCloudOn } from 'react-icons/ci';
 import { FiBox } from 'react-icons/fi';
+import { LuCopyPlus } from 'react-icons/lu';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import cloudIcon from '@/assets/icons/cloud.svg';
+import { Button } from '@/components/Button/Button';
+import { useWorkspace } from '@/hooks/useWorkspace';
 
 import BlockStore from './components/BlockStore/BlockStore';
 
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const { activeWorkspace } = useWorkspace();
 
   const renderTabDescription = () => {
     if (activeTab === 1) {
@@ -42,6 +46,17 @@ export const Stores = () => {
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />
           {renderTabDescription()}
+          <div className="header-right-workspace-file-harvester">
+            <Button
+              onClick={() => {
+                // This is at /workspaces, not at /api/workspaces
+                fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
+                alert('Harvesting started');
+              }}
+            >
+              <LuCopyPlus /> Harvest
+            </Button>
+          </div>
         </div>
       </div>
 
