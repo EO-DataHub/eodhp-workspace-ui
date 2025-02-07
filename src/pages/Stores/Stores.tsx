@@ -8,7 +8,7 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import cloudIcon from '@/assets/icons/cloud.svg';
 // import { Button } from '@/components/Button/Button';
-import { useWorkspace } from '@/hooks/useWorkspace';
+// import { useWorkspace } from '@/hooks/useWorkspace';
 
 import BlockStore from './components/BlockStore/BlockStore';
 
