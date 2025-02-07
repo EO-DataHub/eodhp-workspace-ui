@@ -47,6 +47,7 @@ export const Stores = () => {
           <img alt="Cloud" src={cloudIcon} />
           {renderTabDescription()}
 
+        </div>
       </div>
 
       <Tabs
