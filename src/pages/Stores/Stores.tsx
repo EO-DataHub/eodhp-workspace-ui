@@ -14,7 +14,7 @@ import BlockStore from './components/BlockStore/BlockStore';
 
 export const Stores = () => {
   const [activeTab, setActiveTab] = useState(0);
-//   const { activeWorkspace } = useWorkspace();
+  //   const { activeWorkspace } = useWorkspace();
 
   const renderTabDescription = () => {
     if (activeTab === 1) {
