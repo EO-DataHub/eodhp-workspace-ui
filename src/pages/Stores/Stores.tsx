@@ -46,18 +46,7 @@ export const Stores = () => {
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />
           {renderTabDescription()}
-          <div className="header-right-workspace-file-harvester">
-            <Button
-              onClick={() => {
-                // This is at /workspaces, not at /api/workspaces
-                fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
-                alert('Harvesting started');
-              }}
-            >
-              <LuCopyPlus /> Harvest
-            </Button>
-          </div>
-        </div>
+
       </div>
 
       <Tabs
