@@ -26,7 +26,7 @@ const AddWorkspace = () => {
         internalName: 'account',
         type: 'dropdown',
         value: '',
-        options: accounts.map((account) => {
+        options: accounts?.map((account) => {
           return {
             externalName: account.name,
             internalName: account.id,
