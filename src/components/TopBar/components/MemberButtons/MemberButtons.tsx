@@ -11,38 +11,13 @@ import Form from '@/components/Form/Form';
 import Modal from '@/components/Modal/Modal';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { addMember } from '@/services/members/members';
-import { Member } from '@/services/members/types';
 
 import DeleteRow from '../DeleteRow/DeleteRow';
 
 const ADD_MEMBER_FIELDS: Field[] = [
   {
-    externalName: 'Id',
-    internalName: 'id',
-    value: '',
-    type: 'string',
-  },
-  {
     externalName: 'Username',
     internalName: 'username',
-    value: '',
-    type: 'string',
-  },
-  {
-    externalName: 'First name',
-    internalName: 'firstName',
-    value: '',
-    type: 'string',
-  },
-  {
-    externalName: 'Last name',
-    internalName: 'lastName',
-    value: '',
-    type: 'string',
-  },
-  {
-    externalName: 'Email',
-    internalName: 'email',
     value: '',
     type: 'string',
   },
@@ -105,8 +80,8 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
 
   const validateAddMember = () => {
     const errors = [];
-    if (!formData['id']) {
-      errors.push("Please enter the user's Id");
+    if (!formData['username']) {
+      errors.push("Please enter the user's Username");
     }
     setFormErrors(errors);
     return !errors.length;
@@ -126,15 +101,8 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
           }}
           onSubmit={async () => {
             if (!validateAddMember()) return;
-            const member: Member = {
-              email: formData.email,
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              username: formData.username,
-              id: formData.id,
-            };
             try {
-              await addMember(activeWorkspace.name, member);
+              await addMember(activeWorkspace.name, formData['username']);
               await getAndSetMembers();
               setFormData(initialFormData());
               setModal(false);

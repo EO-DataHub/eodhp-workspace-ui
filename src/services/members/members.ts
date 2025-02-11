@@ -17,22 +17,27 @@ export const getMembers = async (workspaceName: string) => {
   }
 };
 
-export const addMember = async (workspaceName: string, member: Member) => {
+export const addMember = async (workspaceName: string, memberUsername: string) => {
   try {
-    await fetch(`/api/workspaces/${workspaceName}/users/${member.id}`, {
+    const res = await fetch(`/api/workspaces/${workspaceName}/users/${memberUsername}`, {
       method: 'PUT',
-      body: JSON.stringify(member),
     });
+    if (!res.ok) {
+      throw new Error();
+    }
   } catch (error) {
     throw new Error(error);
   }
 };
 
-export const deleteMember = async (workspaceName: string, memberId: string) => {
+export const deleteMember = async (workspaceName: string, memberUsername: string) => {
   try {
-    await fetch(`/api/workspaces/${workspaceName}/users/${memberId}`, {
+    const res = await fetch(`/api/workspaces/${workspaceName}/users/${memberUsername}`, {
       method: 'DELETE',
     });
+    if (!res.ok) {
+      throw new Error();
+    }
   } catch (error) {
     throw new Error(error);
   }

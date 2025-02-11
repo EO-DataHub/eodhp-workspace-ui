@@ -8,12 +8,12 @@
   border-radius: 12px;
 
   &-error {
-    border-color: red;
+    border-color: var(--error);
     width: 50%;
     min-width: 300px;
 
     &__item {
-      color: red;
+      color: var(--error);
     }
   }
 }
