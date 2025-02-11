@@ -45,7 +45,7 @@ const Members = () => {
       <div
         onClick={async () => {
           try {
-            await deleteMember(activeWorkspace.name, member.id);
+            await deleteMember(activeWorkspace.name, member.username);
             await getAndSetMembers();
           } catch (error) {
             console.error(error);

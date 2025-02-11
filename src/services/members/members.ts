@@ -30,11 +30,14 @@ export const addMember = async (workspaceName: string, memberUsername: string) =
   }
 };
 
-export const deleteMember = async (workspaceName: string, memberId: string) => {
+export const deleteMember = async (workspaceName: string, memberUsername: string) => {
   try {
-    await fetch(`/api/workspaces/${workspaceName}/users/${memberId}`, {
+    const res = await fetch(`/api/workspaces/${workspaceName}/users/${memberUsername}`, {
       method: 'DELETE',
     });
+    if (!res.ok) {
+      throw new Error();
+    }
   } catch (error) {
     throw new Error(error);
   }

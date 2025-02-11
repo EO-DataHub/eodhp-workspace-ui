@@ -30,7 +30,8 @@
       min-height: 200px;
       max-width: 750px;
       border-radius: 12px;
-      background-color: white;
+      background-color: var(--background-secondary);
+      color: var(--text-primary);
     }
 
     &-buttons {

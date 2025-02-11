@@ -36,11 +36,11 @@ const DeleteRow = ({ member, onDeleteSuccess }: DeleteRowProps) => {
           onClick={async (e) => {
             e.stopPropagation();
             try {
-              await deleteMember(activeWorkspace.name, member.id);
+              await deleteMember(activeWorkspace.name, member.username);
               await onDeleteSuccess();
             } catch (error) {
               console.error(error);
-              console.error(`Error deleting ${member.id}`);
+              console.error(`Error deleting ${member.username}`);
             }
           }}
         >
