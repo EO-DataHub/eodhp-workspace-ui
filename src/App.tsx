@@ -6,8 +6,11 @@ import { WorkspaceMenu } from './components/WorkspaceMenu/WorkspaceMenu';
 import { WorkspaceSelection } from './components/WorkspaceSelection/WorkspaceSelection';
 import './App.scss';
 import 'react-tabs/style/react-tabs.css';
+import { useWorkspace } from './hooks/useWorkspace';
 
 export const App = () => {
+  const { activeWorkspace, accounts } = useWorkspace()
+
   const [content, setContent] = useState<React.ReactNode>();
   return (
     <div
@@ -19,8 +22,10 @@ export const App = () => {
 
         <div className="content">
           <WorkspaceSelection />
-          <WorkspaceMenu setContent={setContent} />
-          <div className="workspace-content content-border">{content}</div>
+          {activeWorkspace && accounts?.length ? <WorkspaceMenu setContent={setContent} /> : null}
+          {activeWorkspace && accounts?.length ? (
+            <div className="workspace-content content-border">{content}</div>
+          ) : null}
         </div>
       </div>
     </div>

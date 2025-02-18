@@ -36,7 +36,6 @@ export const TopBar = () => {
   return (
     <div className="top-bar__container">
       <div className="disclaimer">
-        <p>The Workspace UI is still in development. Many features are not yet implemented.</p>
         {import.meta.env.VITE_WORKSPACE_LOCAL ? (
           <Button className="theme-switcher" onClick={() => setIsLightTheme(!isLightTheme)}>
             Set theme to {isLightTheme ? 'dark' : 'light'}
