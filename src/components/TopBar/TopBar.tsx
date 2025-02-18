@@ -6,13 +6,13 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 
 import MemberButtons from './components/MemberButtons/MemberButtons';
 import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
+import Warning from '../../assets/icons/warning.svg';
 import { Button } from '../Button/Button';
 import { ProfileTile } from '../ProfileTile/ProfileTile';
 
-import Warning from "../../assets/icons/warning.svg"
-
 export const TopBar = () => {
-  const { activeWorkspace, isWorkspaceOwner, members, availableWorkspaces, accounts } = useWorkspace();
+  const { activeWorkspace, isWorkspaceOwner, members, availableWorkspaces, accounts } =
+    useWorkspace();
   const [isLightTheme, setIsLightTheme] = useState(false);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export const TopBar = () => {
   };
 
   return (
-    <div className='top-bar__container'>
+    <div className="top-bar__container">
       <div className="disclaimer">
         <p>The Workspace UI is still in development. Many features are not yet implemented.</p>
         {import.meta.env.VITE_WORKSPACE_LOCAL ? (
@@ -61,19 +61,26 @@ export const TopBar = () => {
           {renderMemberButtons()}
           {members && <WorkspaceMembers members={members} />}
         </div>
-        
-        
       </div>
-      {accounts?.length ? null : <div className="top-bar__warning-container">
-        <div className="top-bar__warning">
-        <img src={Warning}  />
-          You currently have no billing accounts. Please request a billing account in order to create a workspace.</div>
-      </div>}
-      {availableWorkspaces?.length ? null : <div className="top-bar__warning-container">
-        <div className="top-bar__warning">
-        <img src={Warning}  />
-          You currently have no workspaces. Please create a new workspace to perform workspace management actions. Alternatively, someone can add you to their workspace using your username.</div>
-      </div>}
+      {accounts?.length ? null : (
+        <div className="top-bar__warning-container">
+          <div className="top-bar__warning">
+            <img alt={'Warning Icon'} src={Warning} />
+            You currently have no billing accounts. Please request a billing account in order to
+            create a workspace.
+          </div>
+        </div>
+      )}
+      {availableWorkspaces?.length ? null : (
+        <div className="top-bar__warning-container">
+          <div className="top-bar__warning">
+            <img alt={'Warning Icon'} src={Warning} />
+            You currently have no workspaces. Please create a new workspace to perform workspace
+            management actions. Alternatively, someone can add you to their workspace using your
+            username.
+          </div>
+        </div>
+      )}
     </div>
   );
 };

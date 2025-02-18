@@ -115,7 +115,7 @@ const AddWorkspace = () => {
         />
       ) : null}
       <MdAddCircleOutline
-        className={`workspace-selection__add icon-primary ${accounts?.length ? "" : "disabled"}`}
+        className={`workspace-selection__add icon-primary ${accounts?.length ? '' : 'disabled'}`}
         onClick={() => {
           if (!accounts.length) return;
           setShowModal(true);

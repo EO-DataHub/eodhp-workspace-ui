@@ -158,7 +158,11 @@ export const DataHub = () => {
         </p>
       ) : null}
 
-      <Button className={`${!availableWorkspaces?.length ? "disabled" : ""}`} disabled={loading || !availableWorkspaces?.length} onClick={() => setModal(true)}>
+      <Button
+        className={`${!availableWorkspaces?.length ? 'disabled' : ''}`}
+        disabled={loading || !availableWorkspaces?.length}
+        onClick={() => setModal(true)}
+      >
         Request New Token
       </Button>
 
