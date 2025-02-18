@@ -10,7 +10,7 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
 
 export const DataHub = () => {
-  const { activeWorkspace } = useWorkspace();
+  const { activeWorkspace, availableWorkspaces } = useWorkspace();
 
   const [tokens, setTokens] = useState([]);
   const [newTokenValue, setNewTokenValue] = useState('');
@@ -33,7 +33,7 @@ export const DataHub = () => {
       {
         externalName: 'Scope',
         internalName: 'scope',
-        value: `offline_access workspace:${activeWorkspace.name}`,
+        value: `offline_access workspace:${activeWorkspace?.name}`,
         readOnly: true,
         type: 'string',
       },
@@ -158,7 +158,11 @@ export const DataHub = () => {
         </p>
       ) : null}
 
-      <Button disabled={loading} onClick={() => setModal(true)}>
+      <Button
+        className={`${!availableWorkspaces?.length ? 'disabled' : ''}`}
+        disabled={loading || !availableWorkspaces?.length}
+        onClick={() => setModal(true)}
+      >
         Request New Token
       </Button>
 

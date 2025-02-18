@@ -14,10 +14,10 @@
 
   input {
     padding: 3px 5px;
-    background-color: white;
-    color: black;
+    background-color: var(--background-secondary);
     outline: none;
     border: 1px solid lightgrey;
+    color: var(--text-primary);
 
     &:disabled {
       background-color: lightgrey;
@@ -28,7 +28,8 @@
     outline: none;
     height: 24px;
     border: 1px solid lightgrey;
-    background-color: white;
+    background-color: var(--background-secondary);
+    color: var(--text-primary);
   }
 
   &-error {
