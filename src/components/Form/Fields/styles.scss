@@ -15,11 +15,9 @@
   input {
     padding: 3px 5px;
     background-color: var(--background-secondary);
-    color: black;
     outline: none;
     border: 1px solid lightgrey;
     color: var(--text-primary);
-
 
     &:disabled {
       background-color: lightgrey;
