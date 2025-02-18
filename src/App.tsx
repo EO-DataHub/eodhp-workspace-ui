@@ -9,7 +9,7 @@ import 'react-tabs/style/react-tabs.css';
 import { useWorkspace } from './hooks/useWorkspace';
 
 export const App = () => {
-  const { activeWorkspace, accounts } = useWorkspace()
+  const { activeWorkspace, accounts } = useWorkspace();
 
   const [content, setContent] = useState<React.ReactNode>();
   return (
