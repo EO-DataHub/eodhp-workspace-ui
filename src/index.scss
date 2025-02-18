@@ -47,3 +47,7 @@ p {
 .icon-secondary {
   color: var(--icon-secondary);
 }
+
+.disabled {
+  cursor: not-allowed;
+}

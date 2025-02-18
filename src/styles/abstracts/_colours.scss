@@ -13,6 +13,9 @@
   --info-border: #3d9dce;
   --header-background: #ffffff0f;
   --error: rgb(250 111 111);
+  --warning: rgb(255, 226, 183);
+  --warning-border:rgb(255, 183, 77);
+  --warning-background: transparent;
 }
 
 .light-theme {
@@ -30,4 +33,7 @@
   --info-border: #3d9dce;
   --header-background: #f7f7f7cf;
   --error: rgb(229 35 35);
+  --warning: rgb(102, 60, 0);
+  --warning-border: transparent;
+  --warning-background: rgb(255, 244, 229);
 }

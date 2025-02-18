@@ -11,6 +11,35 @@
     cursor: pointer;
   }
 
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__warning {
+    font-weight: 400;
+    font-size: 0.875rem;
+    background-color: var(--warning-background);
+    display: flex;
+    color: var(--warning);
+    border-radius: 4px;
+    padding: 6px 16px;
+    border: 1px solid var(--warning-border);
+    align-items: center;
+    gap: 1rem; 
+
+    img {
+      width: 25px;
+    }
+
+    &-container {
+      width: 100%;
+      padding: 0 3.5rem;
+      margin-bottom: 1rem;
+    }
+  }
+
   &__left {
     display: flex;
     flex-direction: row;
