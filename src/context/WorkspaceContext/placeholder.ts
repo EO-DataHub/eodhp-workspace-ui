@@ -8,6 +8,9 @@ export const accountsPlaceholder = {
         id: 'a9f1c3b2-64d3-47a1-bf10-c9b3f7e1234d',
         name: 'Sample Test Account',
         accountOwner: 'alex-smith',
+        billingAddress: '',
+        organizationName: null,
+        accountOpeningReason: null,
         workspaces: [
           {
             id: '42d9f8b7-c76e-44a5-b29f-d2e9f3d2a4bc',

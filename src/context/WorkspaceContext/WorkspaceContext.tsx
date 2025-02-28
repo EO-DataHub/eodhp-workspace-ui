@@ -51,8 +51,16 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
 
   useEffect(() => {
     const func = async () => {
-      const res = await fetch(`/api/accounts`);
-      const accounts: Account[] = await res.json();
+      let accounts: Account[];
+      if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+        accounts = accountsPlaceholder.data.accounts;
+      } else {
+        const res = await fetch(`/api/accounts`);
+        if (!res.ok) {
+          throw new Error('Error getting accounts');
+        }
+        accounts = await res.json();
+      }
       setAccounts(accounts);
     };
     func();
