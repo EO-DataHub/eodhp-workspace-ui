@@ -1,3 +1,7 @@
+import ReactDOM from 'react-dom';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
+
 import './ProfileTile.scss';
 
 type ProfileTileProps = {
@@ -25,26 +29,46 @@ export const ProfileTile = ({
 
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF';
-    let color = '#';
+    let colorVal = '#';
     for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+      colorVal += letters[Math.floor(Math.random() * 16)];
     }
-    return color;
+    return colorVal;
   };
 
+  const id = Math.random().toString(36).substring(7);
+
+  const tooltipPortal =
+    typeof document !== 'undefined'
+      ? ReactDOM.createPortal(
+          <Tooltip
+            className="profile-tile-tooltip"
+            id={`full-name-${username}-${id}`}
+            place="top"
+            style={{ fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif' }}
+          />,
+          document.body,
+        )
+      : null;
+
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div
-      className="profile-tile"
-      style={{
-        backgroundColor: color || getRandomColor(),
-        borderColor: borderColor || 'none',
-        border: borderColor ? undefined : 'none',
-      }}
-      onClick={onClick}
-    >
-      {avatar ? <img alt={username} src={avatar} /> : null}
-      <span>{getInitials(username)}</span>
-    </div>
+    <>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+      <div
+        className="profile-tile"
+        data-tooltip-content={username}
+        data-tooltip-id={`full-name-${username}-${id}`}
+        style={{
+          backgroundColor: color || getRandomColor(),
+          borderColor: borderColor || 'none',
+          border: borderColor ? undefined : 'none',
+        }}
+        onClick={onClick}
+      >
+        {avatar ? <img alt={username} src={avatar} /> : null}
+        <span>{getInitials(username)}</span>
+      </div>
+      {tooltipPortal}
+    </>
   );
 };
