@@ -103,7 +103,7 @@ const Invoices = () => {
           set.data[index] += sku.quantity;
         }
       });
-      if (ref) datasets.push(set);
+      if (ref && set.data.length) datasets.push(set);
     });
     setData({
       labels: [monthsShort[months[0] - 1], monthsShort[months[1] - 1]],
