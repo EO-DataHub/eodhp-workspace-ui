@@ -12,9 +12,39 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
+import { useWorkspace } from '@/hooks/useWorkspace';
+
 import { InvoiceData } from './types';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const monthsShort = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+const colours = [
+  'rgb(0, 123, 255)', // Vivid Blue
+  'rgb(255, 82, 82)', // Strong Red
+  'rgb(0, 200, 83)', // Rich Green
+  'rgb(255, 193, 7)', // Strong Yellow/Amber
+  'rgb(103, 58, 183)', // Deep Purple
+  'rgb(233, 30, 99)', // Bold Pink
+  'rgb(255, 145, 0)', // Deep Orange
+  'rgb(33, 150, 243)', // Strong Sky Blue
+  'rgb(76, 175, 80)', // Medium Green
+  'rgb(156, 39, 176)', // Vivid Violet
+];
 
 const options = {
   plugins: {
@@ -35,7 +65,8 @@ const options = {
 };
 
 const Invoices = () => {
-  const [months, setMonths] = useState<string[]>([]);
+  const { skus } = useWorkspace();
+  const [months, setMonths] = useState<number[]>([]);
   const [data, setData] = useState<InvoiceData>();
 
   useEffect(() => {
@@ -46,36 +77,39 @@ const Invoices = () => {
 
   useEffect(() => {
     if (!months.length) return;
-    setData({
-      labels: months,
-      datasets: [
-        {
-          label: 'Compute',
-          data: months.map(() => getRandomNumber(-1000, 1000)),
-          backgroundColor: 'rgb(255, 99, 132)',
-        },
-        {
-          label: 'Storage',
-          data: months.map(() => getRandomNumber(-1000, 1000)),
-          backgroundColor: 'rgb(75, 192, 192)',
-        },
-        {
-          label: 'Processing',
-          data: months.map(() => getRandomNumber(-1000, 1000)),
-          backgroundColor: 'rgb(53, 162, 235)',
-        },
-      ],
+    const datasets = [];
+    skus.forEach((sku) => {
+      let set = datasets.filter((dataset) => {
+        return dataset.label === sku.item;
+      })[0];
+      let ref = false;
+      if (!set) {
+        set = {
+          label: sku.item,
+          data: [],
+          backgroundColor: colours[datasets.length % colours.length],
+        };
+        ref = true;
+      }
+
+      const skuMonth = getMonthString(0, new Date(sku.event_end));
+      months.forEach((month, index) => {
+        if (month === skuMonth) {
+          if (!set.data[index]) set.data[index] = 0;
+          set.data[index] += sku.quantity;
+        }
+      });
+      if (ref) datasets.push(set);
     });
-  }, [months]);
+    setData({
+      labels: [monthsShort[months[0] - 1], monthsShort[months[1] - 1]],
+      datasets,
+    });
+  }, [months, skus]);
 
-  const getRandomNumber = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + 1;
-  };
-
-  const getMonthString = (offset = 0) => {
-    const date = new Date();
+  const getMonthString = (offset = 0, date = new Date()) => {
     date.setMonth(date.getMonth() + offset);
-    return date.toLocaleString('en-US', { month: 'long' });
+    return parseInt(date.toLocaleString('en-US', { month: '2-digit' }));
   };
 
   const getTotal = (offset = 0) => {
@@ -107,6 +141,7 @@ const Invoices = () => {
 
   return (
     <div className="invoices">
+      <div></div>
       {data && <Bar data={data} options={options} />}
       <div className="invoices-value-container">
         <div>
