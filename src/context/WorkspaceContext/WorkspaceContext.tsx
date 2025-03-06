@@ -68,6 +68,8 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     func();
   }, []);
 
+  // Attempt to get SKUs from workspace services. Will use placeholder data locally.
+  // SKU stands for stock-keeping unit defined https://github.com/EO-DataHub/accounting-service/blob/9583a1217ca6be898b700bd9a9cae59a51fca727/accounting_service/models.py#L64
   useEffect(() => {
     if (!activeWorkspace) return;
     const func = async () => {

@@ -70,8 +70,8 @@ const Invoices = () => {
   const [data, setData] = useState<InvoiceData>();
 
   useEffect(() => {
-    const currentMonth = getMonthString();
-    const previousMonth = getMonthString(-1);
+    const currentMonth = getMonthInt();
+    const previousMonth = getMonthInt(-1);
     setMonths([previousMonth, currentMonth]);
   }, []);
 
@@ -92,7 +92,7 @@ const Invoices = () => {
         ref = true;
       }
 
-      const skuMonth = getMonthString(0, new Date(sku.event_end));
+      const skuMonth = getMonthInt(0, new Date(sku.event_end));
       months.forEach((month, index) => {
         if (month === skuMonth) {
           if (!set.data[index]) set.data[index] = 0;
@@ -107,7 +107,7 @@ const Invoices = () => {
     });
   }, [months, skus]);
 
-  const getMonthString = (offset = 0, date = new Date()) => {
+  const getMonthInt = (offset = 0, date = new Date()) => {
     date.setMonth(date.getMonth() + offset);
     return parseInt(date.toLocaleString('en-US', { month: '2-digit' }));
   };
