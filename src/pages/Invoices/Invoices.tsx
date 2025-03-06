@@ -75,6 +75,10 @@ const Invoices = () => {
     setMonths([previousMonth, currentMonth]);
   }, []);
 
+  // We need to get the data in the correct for for chart.js.
+  // Create a dataset for each type of sku and order the data correctly for the
+  // current and previous month. Iterate through all the skus, find the relevant dataset,
+  // find the month then add all of the values together.
   useEffect(() => {
     if (!months.length) return;
     const datasets = [];
