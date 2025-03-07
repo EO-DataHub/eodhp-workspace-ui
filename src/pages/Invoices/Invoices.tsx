@@ -60,6 +60,10 @@ const options = {
     },
     y: {
       stacked: true,
+      title: {
+        display: true,
+        text: 'Cost (£)',
+      },
     },
   },
 };
@@ -127,7 +131,6 @@ const Invoices = () => {
   };
 
   const calculateRelativeToPreviousMonth = () => {
-    if (!data) return;
     const currMonthTotal = getTotal();
     const prevMonthTotal = getTotal(1);
     const ratio = parseFloat(((currMonthTotal / prevMonthTotal) * 100).toFixed(1));
@@ -143,6 +146,15 @@ const Invoices = () => {
     }
   };
 
+  const renderComparison = () => {
+    if (!data) return;
+    const currMonthTotal = getTotal();
+    const prevMonthTotal = getTotal(1);
+
+    if (!currMonthTotal || !prevMonthTotal) return;
+    return <span className="invoices-value__sub">{` ${calculateRelativeToPreviousMonth()}`}</span>;
+  };
+
   return (
     <div className="invoices">
       <div></div>
@@ -152,8 +164,7 @@ const Invoices = () => {
           <span className="invoices-value__header">Current monthly costs</span>
           <span className="invoices-value__value">{` £${getTotal()}`}</span>
         </div>
-
-        <span className="invoices-value__sub">{` ${calculateRelativeToPreviousMonth()}`}</span>
+        {renderComparison()}
       </div>
     </div>
   );
