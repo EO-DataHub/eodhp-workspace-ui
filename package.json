@@ -26,7 +26,9 @@
     "@aws-amplify/storage": "^6.6.9-storage-browser.4db9fef.0",
     "@aws-amplify/ui-react-storage": "^0.0.0-storage-browser-d368514-20241008194754",
     "aws-amplify": "^6.6.4-storage-browser.4db9fef.0",
+    "chart.js": "^4.4.8",
     "react": "^18.3.1",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
     "react-responsive-pagination": "^2.10.0",
@@ -35,6 +37,7 @@
     "react-tooltip": "^5.28.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",

@@ -8,6 +8,9 @@ export const accountsPlaceholder = {
         id: 'a9f1c3b2-64d3-47a1-bf10-c9b3f7e1234d',
         name: 'Sample Test Account',
         accountOwner: 'alex-smith',
+        billingAddress: '',
+        organizationName: null,
+        accountOpeningReason: null,
         workspaces: [
           {
             id: '42d9f8b7-c76e-44a5-b29f-d2e9f3d2a4bc',
@@ -204,5 +207,62 @@ export const workspacesPlaceholder: Workspace[] = [
       },
     ],
     last_updated: '2025-01-23T15:08:57.595118Z',
+  },
+];
+
+export const skuPlaceholder = [
+  {
+    uuid: '603be7c8-73e2-4221-8e2c-b41c0abb31c6',
+    event_start: '2025-02-16T06:42:34Z',
+    event_end: '2025-02-16T06:48:34Z',
+    item: 'testsku',
+    workspace: 'test-workspace',
+    quantity: 3.14,
+    user: 'test_user',
+  },
+  {
+    uuid: 'b5bc9a94-cebb-4d84-a1b8-50c9ad7cda98',
+    event_start: '2025-03-17T06:42:34Z',
+    event_end: '2025-03-17T06:48:34Z',
+    item: 'testsku',
+    workspace: 'test-workspace',
+    quantity: 7,
+    user: 'test_user',
+  },
+  {
+    uuid: '603be7c8-73e2-4221-8e2c-b41c0abb31c6',
+    event_start: '2025-02-16T06:42:34Z',
+    event_end: '2025-02-16T06:48:34Z',
+    item: 'compute',
+    workspace: 'test-workspace',
+    quantity: 3.14,
+    user: 'test_user',
+  },
+  {
+    uuid: 'b5bc9a94-cebb-4d84-a1b8-50c9ad7cda98',
+    event_start: '2025-03-17T06:42:34Z',
+    event_end: '2025-03-17T06:48:34Z',
+    item: 'compute',
+    workspace: 'test-workspace',
+    quantity: 12.23,
+    user: 'test_user',
+  },
+  {
+    uuid: '603be7c8-73e2-4221-8e2c-b41c0abb31c6',
+    event_start: '2025-02-16T06:42:34Z',
+    event_end: '2025-02-16T06:48:34Z',
+    item: 'storage',
+    workspace: 'test-workspace',
+    quantity: 33.14,
+    user: 'test_user',
+  },
+  {
+    uuid: 'b5bc9a94-cebb-4d84-a1b8-50c9ad7cda98',
+    event_start: '2025-03-17T06:42:34Z',
+    event_end: '2025-03-17T06:48:34Z',
+    item: 'storage',
+    workspace: 'test-workspace',
+    quantity: 9.56,
+    user: 'test_user',
   },
 ];

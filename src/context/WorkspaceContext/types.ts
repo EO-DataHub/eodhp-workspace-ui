@@ -35,3 +35,13 @@ export type Account = {
   workspaces: Workspace[];
   last_updated: string;
 };
+
+export type SKU = {
+  uuid: string;
+  event_start: string;
+  event_end: string;
+  item: string;
+  workspace: string;
+  quantity: number;
+  user: string;
+};

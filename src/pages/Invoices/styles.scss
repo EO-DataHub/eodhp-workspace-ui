@@ -1,0 +1,21 @@
+.invoices {
+  padding: 25px;
+
+  &-value {
+    &-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    &__value {
+      font-size: 30px;
+      color: var(--text-tertiary);
+    }
+
+    &__sub {
+      font-size: 12px;
+    }
+  }
+}
