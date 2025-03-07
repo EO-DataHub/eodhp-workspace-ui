@@ -1,6 +1,6 @@
-export const createToken = async (workspaceId: string): Promise<S3Credentials> => {
+export const createToken = async (workspaceName: string): Promise<S3Credentials> => {
   try {
-    const url = `/api/workspaces/${workspaceId}/me/s3-tokens`;
+    const url = `/api/workspaces/${workspaceName}/me/s3-tokens`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
