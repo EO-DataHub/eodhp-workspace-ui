@@ -31,13 +31,6 @@ export const DataHub = () => {
         max: 128,
       },
       {
-        externalName: 'Scope',
-        internalName: 'scope',
-        value: `offline_access workspace:${activeWorkspace?.name}`,
-        readOnly: true,
-        type: 'string',
-      },
-      {
         externalName: 'Expires (days)',
         internalName: 'expires',
         value: 30,
