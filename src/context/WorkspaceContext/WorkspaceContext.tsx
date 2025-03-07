@@ -3,8 +3,8 @@ import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState
 import { getMembers } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
-import { accountsPlaceholder, workspacesPlaceholder } from './placeholder';
-import { Account, Workspace } from './types';
+import { accountsPlaceholder, skuPlaceholder, workspacesPlaceholder } from './placeholder';
+import { Account, SKU, Workspace } from './types';
 
 export type WorkspaceContextType = {
   availableWorkspaces: Workspace[];
@@ -29,6 +29,7 @@ export type WorkspaceContextType = {
   getAndSetWorkspaces: () => void;
 
   accounts: Account[];
+  skus: SKU[];
 };
 
 type WorkspaceProviderProps = {
@@ -48,6 +49,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [workspaceOwner, setWorkspaceOwner] = useState<string>();
   const [members, setMembers] = useState<Member[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [skus, setSKUs] = useState<SKU[]>([]);
 
   useEffect(() => {
     const func = async () => {
@@ -65,6 +67,26 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     };
     func();
   }, []);
+
+  // Attempt to get SKUs from workspace services. Will use placeholder data locally.
+  // SKU stands for stock-keeping unit defined https://github.com/EO-DataHub/accounting-service/blob/9583a1217ca6be898b700bd9a9cae59a51fca727/accounting_service/models.py#L64
+  useEffect(() => {
+    if (!activeWorkspace) return;
+    const func = async () => {
+      let skus: SKU[];
+      if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+        skus = skuPlaceholder;
+      } else {
+        const res = await fetch(`/api/workspaces/${activeWorkspace.name}/accounting/usage-data`);
+        if (!res.ok) {
+          throw new Error('Error getting accounts');
+        }
+        skus = await res.json();
+      }
+      setSKUs(skus);
+    };
+    func();
+  }, [activeWorkspace]);
 
   const getAndSetWorkspaces = async () => {
     const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
@@ -180,6 +202,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         members,
         getAndSetWorkspaces,
         accounts,
+        skus,
         ...initialState,
       }}
     >
