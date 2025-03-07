@@ -14,7 +14,7 @@ export const S3 = () => {
     try {
       setLoading(true);
       setError(null);
-      const newToken: S3Credentials = await createToken(activeWorkspace.id);
+      const newToken: S3Credentials = await createToken(activeWorkspace.name);
       setNewTokenValue(newToken);
     } catch (error) {
       console.error('Failed to create token:', error);
