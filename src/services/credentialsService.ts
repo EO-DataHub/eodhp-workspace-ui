@@ -37,7 +37,7 @@ export const createToken = async (
       credentials: 'include',
     });
 
-    if (response.status === 202) {
+    if (response.status === 201) {
       const newToken: DataHubToken = await response.json();
       return newToken;
     }
