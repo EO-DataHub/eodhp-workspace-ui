@@ -1,5 +1,3 @@
-const API_BASE_URL = '/api/tokens';
-
 // Function to list all tokens
 export const listTokens = async (workspaceName: string): Promise<DataHubToken[]> => {
   try {
