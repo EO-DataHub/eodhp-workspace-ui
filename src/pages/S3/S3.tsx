@@ -1,9 +1,11 @@
 import { useState } from 'react';
 
 import { Button } from '@/components/Button/Button';
+import { useWorkspace } from '@/hooks/useWorkspace';
 import { createToken } from '@/services/S3Service';
 
 export const S3 = () => {
+  const { activeWorkspace } = useWorkspace();
   const [newTokenValue, setNewTokenValue] = useState<S3Credentials | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -12,7 +14,7 @@ export const S3 = () => {
     try {
       setLoading(true);
       setError(null);
-      const newToken: S3Credentials = await createToken();
+      const newToken: S3Credentials = await createToken(activeWorkspace.name);
       setNewTokenValue(newToken);
     } catch (error) {
       console.error('Failed to create token:', error);

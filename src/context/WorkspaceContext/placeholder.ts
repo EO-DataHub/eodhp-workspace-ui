@@ -266,3 +266,14 @@ export const skuPlaceholder = [
     user: 'test_user',
   },
 ];
+
+export const tokenPlaceholder = {
+  created: '2025-03-07T13:55:56Z',
+  expiry: '2025-04-06T13:55:56Z',
+  id: '46f39e06-686a-4a35-9394-399ac54633fb',
+  name: 'API Token',
+  scope: 'offline_access workspace:new-workspace',
+  token: '454f44486d4e77ddb5d098107d53e057',
+  user_id: '15ccb16f-9fd7-4009-ab87-e977b4c50cda',
+  workspace: 'new-workspace',
+};
