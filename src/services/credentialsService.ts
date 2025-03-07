@@ -1,9 +1,10 @@
 const API_BASE_URL = '/api/tokens';
 
 // Function to list all tokens
-export const listTokens = async (): Promise<DataHubToken[]> => {
+export const listTokens = async (workspaceName: string): Promise<DataHubToken[]> => {
   try {
-    const response = await fetch(API_BASE_URL, {
+    const URL = `/api/workspaces/${workspaceName}/me/tokens`;
+    const response = await fetch(URL, {
       credentials: 'include',
     });
 
@@ -21,15 +22,15 @@ export const listTokens = async (): Promise<DataHubToken[]> => {
 // Function to create a new token
 export const createToken = async (
   name: string,
-  scope: string,
+  workspaceName: string,
   expires: number,
 ): Promise<DataHubToken> => {
   try {
-    const response = await fetch(API_BASE_URL, {
+    const URL = `/api/workspaces/${workspaceName}/me/tokens`;
+    const response = await fetch(URL, {
       method: 'POST',
       body: JSON.stringify({
         name: name,
-        scope: scope,
         expires: expires,
       } as CreateDataHubToken),
       headers: {
@@ -54,9 +55,10 @@ export const createToken = async (
 };
 
 // Function to delete a token
-export const deleteToken = async (tokenId: string): Promise<boolean> => {
+export const deleteToken = async (workspaceName: string, tokenId: string): Promise<boolean> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/${tokenId}`, {
+    const URL = `/api/workspaces/${workspaceName}/me/tokens/${tokenId}`;
+    const response = await fetch(URL, {
       method: 'DELETE',
       credentials: 'include',
     });

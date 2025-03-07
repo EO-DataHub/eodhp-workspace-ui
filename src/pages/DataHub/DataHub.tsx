@@ -65,7 +65,7 @@ export const DataHub = () => {
     const fetchTokens = async () => {
       try {
         setLoading(true);
-        const fetchedTokens: DataHubToken[] = await listTokens();
+        const fetchedTokens: DataHubToken[] = await listTokens(activeWorkspace.name);
         setTokens(fetchedTokens);
       } catch (error) {
         console.error('Failed to fetch tokens:', error);
@@ -83,7 +83,7 @@ export const DataHub = () => {
       setCreatingToken(true);
       const newToken: DataHubToken = await createToken(
         formData['name'],
-        formData['scope'],
+        activeWorkspace.name,
         parseFloat(formData['expires']),
       );
       const { token, ...tokenData } = newToken; // Exclude the actual token value
@@ -102,7 +102,7 @@ export const DataHub = () => {
   const handleDeleteToken = async (tokenId: string) => {
     try {
       setLoading(true);
-      await deleteToken(tokenId);
+      await deleteToken(activeWorkspace.name, tokenId);
       setTokens(tokens.filter((token) => token.id !== tokenId));
     } catch (error) {
       console.error('Failed to delete token:', error);

@@ -11,6 +11,7 @@ declare global {
     id: string;
     user_id: string;
     token: string;
+    workspace: string;
     name: string;
     scope: string;
     created: string;
