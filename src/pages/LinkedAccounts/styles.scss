@@ -1,42 +1,44 @@
 .linked-accounts {
-    &__account {
-        border-bottom: 1px solid var(--text-secondary);
-        padding: 20px 0px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+  &__account {
+    border-bottom: 1px solid var(--text-secondary);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-        &-header {
-            color: var(--text-primary);
-            font-weight: 600;
-            span {
-                font-weight: 400;
-                color: var(--text-secondary);
-            }
-        }
+    &-header {
+      color: var(--text-primary);
+      font-weight: 600;
 
-        &-input {
-            display: flex;
-            flex-direction: column;
-            max-width: 600px;
-                input {
-                    padding: 5px 10px;
-                    border-radius: 12px;
-                    background-color: var(--text-primary);
-                    color: var(--background);
-                }
-                span {
-                                    font-weight: 400;
-                color: var(--text-secondary);
-                font-size: 10px;
-                }
-        }
-
-        button {
-            width: 80px;
-            height: 20px;
-            font-size: 8px;
-
-        }
+      span {
+        font-weight: 400;
+        color: var(--text-secondary);
+      }
     }
+
+    &-input {
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+
+      input {
+        padding: 5px 10px;
+        border-radius: 12px;
+        background-color: var(--text-primary);
+        color: var(--background);
+      }
+
+      span {
+        font-weight: 400;
+        color: var(--text-secondary);
+        font-size: 10px;
+      }
+    }
+
+    button {
+      width: 80px;
+      height: 20px;
+      font-size: 8px;
+    }
+  }
 }

@@ -3,7 +3,6 @@ import './styles.scss';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
-import StringField from '@/components/Form/Fields/StringField/StringField';
 
 const LinkedAccounts = () => {
   const renderHeader = () => {
