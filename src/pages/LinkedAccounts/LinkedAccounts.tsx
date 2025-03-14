@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
+import { useWorkspace } from '@/hooks/useWorkspace';
 
 type LinkableAccount = {
+  internalName: string;
+  externalName: string;
+};
+
+type AccountMetaData = {
+  key: string;
+  linked: boolean;
+  message: string;
   internalName: string;
   externalName: string;
 };
@@ -14,7 +23,6 @@ const linkableAccounts: LinkableAccount[] = [
     internalName: 'airbus',
     externalName: 'Airbus',
   },
-
   {
     internalName: 'planet',
     externalName: 'Planet',
@@ -22,13 +30,59 @@ const linkableAccounts: LinkableAccount[] = [
 ];
 
 const LinkedAccounts = () => {
-  const [keys, setKeys] = useState<{ [key: string]: string }>(() => {
-    const initial = {};
-    linkableAccounts.forEach((account) => {
-      initial[account.internalName] = '';
-    });
-    return initial;
-  });
+  const { activeWorkspace, isWorkspaceOwner } = useWorkspace();
+
+  const [error, setError] = useState('');
+  const [data, setData] = useState<AccountMetaData[]>([]);
+  const [running, setRunning] = useState<boolean>();
+
+  useEffect(() => {
+    const getAccounts = async () => {
+      const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`);
+      if (!res.ok) {
+        setError('Failed to get linked accounts');
+        return;
+      }
+      const accounts: string[] = await res.json();
+      const initial: AccountMetaData[] = [];
+      linkableAccounts.forEach((account) => {
+        initial.push({
+          key: accounts.includes(account.internalName) ? 'the_user_will_never_see_this' : '',
+          linked: accounts.includes(account.internalName) ? true : false,
+          message: accounts.includes(account.internalName) ? 'Linked' : 'Not linked',
+          internalName: account.internalName,
+          externalName: account.externalName,
+        });
+      });
+      setData(initial);
+    };
+    if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+      getPlaceHolderAccounts();
+    } else {
+      getAccounts();
+    }
+  }, [activeWorkspace]);
+
+  // Internal Dev only
+  const getPlaceHolderAccounts = () => {
+    const initial: AccountMetaData[] = [
+      {
+        key: 'the_user_will_never_see_this',
+        linked: true,
+        message: 'Linked',
+        internalName: 'airbus',
+        externalName: 'Airbus',
+      },
+      {
+        key: '',
+        linked: false,
+        message: 'Not linked',
+        internalName: 'planet',
+        externalName: 'Planet',
+      },
+    ];
+    setData(initial);
+  };
 
   const renderHeader = () => {
     return (
@@ -47,14 +101,14 @@ const LinkedAccounts = () => {
     );
   };
 
-  const validate = (link: string) => {
-    const key = keys[link];
-    if (!key) {
-      return;
-    }
+  const updateData = (account: AccountMetaData, key: string, value: string | boolean) => {
+    const copy = [...data];
+    const index = copy.findIndex((a) => a.internalName === account.internalName);
+    copy[index][key] = value;
+    setData(copy);
   };
 
-  const renderAccount = (account: LinkableAccount) => {
+  const renderAccount = (account: AccountMetaData) => {
     return (
       <div className="linked-accounts__account">
         <div className="linked-accounts__account-header">
@@ -62,32 +116,91 @@ const LinkedAccounts = () => {
         </div>
         <div className="linked-accounts__account-input">
           <input
+            disabled={account.linked}
             placeholder="Enter your contact / api key"
-            value={keys[account.internalName]}
+            type={account.linked ? 'password' : 'text'}
+            value={account.key}
             onChange={(e) => {
-              const copy = { ...keys };
-              copy[account.internalName] = e.target.value;
-              setKeys(copy);
+              updateData(account, 'key', e.target.value);
             }}
           />
-          <span>Message</span>
+          <span>{account.message}</span>
         </div>
-        <Button
-          disabled={!keys[account.internalName]}
-          onClick={() => validate(account.internalName)}
-        >
-          Link Account
-        </Button>
+        {account.linked ? renderUnlinkButton(account) : renderLinkButton(account)}
       </div>
     );
   };
 
+  const renderLinkButton = (account: AccountMetaData) => {
+    return (
+      <Button
+        disabled={!isWorkspaceOwner || !account.key || running}
+        onClick={() => linkAccount(account)}
+      >
+        Link Account
+      </Button>
+    );
+  };
+
+  const renderUnlinkButton = (account: AccountMetaData) => {
+    return (
+      <Button disabled={!isWorkspaceOwner || running} onClick={() => unlinkAccount(account)}>
+        Unlink Account
+      </Button>
+    );
+  };
+
+  const linkAccount = async (account: AccountMetaData) => {
+    try {
+      setRunning(true);
+      const body = {
+        name: account.internalName,
+        key: account.key,
+      };
+      const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        setError('Error linking account');
+        return;
+      }
+      updateData(account, 'linked', true);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  const unlinkAccount = async (account: AccountMetaData) => {
+    try {
+      setRunning(true);
+      const res = await fetch(
+        `/api/workspaces/${activeWorkspace.name}/linked-accounts/${account.internalName}`,
+        {
+          method: 'DELETE',
+        },
+      );
+      if (!res.ok) {
+        setError('Error linking account');
+        return;
+      }
+      updateData(account, 'linked', true);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  if (!data.length) {
+    return <div className="content-page">{error}</div>;
+  }
   return (
     <div className="content-page">
       {renderHeader()}
-      <div className="linked-accounts">
-        {linkableAccounts.map((account) => renderAccount(account))}
-      </div>
+      <div className="linked-accounts">{data.map((account) => renderAccount(account))}</div>
     </div>
   );
 };
