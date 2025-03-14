@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
+import '../../App.scss';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
@@ -37,31 +38,33 @@ const LinkedAccounts = () => {
   const [running, setRunning] = useState<boolean>();
 
   useEffect(() => {
-    const getAccounts = async () => {
-      const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`);
-      if (!res.ok) {
-        setError('Failed to get linked accounts');
-        return;
-      }
-      const accounts: string[] = await res.json();
-      const initial: AccountMetaData[] = [];
-      linkableAccounts.forEach((account) => {
-        initial.push({
-          key: accounts.includes(account.internalName) ? 'the_user_will_never_see_this' : '',
-          linked: accounts.includes(account.internalName) ? true : false,
-          message: accounts.includes(account.internalName) ? 'Linked' : 'Not linked',
-          internalName: account.internalName,
-          externalName: account.externalName,
-        });
-      });
-      setData(initial);
-    };
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
       getPlaceHolderAccounts();
     } else {
       getAccounts();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWorkspace]);
+
+  const getAccounts = async () => {
+    const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`);
+    if (!res.ok) {
+      setError('Failed to get linked accounts');
+      return;
+    }
+    const accounts: string[] = await res.json();
+    const initial: AccountMetaData[] = [];
+    linkableAccounts.forEach((account) => {
+      initial.push({
+        key: accounts.includes(account.internalName) ? 'the_user_will_never_see_this' : '',
+        linked: accounts.includes(account.internalName) ? true : false,
+        message: accounts.includes(account.internalName) ? 'Linked' : 'Not linked',
+        internalName: account.internalName,
+        externalName: account.externalName,
+      });
+    });
+    setData(initial);
+  };
 
   // Internal Dev only
   const getPlaceHolderAccounts = () => {
@@ -166,6 +169,7 @@ const LinkedAccounts = () => {
         return;
       }
       updateData(account, 'linked', true);
+      await getAccounts();
     } catch (error) {
       setError(error);
     } finally {
@@ -187,6 +191,7 @@ const LinkedAccounts = () => {
         return;
       }
       updateData(account, 'linked', true);
+      await getAccounts();
     } catch (error) {
       setError(error);
     } finally {
@@ -200,6 +205,7 @@ const LinkedAccounts = () => {
   return (
     <div className="content-page">
       {renderHeader()}
+      {<div className="linked-accounts__error">{error}</div>}
       <div className="linked-accounts">{data.map((account) => renderAccount(account))}</div>
     </div>
   );
