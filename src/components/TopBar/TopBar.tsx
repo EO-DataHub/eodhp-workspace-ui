@@ -46,7 +46,7 @@ export const TopBar = () => {
         {activeWorkspace ? (
           <div className="top-bar__left">
             <ProfileTile borderColor="#a19d9d" color="#4c72ba" username={activeWorkspace.name} />
-            <h2>{activeWorkspace.name} Workspace</h2>
+            <h2>{activeWorkspace.name}</h2>
           </div>
         ) : (
           <div className="top-bar__left">
