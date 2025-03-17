@@ -4,6 +4,7 @@ import '../../App.scss';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
+import Modal from '@/components/Modal/Modal';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 type LinkableAccount = {
@@ -36,6 +37,8 @@ const LinkedAccounts = () => {
   const [error, setError] = useState('');
   const [data, setData] = useState<AccountMetaData[]>([]);
   const [running, setRunning] = useState<boolean>();
+  const [modal, setModal] = useState<boolean>(false);
+  const [accountToUnlink, setAccountToUnlink] = useState<AccountMetaData>();
 
   useEffect(() => {
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
@@ -96,8 +99,8 @@ const LinkedAccounts = () => {
         <div className="header-right">
           <img alt="Members" src={link} />
           <div className="header-right-text">
-            <span className="header-right-title">Linked accounts</span> is dedicated to managing the
-            members associated to this workspace.
+            <span className="header-right-title">Linked accounts</span> allows you to store your
+            provider API key in the Hub allowing you to order commercial data.
           </div>
         </div>
       </div>
@@ -146,7 +149,13 @@ const LinkedAccounts = () => {
 
   const renderUnlinkButton = (account: AccountMetaData) => {
     return (
-      <Button disabled={!isWorkspaceOwner || running} onClick={() => unlinkAccount(account)}>
+      <Button
+        disabled={!isWorkspaceOwner || running}
+        onClick={() => {
+          setAccountToUnlink(account);
+          setModal(true);
+        }}
+      >
         Unlink Account
       </Button>
     );
@@ -198,15 +207,40 @@ const LinkedAccounts = () => {
     }
   };
 
+  const renderModalContent = () => {
+    if (!accountToUnlink) return;
+    return <div>Are you sure you want to unlink your {accountToUnlink.externalName} account?</div>;
+  };
+
   if (!data.length) {
     return <div className="content-page">{error}</div>;
   }
   return (
-    <div className="content-page">
-      {renderHeader()}
-      {<div className="linked-accounts__error">{error}</div>}
-      <div className="linked-accounts">{data.map((account) => renderAccount(account))}</div>
-    </div>
+    <>
+      {modal && (
+        <Modal
+          content={renderModalContent()}
+          onCancel={() => {
+            setModal(false);
+            setAccountToUnlink(null);
+          }}
+          onSubmit={() => {
+            setModal(false);
+            unlinkAccount(accountToUnlink);
+            setAccountToUnlink(null);
+          }}
+        />
+      )}
+      <div className="content-page">
+        {renderHeader()}
+        {<div className="linked-accounts__error">{error}</div>}
+        <div className="linked-accounts">
+          {data.map((account) => (
+            <div key={account.key}>{renderAccount(account)}</div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 
