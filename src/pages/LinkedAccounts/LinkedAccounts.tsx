@@ -236,7 +236,7 @@ const LinkedAccounts = () => {
         {<div className="linked-accounts__error">{error}</div>}
         <div className="linked-accounts">
           {data.map((account) => (
-            <div key={account.key}>{renderAccount(account)}</div>
+            <div key={account.internalName}>{renderAccount(account)}</div>
           ))}
         </div>
       </div>
