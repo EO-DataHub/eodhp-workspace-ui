@@ -115,7 +115,7 @@ const LinkedAccounts = () => {
     return (
       <div className="linked-accounts__account">
         <div className="linked-accounts__account-header">
-          {account.externalName} <span>| lorem ipsum</span>
+          {account.externalName} <span>| {account.message}</span>
         </div>
         <div className="linked-accounts__account-input">
           <input
@@ -127,7 +127,6 @@ const LinkedAccounts = () => {
               updateData(account, 'key', e.target.value);
             }}
           />
-          <span>{account.message}</span>
         </div>
         {account.linked ? renderUnlinkButton(account) : renderLinkButton(account)}
       </div>
