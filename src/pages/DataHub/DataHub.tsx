@@ -1,13 +1,42 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import './DataHub.scss';
 
+import deleteIcon from '@/assets/icons/Delete.svg';
 import { Button } from '@/components/Button/Button';
 import { Field } from '@/components/Form/Fields/types';
 import Form from '@/components/Form/Form';
 import Modal from '@/components/Modal/Modal';
+import Table from '@/components/Table/Table';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
+
+import { tokensPlaceholder } from './placeholder';
+
+const tableHeaders = [
+  {
+    internalName: 'name',
+    externalName: 'Name',
+  },
+  {
+    internalName: 'scope',
+    externalName: 'Scope',
+  },
+  {
+    internalName: 'created',
+    externalName: 'Created',
+  },
+  {
+    internalName: 'expiry',
+    externalName: 'Expiry',
+  },
+  {
+    internalName: 'delete',
+    externalName: '',
+  },
+];
 
 export const DataHub = () => {
   const { activeWorkspace, availableWorkspaces } = useWorkspace();
@@ -58,8 +87,13 @@ export const DataHub = () => {
     const fetchTokens = async () => {
       try {
         setLoading(true);
-        const fetchedTokens: DataHubToken[] = await listTokens(activeWorkspace.name);
-        setTokens(fetchedTokens);
+        let _tokens: DataHubToken[];
+        if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+          _tokens = tokensPlaceholder;
+        } else {
+          _tokens = await listTokens(activeWorkspace.name);
+        }
+        setTokens(_tokens);
       } catch (error) {
         console.error('Failed to fetch tokens:', error);
         setError('Failed to fetch tokens.');
@@ -128,6 +162,32 @@ export const DataHub = () => {
     );
   };
 
+  const renderDelete = (token) => {
+    return (
+      <div
+        onClick={async () => {
+          try {
+            await handleDeleteToken(token.id);
+          } catch (error) {
+            console.error(error);
+          }
+        }}
+      >
+        <img alt="delete" className="table-column-delete" src={deleteIcon} />
+      </div>
+    );
+  };
+
+  const rows = tokens.reverse().map((token) => {
+    return {
+      name: token.name,
+      scope: token.scope,
+      created: token.created,
+      expiry: token.expiry,
+      delete: renderDelete(token),
+    };
+  });
+
   return (
     <div className="data-hub application-page">
       {modal && (
@@ -159,36 +219,7 @@ export const DataHub = () => {
         Request New Token
       </Button>
 
-      {tokens.length > 0 ? (
-        <div className="token-list">
-          <h2 className="token-list-header">Active Tokens</h2>
-          <ul>
-            {tokens.reverse().map((token) => (
-              <li key={token.id} className="token">
-                <div className="token-col">
-                  <strong>Name</strong>
-                  <span className="token-info">{token.name}</span>
-                </div>
-                <div className="token-col">
-                  <strong>Scope</strong>
-                  <span className="token-info">{token.scope}</span>
-                </div>
-                <div className="token-col">
-                  <strong>Created</strong>
-                  <span className="token-info">{token.created}</span>
-                </div>
-                <div className="token-col">
-                  <strong>Expiry</strong>
-                  <span className="token-info">{token.expiry}</span>
-                </div>
-                <Button disabled={loading} onClick={() => handleDeleteToken(token.id)}>
-                  Delete
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+      {tokens.length > 0 ? <Table headers={tableHeaders} maxRowsPerPage={10} rows={rows} /> : null}
     </div>
   );
 };

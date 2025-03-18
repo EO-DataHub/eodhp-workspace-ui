@@ -6,7 +6,7 @@ import 'react-responsive-pagination/themes/classic.css';
 
 interface TableProps {
   maxRowsPerPage: number;
-  headers: { internalName: string; externalName: string; icon?: string }[];
+  headers: { internalName: string; externalName: string; icon?: string; help?: ReactElement }[];
   // The keys in the rows need to match the internalNames in the headers
   rows: { [key: string]: string | ReactElement }[];
 }
@@ -18,7 +18,7 @@ const Table = ({ maxRowsPerPage, headers, rows }: TableProps) => {
     const columns = {};
     headers.forEach((header) => {
       columns[header.internalName] = [
-        constructTableHeader(header.externalName, header.icon || null),
+        constructTableHeader(header.externalName, header.icon || null, header.help || null),
       ];
     });
 
@@ -45,11 +45,12 @@ const Table = ({ maxRowsPerPage, headers, rows }: TableProps) => {
     );
   };
 
-  const constructTableHeader = (name: string, iconSrc?: string) => {
+  const constructTableHeader = (name: string, iconSrc?: string, help?: ReactElement) => {
     return (
       <div className="table-header">
         {iconSrc ? <img alt={`${name} icon`} src={iconSrc} /> : null}
         {name}
+        {help ? help : null}
       </div>
     );
   };
