@@ -1,0 +1,55 @@
+.linked-accounts {
+  &__account {
+    border-bottom: 1px solid var(--text-secondary);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &-header {
+      display: flex;
+      align-items: center;
+      color: var(--text-primary);
+      font-weight: 600;
+
+      span {
+        font-weight: 400;
+        color: var(--text-secondary);
+      }
+    }
+
+    &-input {
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+
+      input {
+        padding: 5px 10px;
+        border-radius: 12px;
+        background-color: white;
+        color: black;
+        outline: none;
+        border: 1px solid #060606;
+      }
+
+      span {
+        font-weight: 400;
+        color: var(--text-secondary);
+        font-size: 10px;
+      }
+    }
+
+    button {
+      width: 120px;
+      height: 30px;
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__error {
+    color: var(--error);
+  }
+}
