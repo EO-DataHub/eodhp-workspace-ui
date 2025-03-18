@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
-import '../../App.scss';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
@@ -13,7 +12,7 @@ type LinkableAccount = {
 };
 
 type AccountMetaData = {
-  key: string;
+  value: string;
   linked: boolean;
   message: string;
   internalName: string;
@@ -59,7 +58,7 @@ const LinkedAccounts = () => {
     const initial: AccountMetaData[] = [];
     linkableAccounts.forEach((account) => {
       initial.push({
-        key: accounts.includes(account.internalName) ? 'the_user_will_never_see_this' : '',
+        value: accounts.includes(account.internalName) ? 'the_user_will_never_see_this' : '',
         linked: accounts.includes(account.internalName) ? true : false,
         message: accounts.includes(account.internalName) ? 'Linked' : 'Not linked',
         internalName: account.internalName,
@@ -73,14 +72,14 @@ const LinkedAccounts = () => {
   const getPlaceHolderAccounts = () => {
     const initial: AccountMetaData[] = [
       {
-        key: 'the_user_will_never_see_this',
+        value: 'the_user_will_never_see_this',
         linked: true,
         message: 'Linked',
         internalName: 'airbus',
         externalName: 'Airbus',
       },
       {
-        key: '',
+        value: '',
         linked: false,
         message: 'Not linked',
         internalName: 'planet',
@@ -123,11 +122,11 @@ const LinkedAccounts = () => {
         <div className="linked-accounts__account-input">
           <input
             disabled={account.linked}
-            placeholder="Enter your contact / api key"
+            placeholder="Enter your API key"
             type={account.linked ? 'password' : 'text'}
-            value={account.key}
+            value={account.value}
             onChange={(e) => {
-              updateData(account, 'key', e.target.value);
+              updateData(account, 'value', e.target.value);
             }}
           />
         </div>
@@ -139,7 +138,7 @@ const LinkedAccounts = () => {
   const renderLinkButton = (account: AccountMetaData) => {
     return (
       <Button
-        disabled={!isWorkspaceOwner || !account.key || running}
+        disabled={!isWorkspaceOwner || !account.value || running}
         onClick={() => linkAccount(account)}
       >
         Link Account
@@ -166,7 +165,7 @@ const LinkedAccounts = () => {
       setRunning(true);
       const body = {
         name: account.internalName,
-        key: account.key,
+        key: account.value.trim(),
       };
       const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`, {
         method: 'POST',
