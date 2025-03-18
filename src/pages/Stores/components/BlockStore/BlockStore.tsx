@@ -1,6 +1,7 @@
 import React from 'react';
 import './styles.scss';
 
+import Help from '@/components/Table/Components/Help/Help';
 import Table from '@/components/Table/Table';
 import { Store } from '@/context/WorkspaceContext/types';
 import { useWorkspace } from '@/hooks/useWorkspace';
@@ -17,11 +18,8 @@ const BlockStore = () => {
         externalName: 'Name',
       },
       {
-        internalName: 'accessPointId',
-        externalName: 'Access point Id',
-      },
-      {
         internalName: 'mountPoint',
+        help: <Help content="Location in notebooks and workflows" type="Tooltip" />,
         externalName: 'Mount point',
       },
     ];
@@ -30,7 +28,6 @@ const BlockStore = () => {
     blocks.map((block) => {
       rows.push({
         name: block.name,
-        accessPointId: block.access_point_id,
         mountPoint: block.mount_point,
       });
     });

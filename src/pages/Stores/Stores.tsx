@@ -3,28 +3,38 @@ import { useState } from 'react';
 
 import { CiCloudOn } from 'react-icons/ci';
 import { FiBox } from 'react-icons/fi';
-import { LuCopyPlus } from 'react-icons/lu';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 import cloudIcon from '@/assets/icons/cloud.svg';
-import { Button } from '@/components/Button/Button';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import BlockStore from './components/BlockStore/BlockStore';
 
 export const Stores = () => {
-  const [activeTab, setActiveTab] = useState(0);
   const { activeWorkspace } = useWorkspace();
+  const [activeTab, setActiveTab] = useState(0);
 
   const renderTabDescription = () => {
+    const apphubLink = `${window.location.origin}/apphub`;
+    const environment = window.location.hostname.split('.')[0];
+    const storeEndpoint = `https://${activeWorkspace.name}.${environment}.eodatahub-workspaces.org.uk/files/workspaces/`;
+
     if (activeTab === 1) {
       return (
         <div className="header-right-text">
-          <span className="header-right-title">Block stores</span> To browse the contents of these
-          stores please use{' '}
-          <a href="https://dev.eodatahub.org.uk/apphub" rel="noreferrer" target="_blank">
-            Jupyter
-          </a>
+          <div>
+            <span className="header-right-title">Block stores</span> To browse the contents of these
+            stores please use{' '}
+            <a href={apphubLink} rel="noreferrer" target="_blank">
+              Jupyter
+            </a>
+          </div>
+          <div>
+            Additionally, you can view the block store associated to this workspace{' '}
+            <a href={storeEndpoint} rel="noreferrer" target="_blank">
+              here
+            </a>
+          </div>
         </div>
       );
     } else {
@@ -46,7 +56,7 @@ export const Stores = () => {
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />
           {renderTabDescription()}
-          <div className="header-right-workspace-file-harvester">
+          {/* <div className="header-right-workspace-file-harvester">
             <Button
               onClick={() => {
                 // This is at /workspaces, not at /api/workspaces
@@ -56,7 +66,7 @@ export const Stores = () => {
             >
               <LuCopyPlus /> Harvest
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
 
