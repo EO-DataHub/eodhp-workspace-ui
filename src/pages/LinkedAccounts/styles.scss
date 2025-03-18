@@ -7,6 +7,8 @@
     gap: 10px;
 
     &-header {
+      display: flex;
+      align-items: center;
       color: var(--text-primary);
       font-weight: 600;
 
