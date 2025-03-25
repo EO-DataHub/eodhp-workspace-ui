@@ -1,0 +1,13 @@
+.data-loader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__file {
+        border: 1px solid var(--background-secondary);
+        border-radius: 12px;
+        margin: 25px;
+        padding: 25px;
+    }
+}

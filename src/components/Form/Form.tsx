@@ -53,6 +53,7 @@ const Form = ({ fieldData, header, onChange, formErrors }: FormProps) => {
     });
     return fields;
   };
+
   const getEditorField = (field: Field, value) => {
     const EditorField = FIELD_MAP[field.type];
     return (
