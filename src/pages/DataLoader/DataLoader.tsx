@@ -7,6 +7,7 @@ import './styles.scss';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
+import { useWorkspace } from '@/hooks/useWorkspace';
 
 import basics from './schemas/basics.json';
 import datetime from './schemas/datetime.json';
@@ -20,6 +21,8 @@ import provider from './schemas/provider.json';
 type State = 'validate' | 'upload' | 'harvest';
 
 const DataLoader = () => {
+  const { activeWorkspace } = useWorkspace();
+
   const [file, setFile] = useState<File>();
   const [state, setState] = useState<State>('validate');
   const [message, setMessage] = useState<string>();
@@ -45,7 +48,7 @@ const DataLoader = () => {
   const renderFileSelector = () => {
     return (
       <div className="data-loader__file">
-        <h2>Please select STAC file</h2>
+        <h2>Please select a STAC file</h2>
         <input accept=".json" type="file" onChange={(e) => setFile(e.target.files[0])} />
       </div>
     );
@@ -148,33 +151,51 @@ const DataLoader = () => {
     }
   };
 
-  const upload = () => {
+  const upload = async () => {
     setRunning(true);
-    setMessage('Validating STAC file');
-    setTimeout(() => {
-      setRunning(false);
-      setState('upload');
-      setMessage('File successfully validated');
-    }, 3000);
+    setMessage('Uploading STAC file');
+
+    try {
+      const stacContent = await file.text();
+      const body = {
+        content: stacContent,
+      };
+
+      const res = await fetch(`/api/workspaces/${activeWorkspace.name}/upload`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed uploading file to s3');
+      }
+
+      setState('harvest');
+      setMessage('File successfully uploaded');
+    } catch (error) {
+      console.error(error);
+    }
+
+    setRunning(false);
   };
 
   const harvest = () => {
     setRunning(true);
-    setMessage('Validating STAC file');
-    setTimeout(() => {
-      setRunning(false);
-      setState('upload');
-      setMessage('File successfully validated');
-    }, 3000);
+    setMessage('Running STAC file harvest');
+    try {
+      fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div className="content-page">
       {renderHeader()}
-      {message}
       <div className="data-loader">
         {renderFileSelector()}
         {renderButton()}
+        {message && <div className="data-loader__message">{message}</div>}
       </div>
     </div>
   );

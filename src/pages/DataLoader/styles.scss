@@ -1,13 +1,28 @@
 .data-loader {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 
-    &__file {
-        border: 1px solid var(--background-secondary);
-        border-radius: 12px;
-        margin: 25px;
-        padding: 25px;
-    }
+  &__file {
+    border: 1px solid var(--background-secondary);
+    border-radius: 12px;
+    margin: 25px;
+    padding: 25px;
+    width: 318px;
+  }
+
+  .button {
+    width: 318px;
+  }
+
+  &__message {
+    display: flex;
+    border: 1px solid var(--background-secondary);
+    border-radius: 12px;
+    margin-top: 25px;
+    padding: 25px;
+    width: 318px;
+  }
 }
