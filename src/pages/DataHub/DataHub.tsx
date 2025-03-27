@@ -103,7 +103,7 @@ export const DataHub = () => {
     };
 
     fetchTokens();
-  }, []);
+  }, [activeWorkspace]);
 
   const handleCreateToken = async () => {
     try {
