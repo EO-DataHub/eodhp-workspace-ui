@@ -1,3 +1,5 @@
+$width: 350px;
+
 .data-loader {
   display: flex;
   flex-direction: column;
@@ -10,11 +12,11 @@
     border-radius: 12px;
     margin: 25px;
     padding: 25px;
-    width: 318px;
+    width: $width;
   }
 
   .button {
-    width: 318px;
+    width: $width;
   }
 
   &__message {
@@ -23,6 +25,23 @@
     border-radius: 12px;
     margin-top: 25px;
     padding: 25px;
-    width: 318px;
+    width: $width;
+  }
+
+  &__input {
+    display: flex;
+    flex-direction: column;
+    width: $width;
+    margin-bottom: 25px;
+    margin-top: -20px;
+
+    input {
+      background-color: var(--background);
+      color: var(--text-primary);
+      outline: none;
+      padding: 3px 5px;
+      border-radius: 2px;
+      border: 1px solid lightgrey;
+    }
   }
 }

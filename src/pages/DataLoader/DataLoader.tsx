@@ -24,6 +24,7 @@ const DataLoader = () => {
   const { activeWorkspace } = useWorkspace();
 
   const [file, setFile] = useState<File>();
+  const [fileName, setFileName] = useState<string>('');
   const [state, setState] = useState<State>('validate');
   const [message, setMessage] = useState<string>();
   const [running, setRunning] = useState<boolean>(false);
@@ -49,36 +50,75 @@ const DataLoader = () => {
     return (
       <div className="data-loader__file">
         <h2>Please select a STAC file</h2>
-        <input accept=".json" type="file" onChange={(e) => setFile(e.target.files[0])} />
+        <input
+          accept=".json"
+          type="file"
+          onChange={(e) => {
+            setFile(e.target.files[0]);
+            setFileName(e.target.files[0].name);
+          }}
+        />
       </div>
     );
   };
 
+  const renderFileNameField = () => {
+    return (
+      <div className="data-loader__input">
+        <label htmlFor="data-loader-file-name">File name</label>
+        <input
+          id="data-loader-file-name"
+          type="text"
+          value={fileName}
+          onChange={(e) => setFileName(e.target.value)}
+        />
+      </div>
+    );
+  };
+
+  const validateFileName = () => {
+    let valid = true;
+    // access-policy.json would cause the backend to break
+    if (fileName.includes('access-policy')) {
+      setMessage('File name cannot include access-policy');
+      valid = false;
+    }
+    if (!fileName) {
+      setMessage('File name cannot be empty');
+      valid = false;
+    }
+    return valid;
+  };
+
   const renderButton = () => {
-    if (state === 'validate') {
-      return (
-        <Button disabled={running} onClick={validate}>
-          {running ? 'Running' : 'Validate'}
-        </Button>
-      );
-    }
-    if (state === 'upload') {
-      return (
-        <Button disabled={running} onClick={upload}>
-          {running ? 'Running' : 'Upload'}
-        </Button>
-      );
-    }
-    if (state === 'harvest') {
-      return (
-        <Button disabled={running} onClick={harvest}>
-          {running ? 'Running' : 'Harvest'}
-        </Button>
-      );
-    }
+    const buttonData = {
+      validate: {
+        method: validate,
+        text: 'Validate',
+      },
+      upload: {
+        method: upload,
+        text: 'Upload',
+      },
+      harvest: {
+        method: harvest,
+        text: 'Harvest',
+      },
+    };
+
+    return (
+      <Button disabled={running} onClick={buttonData[state].method}>
+        {running ? 'Running' : buttonData[state].text}
+      </Button>
+    );
   };
 
   const validate = async () => {
+    if (!file) {
+      setMessage('Please select a file before running validation');
+      return;
+    }
+
     setRunning(true);
     setMessage('Validating STAC file');
     try {
@@ -152,22 +192,26 @@ const DataLoader = () => {
   };
 
   const upload = async () => {
+    const valid = validateFileName();
+    if (!valid) return;
     setRunning(true);
     setMessage('Uploading STAC file');
 
     try {
       const stacContent = await file.text();
       const body = {
-        content: stacContent,
+        fileContent: stacContent,
+        fileName,
       };
 
-      const res = await fetch(`/api/workspaces/${activeWorkspace.name}/upload`, {
+      const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
         method: 'POST',
         body: JSON.stringify(body),
       });
 
       if (!res.ok) {
-        throw new Error('Failed uploading file to s3');
+        setMessage('Failed to upload file to s3');
+        throw new Error();
       }
 
       setState('harvest');
@@ -181,7 +225,7 @@ const DataLoader = () => {
 
   const harvest = () => {
     setRunning(true);
-    setMessage('Running STAC file harvest');
+    setMessage('STAC file harvest in progress, check back later');
     try {
       fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
     } catch (error) {
@@ -194,6 +238,7 @@ const DataLoader = () => {
       {renderHeader()}
       <div className="data-loader">
         {renderFileSelector()}
+        {state === 'upload' ? renderFileNameField() : null}
         {renderButton()}
         {message && <div className="data-loader__message">{message}</div>}
       </div>
