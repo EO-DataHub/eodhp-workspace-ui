@@ -15,6 +15,7 @@ import draft07 from './schemas/draft-07.json';
 import feature from './schemas/feature.json';
 import geometry from './schemas/geometry.json';
 import instrument from './schemas/instrument.json';
+import schema from './schemas/item.json';
 import licensing from './schemas/licensing.json';
 import provider from './schemas/provider.json';
 
@@ -28,6 +29,7 @@ const DataLoader = () => {
   const [state, setState] = useState<State>('validate');
   const [message, setMessage] = useState<string>();
   const [running, setRunning] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<string>();
 
   const renderHeader = () => {
     return (
@@ -141,14 +143,9 @@ const DataLoader = () => {
       throw new Error();
     }
 
-    let schema;
     let ajv;
 
     try {
-      const schemaUrl =
-        'https://raw.githubusercontent.com/radiantearth/stac-spec/v1.0.0/item-spec/json-schema/item.json';
-      schema = await fetch(schemaUrl).then((res) => res.json());
-
       ajv = new Ajv({ strict: false });
       addFormats(ajv);
       ajv.addMetaSchema(draft07);
@@ -186,7 +183,7 @@ const DataLoader = () => {
       setMessage('✅ STAC item is valid!');
     } else {
       setMessage('❌ STAC item is invalid');
-      console.log(ajvValidate.errors);
+      setValidationErrors(ajvValidate.errors);
       throw new Error();
     }
   };
@@ -223,14 +220,16 @@ const DataLoader = () => {
     setRunning(false);
   };
 
-  const harvest = () => {
+  const harvest = async () => {
     setRunning(true);
     setMessage('STAC file harvest in progress, check back later');
     try {
-      fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
+      await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
     } catch (error) {
       console.error(error);
+      setMessage('Failed to start harvest');
     }
+    setRunning(false);
   };
 
   return (
@@ -241,6 +240,9 @@ const DataLoader = () => {
         {state === 'upload' ? renderFileNameField() : null}
         {renderButton()}
         {message && <div className="data-loader__message">{message}</div>}
+        {validationErrors && (
+          <div className="data-loader__errors">{JSON.stringify(validationErrors, null, 2)}</div>
+        )}
       </div>
     </div>
   );
