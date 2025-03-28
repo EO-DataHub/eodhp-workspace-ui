@@ -42,6 +42,22 @@ $width: 350px;
       padding: 3px 5px;
       border-radius: 2px;
       border: 1px solid lightgrey;
+
+      &:disabled {
+        cursor: not-allowed;
+        background-color: lightgrey;
+      }
+    }
+  }
+
+  &__dropdown {
+    display: flex;
+    flex-direction: column;
+    width: $width;
+
+    select {
+    background-color: var(--background);
+      color: var(--text-primary);
     }
   }
 }

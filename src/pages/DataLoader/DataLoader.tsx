@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
@@ -30,6 +30,9 @@ const DataLoader = () => {
   const [message, setMessage] = useState<string>();
   const [running, setRunning] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<string>();
+  const [fileType, setFileType] = useState<string>('stac');
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const renderHeader = () => {
     return (
@@ -51,8 +54,13 @@ const DataLoader = () => {
   const renderFileSelector = () => {
     return (
       <div className="data-loader__file">
-        <h2>Please select a STAC file</h2>
+        {fileType === 'stac' ? (
+          <h2>Please select a STAC file</h2>
+        ) : (
+          <h2>Please select your Access Policy file</h2>
+        )}
         <input
+          ref={fileInputRef}
           accept=".json"
           type="file"
           onChange={(e) => {
@@ -64,11 +72,34 @@ const DataLoader = () => {
     );
   };
 
+  const renderDropdown = () => {
+    return (
+      <div className="data-loader__dropdown">
+        <span>Upload type</span>
+        <select
+          className="data-loader__select"
+          onChange={(e) => {
+            setFile(null);
+            setFileName('');
+            fileInputRef.current.value = '';
+            setState('validate');
+            setMessage('');
+            setFileType(e.target.value);
+          }}
+        >
+          <option value={'stac'}>STAC</option>
+          <option value={'access-policy'}>Access Policy</option>
+        </select>
+      </div>
+    );
+  };
+
   const renderFileNameField = () => {
     return (
       <div className="data-loader__input">
         <label htmlFor="data-loader-file-name">File name</label>
         <input
+          disabled={fileType === 'access-policy'}
           id="data-loader-file-name"
           type="text"
           value={fileName}
@@ -104,9 +135,17 @@ const DataLoader = () => {
       },
       harvest: {
         method: harvest,
-        text: 'Harvest',
+        text: 'Load',
       },
     };
+
+    if (fileType === 'access-policy') {
+      return (
+        <Button disabled={running} onClick={validateAccessPolicy}>
+          {running ? 'Running' : buttonData[state].text}
+        </Button>
+      );
+    }
 
     return (
       <Button disabled={running} onClick={buttonData[state].method}>
@@ -129,6 +168,26 @@ const DataLoader = () => {
       setState('upload');
     } catch (error) {
       console.error(error);
+    }
+    setRunning(false);
+  };
+
+  const validateAccessPolicy = async () => {
+    if (!file) {
+      setMessage('Please select a file before running validation');
+      return;
+    }
+
+    setRunning(true);
+    setMessage('Validating Access Policy');
+    try {
+      const text = await file.text();
+      JSON.parse(text);
+      setMessage('File successfully validated');
+      setState('upload');
+      setFileName('access-policy.json');
+    } catch {
+      setMessage('Invalid JSON');
     }
     setRunning(false);
   };
@@ -236,6 +295,7 @@ const DataLoader = () => {
     <div className="content-page">
       {renderHeader()}
       <div className="data-loader">
+        {renderDropdown()}
         {renderFileSelector()}
         {state === 'upload' ? renderFileNameField() : null}
         {renderButton()}
