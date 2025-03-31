@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from './App';
 import './index.scss';
+import { DataLoaderProvider } from './context/DataLoaderContext/DataLoaderContext';
 import { WorkspaceProvider } from './context/WorkspaceContext/WorkspaceContext';
 
 const enableMocking = async () => {
@@ -24,7 +25,9 @@ enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <WorkspaceProvider>
-        <App />
+        <DataLoaderProvider>
+          <App />
+        </DataLoaderProvider>
       </WorkspaceProvider>
     </StrictMode>,
   );

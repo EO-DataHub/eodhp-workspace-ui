@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
@@ -7,8 +7,11 @@ import './styles.scss';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
+import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
+import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
+import STACDescription from './descriptions/STACDescription';
 import basics from './schemas/basics.json';
 import datetime from './schemas/datetime.json';
 import draft07 from './schemas/draft-07.json';
@@ -19,18 +22,24 @@ import schema from './schemas/item.json';
 import licensing from './schemas/licensing.json';
 import provider from './schemas/provider.json';
 
-type State = 'validate' | 'upload' | 'harvest';
-
 const DataLoader = () => {
   const { activeWorkspace } = useWorkspace();
-
-  const [file, setFile] = useState<File>();
-  const [fileName, setFileName] = useState<string>('');
-  const [state, setState] = useState<State>('validate');
-  const [message, setMessage] = useState<string>();
-  const [running, setRunning] = useState<boolean>(false);
-  const [validationErrors, setValidationErrors] = useState<string>();
-  const [fileType, setFileType] = useState<string>('stac');
+  const {
+    file,
+    setFile,
+    fileName,
+    setFileName,
+    state,
+    setState,
+    message,
+    setMessage,
+    running,
+    setRunning,
+    validationErrors,
+    setValidationErrors,
+    fileType,
+    setFileType,
+  } = useDataLoader();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -78,6 +87,7 @@ const DataLoader = () => {
         <span>Upload type</span>
         <select
           className="data-loader__select"
+          value={fileType}
           onChange={(e) => {
             setFile(null);
             setFileName('');
@@ -93,6 +103,15 @@ const DataLoader = () => {
         </select>
       </div>
     );
+  };
+
+  const renderDescription = () => {
+    const descriptions = {
+      stac: <STACDescription />,
+      'access-policy': <AccessPolicyDescription />,
+    };
+
+    return descriptions[fileType];
   };
 
   const renderFileNameField = () => {
@@ -294,6 +313,7 @@ const DataLoader = () => {
       {renderHeader()}
       <div className="data-loader">
         {renderDropdown()}
+        {renderDescription()}
         {renderFileSelector()}
         {state === 'upload' ? renderFileNameField() : null}
         {renderButton()}

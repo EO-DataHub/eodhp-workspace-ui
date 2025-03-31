@@ -1,4 +1,4 @@
-$width: 350px;
+$width: 400px;
 
 .data-loader {
   display: flex;
@@ -69,5 +69,21 @@ $width: 350px;
     padding: 25px;
     width: $width;
     overflow-x: auto;
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--background-secondary);
+    border-radius: 12px;
+    margin-top: 25px;
+    padding: 25px;
+    width: $width;
+    overflow-y: auto;
+    max-height: 250px;
+
+    code {
+      font-size: 10px;
+    }
   }
 }
