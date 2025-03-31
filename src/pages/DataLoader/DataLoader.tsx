@@ -139,14 +139,6 @@ const DataLoader = () => {
       },
     };
 
-    if (fileType === 'access-policy') {
-      return (
-        <Button disabled={running} onClick={validateAccessPolicy}>
-          {running ? 'Running' : buttonData[state].text}
-        </Button>
-      );
-    }
-
     return (
       <Button disabled={running} onClick={buttonData[state].method}>
         {running ? 'Running' : buttonData[state].text}
@@ -161,9 +153,10 @@ const DataLoader = () => {
     }
 
     setRunning(true);
-    setMessage('Validating STAC file');
+    setMessage('Validating file');
     try {
-      await validateSTAC();
+      if (fileType === 'access-policy') validateAccessPolicy();
+      if (fileType === 'stac') await validateSTAC();
       setMessage('File successfully validated');
       setState('upload');
     } catch (error) {
@@ -248,10 +241,12 @@ const DataLoader = () => {
   };
 
   const upload = async () => {
-    const valid = validateFileName();
-    if (!valid) return;
+    if (fileType === 'stac') {
+      const valid = validateFileName();
+      if (!valid) return;
+    }
     setRunning(true);
-    setMessage('Uploading STAC file');
+    setMessage('Uploading file');
 
     try {
       const stacContent = await file.text();
