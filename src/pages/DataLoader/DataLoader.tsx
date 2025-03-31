@@ -84,6 +84,7 @@ const DataLoader = () => {
             fileInputRef.current.value = '';
             setState('validate');
             setMessage('');
+            setValidationErrors(null);
             setFileType(e.target.value);
           }}
         >
@@ -234,7 +235,9 @@ const DataLoader = () => {
     if (valid) {
       setMessage('✅ STAC item is valid!');
     } else {
-      setMessage('❌ STAC item is invalid');
+      setMessage(
+        '❌ STAC item is invalid, to see a full breakdown of the errors please go to https://staclint.com/',
+      );
       setValidationErrors(ajvValidate.errors);
       throw new Error();
     }
