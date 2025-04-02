@@ -10,20 +10,20 @@ const AccessPolicyDescription = () => {
         <code>{`
 {
     "block-store": {
-        "/path/to/file": {"access": "public"}
-        "/path/to/file/another": {"access": "private"}
+        "/path/to/file": {"access": "public"},
+        "/path/to/file/another.json": {"access": "private"}
     },
     "object-store": {
-        "/processing-results/qa-check": {"access": "public"}
+        "/path/to/file/qa-check": {"access": "public"}
     },
     "catalogue": {
-        "/catalogs/processing-results/catalogs/qa-check": {"access": "public"}
+        "my-catalogue-name": {"access": "public"}
     },
     "workflows": {
         "my-workflow-name": {"access": "public"}
     }
 }
- `}</code>
+// `}</code>
       </pre>
     </div>
   );

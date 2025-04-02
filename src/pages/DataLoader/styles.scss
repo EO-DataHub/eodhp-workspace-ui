@@ -63,6 +63,7 @@ $width: 400px;
 
   &__errors {
     display: flex;
+    flex-direction: column;
     border: 1px solid var(--background-secondary);
     border-radius: 12px;
     margin-top: 25px;

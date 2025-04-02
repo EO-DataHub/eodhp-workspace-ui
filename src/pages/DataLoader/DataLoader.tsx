@@ -224,6 +224,11 @@ const DataLoader = () => {
     }
 
     if (data.status === 'error') {
+      if (!data.content) {
+        setMessage('❌ Failed to validate STAC');
+        setValidationErrors([data.message]);
+        throw new Error();
+      }
       const errors = [];
       data.content.forEach((error) => {
         if (Array.isArray(error)) {
