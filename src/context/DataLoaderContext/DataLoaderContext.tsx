@@ -16,8 +16,8 @@ export type DataLoaderContextType = {
   running: boolean;
   setRunning: (value: boolean) => void;
 
-  validationErrors: string;
-  setValidationErrors: (value: string) => void;
+  validationErrors: string[];
+  setValidationErrors: (value: string[]) => void;
 
   fileType: string;
   setFileType: (value: string) => void;
@@ -38,7 +38,7 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
   const [state, setState] = useState<State>('validate');
   const [message, setMessage] = useState<string>();
   const [running, setRunning] = useState<boolean>(false);
-  const [validationErrors, setValidationErrors] = useState<string>();
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [fileType, setFileType] = useState<string>('stac');
 
   useEffect(() => {}, []);

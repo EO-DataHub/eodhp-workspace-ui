@@ -203,6 +203,8 @@ const DataLoader = () => {
       throw new Error();
     }
 
+    let data;
+
     try {
       const res = await fetch(`https://dev.eodatahub.org.uk/api/validate-stac`, {
         method: 'POST',
@@ -215,25 +217,26 @@ const DataLoader = () => {
         }),
       });
       const dataAndCode = await res.json();
-      const data = dataAndCode[0];
-      if (data.status === 'error') {
-        const errors = [];
-        data.content.forEach((error) => {
-          if (Array.isArray(error)) {
-            error.forEach((e) => errors.push(e));
-          } else {
-            errors.push(error);
-          }
-        });
-        setMessage('❌ Failed to validate STAC');
-        setValidationErrors(JSON.stringify(errors));
-        throw new Error();
-      } else {
-        setMessage('✅ STAC item is valid!');
-      }
+      data = dataAndCode[0];
     } catch (error) {
       setMessage('Failed to send request');
       throw new Error();
+    }
+
+    if (data.status === 'error') {
+      const errors = [];
+      data.content.forEach((error) => {
+        if (Array.isArray(error)) {
+          error.forEach((e) => errors.push(e));
+        } else {
+          errors.push(error);
+        }
+      });
+      setMessage('❌ Failed to validate STAC');
+      setValidationErrors(errors);
+      throw new Error();
+    } else {
+      setMessage('✅ STAC item is valid!');
     }
   };
 
@@ -293,8 +296,16 @@ const DataLoader = () => {
         {state === 'upload' ? renderFileNameField() : null}
         {renderButton()}
         {message && <div className="data-loader__message">{message}</div>}
-        {validationErrors && (
-          <div className="data-loader__errors">{JSON.stringify(validationErrors, null, 2)}</div>
+        {validationErrors.length > 0 && (
+          <ul className="data-loader__errors">
+            {validationErrors.map((error) => {
+              return (
+                <li key={error} className="data-loader__errors-error">
+                  {error}
+                </li>
+              );
+            })}
+          </ul>
         )}
       </div>
     </div>
