@@ -1,8 +1,5 @@
 import React, { useRef } from 'react';
 
-import Ajv from 'ajv/dist/2020';
-import addFormats from 'ajv-formats';
-
 import './styles.scss';
 
 import link from '@/assets/icons/link.svg';
@@ -12,15 +9,6 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 
 import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
 import STACDescription from './descriptions/STACDescription';
-import basics from './schemas/basics.json';
-import datetime from './schemas/datetime.json';
-import draft07 from './schemas/draft-07.json';
-import feature from './schemas/feature.json';
-import geometry from './schemas/geometry.json';
-import instrument from './schemas/instrument.json';
-import schema from './schemas/item.json';
-import licensing from './schemas/licensing.json';
-import provider from './schemas/provider.json';
 
 const DataLoader = () => {
   const { activeWorkspace } = useWorkspace();
@@ -215,49 +203,36 @@ const DataLoader = () => {
       throw new Error();
     }
 
-    let ajv;
-
     try {
-      ajv = new Ajv({ strict: false });
-      addFormats(ajv);
-      ajv.addMetaSchema(draft07);
-      ajv.addSchema(feature, 'https://geojson.org/schema/Feature.json');
-      ajv.addSchema(geometry, 'https://geojson.org/schema/Geometry.json');
-      ajv.addSchema(
-        basics,
-        'https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/basics.json',
-      );
-      ajv.addSchema(
-        datetime,
-        'https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/datetime.json',
-      );
-      ajv.addSchema(
-        instrument,
-        'https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/instrument.json',
-      );
-      ajv.addSchema(
-        licensing,
-        'https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/licensing.json',
-      );
-      ajv.addSchema(
-        provider,
-        'https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/provider.json',
-      );
+      const res = await fetch(`https://dev.eodatahub.org.uk/api/validate-stac`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          credentials: 'include',
+        },
+        body: JSON.stringify({
+          content: stac,
+        }),
+      });
+      const dataAndCode = await res.json();
+      const data = dataAndCode[0];
+      if (data.status === 'error') {
+        const errors = [];
+        data.content.forEach((error) => {
+          if (Array.isArray(error)) {
+            error.forEach((e) => errors.push(e));
+          } else {
+            errors.push(error);
+          }
+        });
+        setMessage('❌ Failed to validate STAC');
+        setValidationErrors(JSON.stringify(errors));
+        throw new Error();
+      } else {
+        setMessage('✅ STAC item is valid!');
+      }
     } catch (error) {
-      setMessage('❌ Schema fetch failed');
-      throw new Error();
-    }
-
-    const ajvValidate = ajv.compile(schema);
-    const valid = ajvValidate(stac);
-
-    if (valid) {
-      setMessage('✅ STAC item is valid!');
-    } else {
-      setMessage(
-        '❌ STAC item is invalid, to see a full breakdown of the errors please go to https://staclint.com/',
-      );
-      setValidationErrors(ajvValidate.errors);
+      setMessage('Failed to send request');
       throw new Error();
     }
   };
