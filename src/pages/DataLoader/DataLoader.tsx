@@ -82,7 +82,7 @@ const DataLoader = () => {
             fileInputRef.current.value = '';
             setState('validate');
             setMessage('');
-            setValidationErrors(null);
+            setValidationErrors([]);
             setFileType(e.target.value);
           }}
         >
