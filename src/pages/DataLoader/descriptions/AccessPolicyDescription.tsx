@@ -22,8 +22,7 @@ const AccessPolicyDescription = () => {
     "workflows": {
         "my-workflow-name": {"access": "public"}
     }
-}
-// `}</code>
+}`}</code>
       </pre>
     </div>
   );
