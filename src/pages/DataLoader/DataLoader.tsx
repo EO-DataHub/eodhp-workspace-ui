@@ -242,6 +242,7 @@ const DataLoader = () => {
       throw new Error();
     } else {
       setMessage('✅ STAC item is valid!');
+      setValidationErrors([]);
     }
   };
 
