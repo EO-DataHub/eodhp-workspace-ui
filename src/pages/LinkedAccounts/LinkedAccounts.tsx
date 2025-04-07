@@ -313,7 +313,6 @@ const LinkedAccounts = () => {
       setPNEO(_pneoOptions[0]);
 
       updateData(account, 'valid', true);
-      await getAccounts();
     } catch (error) {
       setError(error);
     } finally {
