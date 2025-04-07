@@ -296,11 +296,11 @@ const LinkedAccounts = () => {
       Object.keys(contracts.optical).forEach((contractKey) => {
         if (contracts.optical[contractKey].includes('LEGACY')) {
           _legacyOptions.push(contractKey);
-          if (!_legacyKey) _legacyKey = contractKey;
+          if (!_legacyKey) _legacyKey = contracts.optical[contractKey];
         }
         if (contracts.optical[contractKey].includes('PNEO')) {
           _pneoOptions.push(contractKey);
-          if (!_pneoKey) _pneoKey = contractKey;
+          if (!_pneoKey) _pneoKey = contracts.optical[contractKey];
         }
       });
 
@@ -329,8 +329,8 @@ const LinkedAccounts = () => {
           sar: sar,
           optical: {},
         };
-        contracts.optical[legacyKey] = legacy;
-        contracts.optical[pneoKey] = pneo;
+        contracts.optical[legacy] = legacyKey;
+        contracts.optical[pneo] = pneoKey;
         body.contracts = contracts;
       }
       const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`, {
