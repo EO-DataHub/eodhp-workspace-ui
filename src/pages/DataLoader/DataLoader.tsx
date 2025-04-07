@@ -223,26 +223,27 @@ const DataLoader = () => {
       throw new Error();
     }
 
+    const errors = [];
+    data.content.forEach((error) => {
+      if (Array.isArray(error)) {
+        error.forEach((e) => errors.push(e));
+      } else {
+        errors.push(error);
+      }
+    });
+
     if (data.status === 'error') {
       if (!data.content) {
         setMessage('❌ Failed to validate STAC');
         setValidationErrors([data.message]);
         throw new Error();
       }
-      const errors = [];
-      data.content.forEach((error) => {
-        if (Array.isArray(error)) {
-          error.forEach((e) => errors.push(e));
-        } else {
-          errors.push(error);
-        }
-      });
       setMessage('❌ Failed to validate STAC');
       setValidationErrors(errors);
       throw new Error();
     } else {
       setMessage('✅ STAC item is valid!');
-      setValidationErrors([]);
+      setValidationErrors(errors);
     }
   };
 
