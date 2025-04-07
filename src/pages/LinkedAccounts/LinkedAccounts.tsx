@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
+import Cross from '@/assets/icons/cross.svg';
 import link from '@/assets/icons/link.svg';
+import Tick from '@/assets/icons/tick.svg';
 import { Button } from '@/components/Button/Button';
 import Modal from '@/components/Modal/Modal';
 import Help from '@/components/Table/Components/Help/Help';
@@ -20,6 +23,7 @@ type AccountMetaData = {
   internalName: string;
   externalName: string;
   docs: string;
+  valid?: boolean;
 };
 
 const linkableAccounts: LinkableAccount[] = [
@@ -43,6 +47,10 @@ const LinkedAccounts = () => {
   const [running, setRunning] = useState<boolean>();
   const [modal, setModal] = useState<boolean>(false);
   const [accountToUnlink, setAccountToUnlink] = useState<AccountMetaData>();
+
+  const [legacyOptions, setLegacyOptions] = useState<string[]>([]);
+  const [pneoOptions, setPneoOptions] = useState<string[]>([]);
+  const [sar, setSar] = useState<boolean>(false);
 
   useEffect(() => {
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
@@ -78,17 +86,18 @@ const LinkedAccounts = () => {
   const getPlaceHolderAccounts = () => {
     const initial: AccountMetaData[] = [
       {
-        value: 'the_user_will_never_see_this',
-        linked: true,
-        message: 'Linked',
-        internalName: 'airbus',
-        externalName: 'Airbus',
-        docs: linkableAccounts[0].docs,
-      },
-      {
         value: '',
         linked: false,
         message: 'Not linked',
+        internalName: 'airbus',
+        externalName: 'Airbus',
+        docs: linkableAccounts[0].docs,
+        valid: true,
+      },
+      {
+        value: 'the_user_will_never_see_this',
+        linked: true,
+        message: 'Linked',
         internalName: 'planet',
         externalName: 'Planet',
         docs: linkableAccounts[1].docs,
@@ -139,8 +148,62 @@ const LinkedAccounts = () => {
             }}
           />
         </div>
-        {account.linked ? renderUnlinkButton(account) : renderLinkButton(account)}
+        {account.valid && renderValidationOptions()}
+        {renderButton(account)}
       </div>
+    );
+  };
+
+  const renderValidationOptions = () => {
+    return (
+      <div className="linked-accounts__validation">
+        <div className="linked-accounts__validation-radar">
+          <h3>Radar</h3>
+          {sar ? <img alt="SAR status" src={Tick} /> : <img alt="SAR status" src={Cross} />}
+        </div>
+        <div className="linked-accounts__validation-optical">
+          <h3>Optical</h3>
+          <div>Legacy Contract</div>
+          <select>
+            {legacyOptions.map((option) => {
+              return (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              );
+            })}
+          </select>
+          <div>PNEO Contract</div>
+          <select>
+            {pneoOptions.map((option) => {
+              return (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      </div>
+    );
+  };
+
+  const renderButton = (account: AccountMetaData) => {
+    if (account.internalName === 'airbus' && !account.linked) {
+      return renderValidateButton(account);
+    }
+    if (account.linked) return renderUnlinkButton(account);
+    if (!account.linked) return renderLinkButton(account);
+  };
+
+  const renderValidateButton = (account: AccountMetaData) => {
+    return (
+      <Button
+        disabled={!isWorkspaceOwner || !account.value || running}
+        onClick={() => validateAccount(account)}
+      >
+        Validate API key
+      </Button>
     );
   };
 
@@ -167,6 +230,37 @@ const LinkedAccounts = () => {
         Unlink Account
       </Button>
     );
+  };
+
+  const validateAccount = async (account: AccountMetaData) => {
+    try {
+      setRunning(true);
+      const body = {
+        name: 'airbus',
+        key: account.value.trim(),
+      };
+      const res = await fetch(
+        `/api/workspaces/${activeWorkspace.name}/linked-accounts/airbus/validate`,
+        {
+          method: 'POST',
+          body: JSON.stringify(body),
+        },
+      );
+      if (!res.ok) {
+        setError('Error validating account');
+        return;
+      }
+
+      const json = await res.json();
+      console.log(json);
+
+      updateData(account, 'valid', true);
+      await getAccounts();
+    } catch (error) {
+      setError(error);
+    } finally {
+      setRunning(false);
+    }
   };
 
   const linkAccount = async (account: AccountMetaData) => {
