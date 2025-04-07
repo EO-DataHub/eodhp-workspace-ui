@@ -216,7 +216,7 @@ const LinkedAccounts = () => {
   };
 
   const renderButton = (account: AccountMetaData) => {
-    if (account.internalName === 'airbus' && !account.linked) {
+    if (account.internalName === 'airbus' && !account.linked && !account.valid) {
       return renderValidateButton(account);
     }
     if (account.linked) return renderUnlinkButton(account);
