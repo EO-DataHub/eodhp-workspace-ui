@@ -26,6 +26,15 @@ type AccountMetaData = {
   valid?: boolean;
 };
 
+type ValidationResponse = {
+  key: string;
+  name: string;
+  contracts?: {
+    sar: boolean;
+    optical: { [key: string]: string };
+  };
+};
+
 const linkableAccounts: LinkableAccount[] = [
   {
     internalName: 'airbus',
@@ -49,7 +58,13 @@ const LinkedAccounts = () => {
   const [accountToUnlink, setAccountToUnlink] = useState<AccountMetaData>();
 
   const [legacyOptions, setLegacyOptions] = useState<string[]>([]);
+  const [legacyKey, setLegacyKey] = useState<string>();
+  const [legacy, setLegacy] = useState<string>();
+
   const [pneoOptions, setPneoOptions] = useState<string[]>([]);
+  const [pneoKey, setPNEOKey] = useState<string>();
+  const [pneo, setPNEO] = useState<string>();
+
   const [sar, setSar] = useState<boolean>(false);
 
   useEffect(() => {
@@ -164,25 +179,38 @@ const LinkedAccounts = () => {
         <div className="linked-accounts__validation-optical">
           <h3>Optical</h3>
           <div>Legacy Contract</div>
-          <select>
-            {legacyOptions.map((option) => {
-              return (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              );
-            })}
-          </select>
+          {legacyOptions.length && (
+            <select
+              disabled={legacyOptions.length === 1}
+              value={legacy}
+              onChange={(e) => setLegacy(e.target.value)}
+            >
+              {legacyOptions.map((option) => {
+                return (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                );
+              })}
+            </select>
+          )}
+
           <div>PNEO Contract</div>
-          <select>
-            {pneoOptions.map((option) => {
-              return (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              );
-            })}
-          </select>
+          {pneoOptions.length && (
+            <select
+              disabled={pneoOptions.length === 1}
+              value={pneo}
+              onChange={(e) => setPNEO(e.target.value)}
+            >
+              {pneoOptions.map((option) => {
+                return (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                );
+              })}
+            </select>
+          )}
         </div>
       </div>
     );
@@ -200,7 +228,7 @@ const LinkedAccounts = () => {
     return (
       <Button
         disabled={!isWorkspaceOwner || !account.value || running}
-        onClick={() => validateAccount(account)}
+        onClick={() => validateAirbusKey(account)}
       >
         Validate API key
       </Button>
@@ -232,7 +260,7 @@ const LinkedAccounts = () => {
     );
   };
 
-  const validateAccount = async (account: AccountMetaData) => {
+  const validateAirbusKey = async (account: AccountMetaData) => {
     try {
       setRunning(true);
       const body = {
@@ -247,12 +275,43 @@ const LinkedAccounts = () => {
         },
       );
       if (!res.ok) {
-        setError('Error validating account');
+        setError('Error validating account, please check your API key');
         return;
       }
 
-      const json = await res.json();
-      console.log(json);
+      const json: ValidationResponse = await res.json();
+      if (!json.contracts) {
+        setError('No contracts associated to this API key');
+        return;
+      }
+
+      const contracts = json.contracts;
+      setSar(contracts.sar);
+
+      const _legacyOptions: string[] = [];
+      let _legacyKey: string;
+
+      const _pneoOptions: string[] = [];
+      let _pneoKey: string;
+
+      Object.keys(contracts.optical).forEach((contractKey) => {
+        if (contracts.optical[contractKey].includes('LEGACY')) {
+          _legacyOptions.push(contractKey);
+          if (!_legacyKey) _legacyKey = contractKey;
+        }
+        if (contracts.optical[contractKey].includes('PNEO')) {
+          _pneoOptions.push(contractKey);
+          if (!_pneoKey) _pneoKey = contractKey;
+        }
+      });
+
+      setLegacyOptions(_legacyOptions);
+      setLegacyKey(_legacyKey);
+      setLegacy(_legacyOptions[0]);
+
+      setPneoOptions(_pneoOptions);
+      setPNEOKey(_pneoKey);
+      setPNEO(_pneoOptions[0]);
 
       updateData(account, 'valid', true);
       await getAccounts();
@@ -266,10 +325,16 @@ const LinkedAccounts = () => {
   const linkAccount = async (account: AccountMetaData) => {
     try {
       setRunning(true);
-      const body = {
-        name: account.internalName,
-        key: account.value.trim(),
-      };
+      const body: ValidationResponse = { name: account.internalName, key: account.value.trim() };
+      if (account.internalName === 'airbus') {
+        const contracts = {
+          sar: sar,
+          optical: {},
+        };
+        contracts.optical[legacyKey] = legacy;
+        contracts.optical[pneoKey] = pneo;
+        body.contracts = contracts;
+      }
       const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`, {
         method: 'POST',
         body: JSON.stringify(body),
