@@ -280,6 +280,7 @@ const LinkedAccounts = () => {
   const validateAirbusKey = async (account: AccountMetaData) => {
     try {
       setRunning(true);
+      setError('');
       const body = {
         name: 'airbus',
         key: account.value.trim(),
