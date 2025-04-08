@@ -34,6 +34,12 @@ type ValidationResponse = {
   };
 };
 
+type ContractData = {
+  options: string[];
+  key: string;
+  value: string;
+};
+
 const linkableAccounts: LinkableAccount[] = [
   {
     internalName: 'airbus',
@@ -56,13 +62,17 @@ const LinkedAccounts = () => {
   const [modal, setModal] = useState<boolean>(false);
   const [accountToUnlink, setAccountToUnlink] = useState<AccountMetaData>();
 
-  const [legacyOptions, setLegacyOptions] = useState<string[]>([]);
-  const [legacyKey, setLegacyKey] = useState<string>();
-  const [legacy, setLegacy] = useState<string>();
+  const [legacyData, setLegacyData] = useState<ContractData>({
+    options: [],
+    key: '',
+    value: '',
+  });
 
-  const [pneoOptions, setPneoOptions] = useState<string[]>([]);
-  const [pneoKey, setPNEOKey] = useState<string>();
-  const [pneo, setPNEO] = useState<string>();
+  const [pneoData, setPNEOData] = useState<ContractData>({
+    options: [],
+    key: '',
+    value: '',
+  });
 
   const [sar, setSar] = useState<boolean>(false);
 
@@ -178,13 +188,17 @@ const LinkedAccounts = () => {
         <div className="linked-accounts__validation-optical">
           <h3>Optical</h3>
           <div>Legacy Contract</div>
-          {legacyOptions.length && (
+          {legacyData.options.length && (
             <select
-              disabled={legacyOptions.length === 1}
-              value={legacy}
-              onChange={(e) => setLegacy(e.target.value)}
+              disabled={legacyData.options.length === 1}
+              value={legacyData.value}
+              onChange={(e) => {
+                const copy = { ...legacyData };
+                copy.value = e.target.value;
+                setLegacyData(copy);
+              }}
             >
-              {legacyOptions.map((option) => {
+              {legacyData.options.map((option) => {
                 return (
                   <option key={option} value={option}>
                     {option}
@@ -195,13 +209,17 @@ const LinkedAccounts = () => {
           )}
 
           <div>PNEO Contract</div>
-          {pneoOptions.length && (
+          {pneoData.options.length && (
             <select
-              disabled={pneoOptions.length === 1}
-              value={pneo}
-              onChange={(e) => setPNEO(e.target.value)}
+              disabled={pneoData.options.length === 1}
+              value={pneoData.value}
+              onChange={(e) => {
+                const copy = { ...legacyData };
+                copy.value = e.target.value;
+                setPNEOData(copy);
+              }}
             >
-              {pneoOptions.map((option) => {
+              {pneoData.options.map((option) => {
                 return (
                   <option key={option} value={option}>
                     {option}
@@ -304,13 +322,17 @@ const LinkedAccounts = () => {
         }
       });
 
-      setLegacyOptions(_legacyOptions);
-      setLegacyKey(_legacyKey);
-      setLegacy(_legacyOptions[0]);
+      setLegacyData({
+        options: _legacyOptions,
+        key: _legacyKey,
+        value: _legacyOptions[0],
+      });
 
-      setPneoOptions(_pneoOptions);
-      setPNEOKey(_pneoKey);
-      setPNEO(_pneoOptions[0]);
+      setPNEOData({
+        options: _pneoOptions,
+        key: _pneoKey,
+        value: _pneoOptions[0],
+      });
 
       updateData(account, 'valid', true);
     } catch (error) {
@@ -329,8 +351,8 @@ const LinkedAccounts = () => {
           sar: sar,
           optical: {},
         };
-        contracts.optical[legacy] = legacyKey;
-        contracts.optical[pneo] = pneoKey;
+        contracts.optical[legacyData.value] = legacyData.key;
+        contracts.optical[pneoData.value] = pneoData.key;
         body.contracts = contracts;
       }
       const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`, {
