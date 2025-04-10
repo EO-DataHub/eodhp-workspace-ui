@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import './styles.scss';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
+import Modal from '@/components/Modal/Modal';
 import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
@@ -13,8 +14,8 @@ import STACDescription from './descriptions/STACDescription';
 const DataLoader = () => {
   const { activeWorkspace } = useWorkspace();
   const {
-    file,
-    setFile,
+    files,
+    setFiles,
     fileName,
     setFileName,
     state,
@@ -28,6 +29,8 @@ const DataLoader = () => {
     fileType,
     setFileType,
   } = useDataLoader();
+
+  const [modal, setModal] = useState<boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -59,9 +62,10 @@ const DataLoader = () => {
         <input
           ref={fileInputRef}
           accept=".json"
+          multiple={fileType === 'stac'}
           type="file"
           onChange={(e) => {
-            setFile(e.target.files[0]);
+            setFiles(e.target.files);
             setFileName(e.target.files[0].name);
           }}
         />
@@ -77,7 +81,7 @@ const DataLoader = () => {
           className="data-loader__select"
           value={fileType}
           onChange={(e) => {
-            setFile(null);
+            setFiles(null);
             setFileName('');
             fileInputRef.current.value = '';
             setState('validate');
@@ -91,6 +95,11 @@ const DataLoader = () => {
         </select>
       </div>
     );
+  };
+
+  const renderSTACButton = () => {
+    if (fileType !== 'stac') return;
+    return <Button onClick={() => setModal(true)}>View harvested STAC files</Button>;
   };
 
   const renderDescription = () => {
@@ -155,7 +164,7 @@ const DataLoader = () => {
   };
 
   const validate = async () => {
-    if (!file) {
+    if (!files) {
       setMessage('Please select a file before running validation');
       return;
     }
@@ -164,8 +173,13 @@ const DataLoader = () => {
     setMessage('Validating file');
     try {
       if (fileType === 'access-policy') validateAccessPolicy();
-      if (fileType === 'stac') await validateSTAC();
-      setMessage('File successfully validated');
+      if (fileType === 'stac') {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          await validateSTAC(file);
+        }
+      }
+      setMessage('File(s) successfully validated');
       setState('upload');
     } catch (error) {
       console.error(error);
@@ -174,7 +188,7 @@ const DataLoader = () => {
   };
 
   const validateAccessPolicy = async () => {
-    if (!file) {
+    if (!files) {
       setMessage('Please select a file before running validation');
       return;
     }
@@ -182,7 +196,7 @@ const DataLoader = () => {
     setRunning(true);
     setMessage('Validating Access Policy');
     try {
-      const text = await file.text();
+      const text = await files[0].text();
       JSON.parse(text);
       setMessage('File successfully validated');
       setState('upload');
@@ -193,13 +207,13 @@ const DataLoader = () => {
     setRunning(false);
   };
 
-  const validateSTAC = async () => {
+  const validateSTAC = async (file: File) => {
     const stacContent = await file.text();
     let stac;
     try {
       stac = JSON.parse(stacContent);
     } catch (e) {
-      setMessage('❌ Invalid JSON format');
+      setMessage(`❌ Invalid JSON format in file ${file.name}`);
       throw new Error();
     }
 
@@ -234,11 +248,11 @@ const DataLoader = () => {
 
     if (data.status === 'error') {
       if (!data.content) {
-        setMessage('❌ Failed to validate STAC');
+        setMessage(`❌ Failed to validate STAC in file ${file.name}`);
         setValidationErrors([data.message]);
         throw new Error();
       }
-      setMessage('❌ Failed to validate STAC');
+      setMessage(`❌ Failed to validate STAC in file ${file.name}`);
       setValidationErrors(errors);
       throw new Error();
     } else {
@@ -248,36 +262,38 @@ const DataLoader = () => {
   };
 
   const upload = async () => {
-    if (fileType === 'stac') {
-      const valid = validateFileName();
-      if (!valid) return;
-    }
-    setRunning(true);
-    setMessage('Uploading file');
-
-    try {
-      const stacContent = await file.text();
-      const body = {
-        fileContent: stacContent,
-        fileName,
-      };
-
-      const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
-        method: 'POST',
-        body: JSON.stringify(body),
-      });
-
-      if (!res.ok) {
-        setMessage('Failed to upload file to s3');
-        throw new Error();
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (fileType === 'stac') {
+        const valid = validateFileName();
+        if (!valid) return;
       }
+      setRunning(true);
+      setMessage('Uploading file');
 
-      setState('harvest');
-      setMessage('File successfully uploaded');
-    } catch (error) {
-      console.error(error);
+      try {
+        const stacContent = await file.text();
+        const body = {
+          fileContent: stacContent,
+          fileName,
+        };
+
+        const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          setMessage(`Failed to upload ${file.name} to s3`);
+          throw new Error();
+        }
+
+        setState('harvest');
+        setMessage('File successfully uploaded');
+      } catch (error) {
+        console.error(error);
+      }
     }
-
     setRunning(false);
   };
 
@@ -294,28 +310,42 @@ const DataLoader = () => {
   };
 
   return (
-    <div className="content-page">
-      {renderHeader()}
-      <div className="data-loader">
-        {renderDropdown()}
-        {renderDescription()}
-        {renderFileSelector()}
-        {state === 'upload' ? renderFileNameField() : null}
-        {renderButton()}
-        {message && <div className="data-loader__message">{message}</div>}
-        {validationErrors.length > 0 && (
-          <ul className="data-loader__errors">
-            {validationErrors.map((error) => {
-              return (
-                <li key={error} className="data-loader__errors-error">
-                  {error}
-                </li>
-              );
-            })}
-          </ul>
-        )}
+    <>
+      {modal && (
+        <Modal
+          content="asd"
+          onCancel={() => {
+            setModal(false);
+          }}
+          onSubmit={() => {
+            setModal(false);
+          }}
+        />
+      )}
+      <div className="content-page">
+        {renderHeader()}
+        <div className="data-loader">
+          {renderDropdown()}
+          {renderSTACButton()}
+          {renderDescription()}
+          {renderFileSelector()}
+          {state === 'upload' ? renderFileNameField() : null}
+          {renderButton()}
+          {message && <div className="data-loader__message">{message}</div>}
+          {validationErrors.length > 0 && (
+            <ul className="data-loader__errors">
+              {validationErrors.map((error) => {
+                return (
+                  <li key={error} className="data-loader__errors-error">
+                    {error}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

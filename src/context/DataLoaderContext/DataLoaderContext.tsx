@@ -1,8 +1,8 @@
 import { ReactNode, createContext, useEffect, useState } from 'react';
 
 export type DataLoaderContextType = {
-  file: File;
-  setFile: (value: File) => void;
+  files: FileList;
+  setFiles: (value: FileList) => void;
 
   fileName: string;
   setFileName: (value: string) => void;
@@ -33,7 +33,7 @@ export const DataLoaderContext = createContext<DataLoaderContextType | null>(nul
 DataLoaderContext.displayName = 'DataLoaderContext';
 
 export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderProviderProps) => {
-  const [file, setFile] = useState<File>();
+  const [files, setFiles] = useState<FileList>();
   const [fileName, setFileName] = useState<string>('');
   const [state, setState] = useState<State>('validate');
   const [message, setMessage] = useState<string>();
@@ -46,8 +46,8 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
   return (
     <DataLoaderContext.Provider
       value={{
-        file,
-        setFile,
+        files,
+        setFiles,
         fileName,
         setFileName,
         state,

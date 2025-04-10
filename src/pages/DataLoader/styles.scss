@@ -54,6 +54,7 @@ $width: 400px;
     display: flex;
     flex-direction: column;
     width: $width;
+    margin-bottom: 15px;
 
     select {
       background-color: var(--background);
