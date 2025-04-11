@@ -110,7 +110,7 @@ const DataLoader = () => {
           onChange={(e) => {
             setFiles(null);
             setFileName('');
-            fileInputRef.current.value = '';
+            if (fileInputRef) fileInputRef.current.value = '';
             setState('validate');
             setMessage('');
             setValidationErrors([]);
