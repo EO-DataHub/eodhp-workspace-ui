@@ -1,16 +1,16 @@
-$width: 400px;
+$width: 600px;
 
 .data-loader {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 25px;
   align-items: center;
   width: 100%;
 
   &__file {
     border: 1px solid var(--background-secondary);
     border-radius: 12px;
-    margin: 25px;
     padding: 25px;
     width: $width;
   }
@@ -23,7 +23,6 @@ $width: 400px;
     display: flex;
     border: 1px solid var(--background-secondary);
     border-radius: 12px;
-    margin-top: 25px;
     padding: 25px;
     width: $width;
   }
@@ -32,7 +31,6 @@ $width: 400px;
     display: flex;
     flex-direction: column;
     width: $width;
-    margin-bottom: 25px;
     margin-top: -20px;
 
     input {
@@ -54,7 +52,6 @@ $width: 400px;
     display: flex;
     flex-direction: column;
     width: $width;
-    margin-bottom: 15px;
 
     select {
       background-color: var(--background);
@@ -67,7 +64,6 @@ $width: 400px;
     flex-direction: column;
     border: 1px solid var(--background-secondary);
     border-radius: 12px;
-    margin-top: 25px;
     padding: 25px;
     width: $width;
     overflow-x: auto;
@@ -78,7 +74,6 @@ $width: 400px;
     flex-direction: column;
     border: 1px solid var(--background-secondary);
     border-radius: 12px;
-    margin-top: 25px;
     padding: 25px;
     width: $width;
     overflow-y: auto;
@@ -86,6 +81,16 @@ $width: 400px;
 
     code {
       font-size: 10px;
+    }
+  }
+
+  &__selector {
+    width: $width;
+
+    ul {
+      display: flex;
+      width: inherit;
+      overflow-x: auto;
     }
   }
 }

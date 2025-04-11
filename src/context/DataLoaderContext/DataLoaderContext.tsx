@@ -1,5 +1,7 @@
 import { ReactNode, createContext, useEffect, useState } from 'react';
 
+import type { Catalog, Collection } from 'stac-js';
+
 export type DataLoaderContextType = {
   files: FileList;
   setFiles: (value: FileList) => void;
@@ -21,6 +23,15 @@ export type DataLoaderContextType = {
 
   fileType: string;
   setFileType: (value: string) => void;
+
+  selectedCatalog: Catalog;
+  setSelectedCatalog: (value: Catalog) => void;
+
+  collections: Collection[];
+  setCollections: (value: Collection[]) => void;
+
+  selectedCollection: Collection;
+  setSelectedCollection: (value: Collection) => void;
 };
 
 type DataLoaderProviderProps = {
@@ -40,6 +51,9 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
   const [running, setRunning] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [fileType, setFileType] = useState<string>('stac');
+  const [selectedCatalog, setSelectedCatalog] = useState<Catalog>();
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [selectedCollection, setSelectedCollection] = useState<Collection>();
 
   useEffect(() => {}, []);
 
@@ -60,6 +74,12 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
         setValidationErrors,
         fileType,
         setFileType,
+        selectedCatalog,
+        setSelectedCatalog,
+        collections,
+        setCollections,
+        selectedCollection,
+        setSelectedCollection,
         ...initialState,
       }}
     >

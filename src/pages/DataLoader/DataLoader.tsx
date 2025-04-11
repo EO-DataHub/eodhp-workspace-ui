@@ -1,6 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import './styles.scss';
+
+import type { Catalog } from 'stac-js';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
@@ -8,8 +10,10 @@ import Modal from '@/components/Modal/Modal';
 import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
+import Selector from './components/Selector/Selector';
 import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
 import STACDescription from './descriptions/STACDescription';
+import { catalogPlaceholder } from './placeholders/catalogPlaceholder';
 
 const DataLoader = () => {
   const { activeWorkspace } = useWorkspace();
@@ -28,11 +32,30 @@ const DataLoader = () => {
     setValidationErrors,
     fileType,
     setFileType,
+    selectedCollection,
+    selectedCatalog,
   } = useDataLoader();
 
   const [modal, setModal] = useState<boolean>(false);
 
+  const [catalogues, setCatalogues] = useState<Catalog[]>([]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const getCatalogues = async () => {
+      if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+        setCatalogues(catalogPlaceholder.catalogs);
+      } else {
+        const res = await fetch(
+          `/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs`,
+        );
+        const json = await res.json();
+        setCatalogues(json.catalogs);
+      }
+    };
+    getCatalogues();
+  }, [activeWorkspace.name]);
 
   const renderHeader = () => {
     return (
@@ -52,10 +75,14 @@ const DataLoader = () => {
   };
 
   const renderFileSelector = () => {
+    if (!selectedCollection) return;
     return (
       <div className="data-loader__file">
         {fileType === 'stac' ? (
-          <h2>Please select a STAC file</h2>
+          <h2>
+            Please select all STAC items you wish you load into {selectedCatalog.id}/
+            {selectedCollection.id}
+          </h2>
         ) : (
           <h2>Please select your Access Policy file</h2>
         )}
@@ -109,6 +136,13 @@ const DataLoader = () => {
     };
 
     return descriptions[fileType];
+  };
+
+  const renderCatalogCollectionSelector = () => {
+    if (fileType !== 'stac') return;
+    // TODO: Tell user they have no catalogues
+    if (!catalogues.length) return;
+    return <Selector catalogues={catalogues} />;
   };
 
   const renderFileNameField = () => {
@@ -328,6 +362,7 @@ const DataLoader = () => {
           {renderDropdown()}
           {renderSTACButton()}
           {renderDescription()}
+          {renderCatalogCollectionSelector()}
           {renderFileSelector()}
           {state === 'upload' ? renderFileNameField() : null}
           {renderButton()}
