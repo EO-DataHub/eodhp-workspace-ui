@@ -145,13 +145,14 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
     try {
       const body = {
-        fileContent: newTemplate,
+        fileContent: JSON.stringify(newTemplate),
         fileName: `${newTemplate.id}.json`,
       };
 
       const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
         method: 'POST',
         body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
       });
 
       if (!res.ok) {
