@@ -140,8 +140,10 @@ const DataLoader = () => {
 
   const renderCatalogCollectionSelector = () => {
     if (fileType !== 'stac') return;
-    // TODO: Tell user they have no catalogues
-    if (!catalogues.length) return;
+    if (!catalogues.length) {
+      setMessage('No catalogs associated to this workspace');
+      return;
+    }
     return <Selector catalogues={catalogues} />;
   };
 

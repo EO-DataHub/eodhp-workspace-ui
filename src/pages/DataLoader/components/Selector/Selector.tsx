@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
 import type { Catalog } from 'stac-js';
 
 import { Button } from '@/components/Button/Button';
 import { useDataLoader } from '@/hooks/useDataLoader';
+import { useWorkspace } from '@/hooks/useWorkspace';
 
+import { collectionTemplate } from './collectionTemplate';
 import { collectionPlaceholder } from '../../placeholders/collectionPlaceholder';
 
 interface SelectorProps {
@@ -13,6 +15,7 @@ interface SelectorProps {
 }
 
 const Selector = ({ catalogues }: SelectorProps) => {
+  const { activeWorkspace } = useWorkspace();
   const {
     selectedCatalog,
     setSelectedCatalog,
@@ -21,6 +24,9 @@ const Selector = ({ catalogues }: SelectorProps) => {
     selectedCollection,
     setSelectedCollection,
   } = useDataLoader();
+
+  const [addingNewCollection, setAddingNewCollection] = useState<boolean>(false);
+  const [newCollectionName, setNewCollectionName] = useState<string>('');
 
   useEffect(() => {
     onCatalogueSelect(catalogues[0].id);
@@ -81,33 +87,92 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
   const renderCollectionsContainer = () => {
     if (!selectedCatalog) return;
-    if (!selectedCollection) return;
     return (
       <div className="selector-collections-container">
         <h3>Collections for {selectedCatalog.id}</h3>
         <div className="selector-collections">
-          <select
-            value={selectedCollection.id}
-            onChange={(e) => onCollectionSelect(e.target.value)}
+          {selectedCollection && (
+            <select
+              value={selectedCollection.id}
+              onChange={(e) => onCollectionSelect(e.target.value)}
+            >
+              {collections?.map((collection) => {
+                return (
+                  <option key={collection.id} value={collection.id}>
+                    {collection.id}
+                  </option>
+                );
+              })}
+            </select>
+          )}
+          <Button
+            onClick={() => {
+              setAddingNewCollection(true);
+            }}
           >
-            {collections?.map((collection) => {
-              return (
-                <option key={collection.id} value={collection.id}>
-                  {collection.id}
-                </option>
-              );
-            })}
-          </select>
-          <Button onClick={() => console.log('Clicked')}>Add new collection</Button>
+            Add new collection
+          </Button>
         </div>
       </div>
     );
+  };
+
+  const renderAddNewCollection = () => {
+    return (
+      <div>
+        <div>
+          <label htmlFor="new-collection-name">Collection name</label>
+          <input
+            id="new-collection-name"
+            value={newCollectionName}
+            onChange={(e) => setNewCollectionName(e.target.value)}
+          />
+        </div>
+        <div>
+          <Button disabled={!newCollectionName} onClick={() => addNewCollection()}>
+            Add new collection
+          </Button>
+          <Button onClick={() => setAddingNewCollection(false)}>Cancel</Button>
+        </div>
+      </div>
+    );
+  };
+
+  const addNewCollection = async () => {
+    const newTemplate = { ...collectionTemplate };
+    newTemplate.id = newCollectionName;
+    newTemplate.links[0].href = `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${newTemplate.id}`;
+
+    try {
+      const body = {
+        fileContent: newTemplate,
+        fileName: `${newTemplate.id}.json`,
+      };
+
+      const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        throw new Error();
+      }
+
+      try {
+        await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
+      } catch (error) {
+        console.error(error);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div className="data-loader__selector">
       {renderCataloguesSelector()}
       {renderCollectionsContainer()}
+      {addingNewCollection && renderAddNewCollection()}
     </div>
   );
 };
