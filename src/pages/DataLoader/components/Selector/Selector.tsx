@@ -43,6 +43,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
         const res = await fetch(collectionLink);
 
         if (!res.ok) {
+          // TODO: Display this error to the user
           throw new Error('Failed to fetch collections');
         }
 

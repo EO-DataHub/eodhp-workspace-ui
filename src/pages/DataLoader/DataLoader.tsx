@@ -199,7 +199,7 @@ const DataLoader = () => {
 
   const validate = async () => {
     if (!files) {
-      setMessage('Please select a file before running validation');
+      setMessage('Please select at least one file before running validation');
       return;
     }
 
@@ -290,6 +290,10 @@ const DataLoader = () => {
       setValidationErrors(errors);
       throw new Error();
     } else {
+      if (data.type !== 'ITEM') {
+        setMessage(`❌ ${file.name} is of type ${data.type} it must be a STAC Item`);
+        throw new Error();
+      }
       setMessage('✅ STAC item is valid!');
       setValidationErrors(errors);
     }
@@ -307,6 +311,11 @@ const DataLoader = () => {
 
       try {
         const stacContent = await file.text();
+        const stacObject = JSON.parse(stacContent);
+
+        const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
+        parentLinkObject.href = `${selectedCollection}/${selectedCatalog}`;
+
         const body = {
           fileContent: stacContent,
           fileName,
