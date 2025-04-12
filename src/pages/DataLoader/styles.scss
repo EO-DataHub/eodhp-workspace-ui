@@ -8,6 +8,11 @@ $width: 600px;
   align-items: center;
   width: 100%;
 
+  &-tutorial {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
   &__file {
     border: 1px solid var(--background-secondary);
     border-radius: 12px;

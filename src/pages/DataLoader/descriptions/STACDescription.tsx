@@ -3,12 +3,23 @@ import React from 'react';
 
 const STACDescription = () => {
   return (
-    <div className="data-loader__description">
-      <h3>What is a STAC file?</h3>
+    <div>
+      <h3>What is a STAC Collection?</h3>
       <p>
-        A STAC (SpatioTemporal Asset Catalog) file is a standardized JSON format used to describe
-        geospatial data. If you're unsure what it should contain, you can use the resources below:
+        A STAC Collection groups together related STAC Items (like satellite images or geospatial
+        assets). Collections include common metadata (such as spatial extents and temporal
+        intervals) and typically require a <code>summaries</code> field that can contain recommended
+        information like available bands (e.g. <code>eo:bands</code>).
       </p>
+
+      <h3>What is a STAC Item?</h3>
+      <p>
+        A STAC Item represents a single geospatial asset. It must include spatial information (a
+        valid GeoJSON <code>geometry</code> and a <code>bbox</code>), temporal metadata (like the
+        acquisition date), and details about its assets (e.g. links to images or data files).
+      </p>
+
+      <h3>Learn more about STAC</h3>
       <ul>
         <li>
           📄{' '}

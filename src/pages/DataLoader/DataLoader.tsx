@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useRef, useState } from 'react';
 
 import './styles.scss';
@@ -11,8 +13,8 @@ import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import Selector from './components/Selector/Selector';
+import DataLoaderTutorial from './components/Tutorial/DataLoaderTutorial';
 import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
-import STACDescription from './descriptions/STACDescription';
 import { catalogPlaceholder } from './placeholders/catalogPlaceholder';
 
 const DataLoader = () => {
@@ -37,6 +39,7 @@ const DataLoader = () => {
   } = useDataLoader();
 
   const [modal, setModal] = useState<boolean>(false);
+  const [tutorialModal, setTutorialModal] = useState<boolean>(false);
 
   const [catalogues, setCatalogues] = useState<Catalog[]>([]);
 
@@ -67,7 +70,13 @@ const DataLoader = () => {
           <img alt="Members" src={link} />
           <div className="header-right-text">
             <span className="header-right-title">Data Loader</span> allows you to validate, upload
-            and harvest STAC files directly into your workspace.
+            and harvest STAC files directly into your workspace.{' '}
+            <span
+              className="header-right-title data-loader-tutorial"
+              onClick={() => setTutorialModal(true)}
+            >
+              How to use the data loader
+            </span>
           </div>
         </div>
       </div>
@@ -130,12 +139,7 @@ const DataLoader = () => {
   };
 
   const renderDescription = () => {
-    const descriptions = {
-      stac: <STACDescription />,
-      'access-policy': <AccessPolicyDescription />,
-    };
-
-    return descriptions[fileType];
+    return <AccessPolicyDescription />;
   };
 
   const renderCatalogCollectionSelector = () => {
@@ -356,6 +360,19 @@ const DataLoader = () => {
 
   return (
     <>
+      {tutorialModal && (
+        <Modal
+          submitDisabled
+          cancelText="Close"
+          content={<DataLoaderTutorial />}
+          onCancel={() => {
+            setTutorialModal(false);
+          }}
+          onSubmit={() => {
+            setTutorialModal(false);
+          }}
+        />
+      )}
       {modal && (
         <Modal
           content="asd"
@@ -372,7 +389,7 @@ const DataLoader = () => {
         <div className="data-loader">
           {renderDropdown()}
           {renderSTACButton()}
-          {renderDescription()}
+          {fileType === 'access-policy' && renderDescription()}
           {renderCatalogCollectionSelector()}
           {renderFileSelector()}
           {state === 'upload' ? renderFileNameField() : null}
