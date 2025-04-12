@@ -1,10 +1,57 @@
+$width: 600px;
+
 .selector {
+  border: 1px solid var(--background-secondary);
+  border-radius: 12px;
+  padding: 25px;
+  width: $width;
+  display: flex;
+  flex-direction: column;
+
   &-collections {
     display: flex;
-    justify-content: space-between;
+    width: 100%;
 
     .button {
-      width: 100px;
+      width: 200px;
+      justify-self: right;
+    }
+
+    &-new {
+      margin: 15px 0;
+
+      &__input {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+
+        label {
+          font-size: 20px;
+          font-weight: 600;
+        }
+
+        input {
+          padding: 3px;
+        }
+      }
+
+      &__buttons {
+        display: flex;
+        justify-self: right;
+        gap: 25px;
+        width: 400px;
+
+        .button {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &-catalogs {
+    select {
+      width: 100%;
+      padding: 3px;
     }
   }
 }

@@ -70,7 +70,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
   const renderCataloguesSelector = () => {
     if (!selectedCatalog) return;
     return (
-      <div>
+      <div className="selector-catalogs">
         <h3>Please select a Catalogue</h3>
         <select value={selectedCatalog.id} onChange={(e) => onCatalogueSelect(e.target.value)}>
           {catalogues.map((catalog) => {
@@ -119,8 +119,8 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
   const renderAddNewCollection = () => {
     return (
-      <div>
-        <div>
+      <div className="selector-collections-new">
+        <div className="selector-collections-new__input">
           <label htmlFor="new-collection-name">Collection name</label>
           <input
             id="new-collection-name"
@@ -128,7 +128,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
             onChange={(e) => setNewCollectionName(e.target.value)}
           />
         </div>
-        <div>
+        <div className="selector-collections-new__buttons">
           <Button disabled={!newCollectionName} onClick={() => addNewCollection()}>
             Add new collection
           </Button>
@@ -170,7 +170,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
   };
 
   return (
-    <div className="data-loader__selector">
+    <div className="selector">
       {renderCataloguesSelector()}
       {renderCollectionsContainer()}
       {addingNewCollection && renderAddNewCollection()}
