@@ -12,9 +12,6 @@ export const collectionTemplate = {
       interval: [['2021-01-01T00:00:00Z', null]],
     },
   },
-  summaries: {
-    'eo:bands': ['B04'],
-  },
   links: [
     {
       rel: 'self',
