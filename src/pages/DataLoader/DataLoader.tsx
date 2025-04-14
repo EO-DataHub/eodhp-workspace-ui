@@ -316,6 +316,9 @@ const DataLoader = () => {
         const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
         parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
 
+        const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
+        stacObject.links[parentLinkIndex] = parentLinkObject;
+
         const body = {
           fileContent: stacContent,
           fileName,
