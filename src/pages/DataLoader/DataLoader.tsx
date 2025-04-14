@@ -314,10 +314,29 @@ const DataLoader = () => {
         const stacObject = JSON.parse(stacContent);
 
         const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
-        parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
+        if (parentLinkObject) {
+          parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
 
-        const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
-        stacObject.links[parentLinkIndex] = parentLinkObject;
+          const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
+          stacObject.links[parentLinkIndex] = parentLinkObject;
+        } else {
+          stacObject.links.push({
+            rel: 'parent',
+            href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
+            type: 'application/json',
+          });
+        }
+
+        const selfLinkObject = stacObject.links.filter((link) => link.rel === 'self')[0];
+        if (!selfLinkObject) {
+          stacObject.links.push({
+            rel: 'self',
+            href: '',
+            type: 'application/json',
+          });
+        }
+
+        stacObject.collection = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
 
         const body = {
           fileContent: JSON.stringify(stacObject),
