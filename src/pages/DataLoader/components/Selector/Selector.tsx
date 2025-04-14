@@ -142,7 +142,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
     const newTemplate = { ...collectionTemplate };
     newTemplate.id = newCollectionName;
     newTemplate.links[0].href = `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${newTemplate.id}`;
-    newTemplate.links[1].href = `catalogs/${selectedCatalog.id}/collections/${newCollectionName}`;
+    newTemplate.links[1].href = `catalogs/${selectedCatalog.id}`;
 
     try {
       const body = {

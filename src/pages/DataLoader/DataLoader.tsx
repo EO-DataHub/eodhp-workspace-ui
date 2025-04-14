@@ -38,7 +38,6 @@ const DataLoader = () => {
     selectedCatalog,
   } = useDataLoader();
 
-  const [modal, setModal] = useState<boolean>(false);
   const [tutorialModal, setTutorialModal] = useState<boolean>(false);
 
   const [catalogues, setCatalogues] = useState<Catalog[]>([]);
@@ -131,11 +130,6 @@ const DataLoader = () => {
         </select>
       </div>
     );
-  };
-
-  const renderSTACButton = () => {
-    if (fileType !== 'stac') return;
-    return <Button onClick={() => setModal(true)}>View harvested STAC files</Button>;
   };
 
   const renderDescription = () => {
@@ -320,7 +314,7 @@ const DataLoader = () => {
         const stacObject = JSON.parse(stacContent);
 
         const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
-        parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/collectionName/items/itemName`;
+        parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
 
         const body = {
           fileContent: stacContent,
@@ -362,7 +356,7 @@ const DataLoader = () => {
     <>
       {tutorialModal && (
         <Modal
-          submitDisabled
+          hideSubmit
           cancelText="Close"
           content={<DataLoaderTutorial />}
           onCancel={() => {
@@ -373,22 +367,10 @@ const DataLoader = () => {
           }}
         />
       )}
-      {modal && (
-        <Modal
-          content="asd"
-          onCancel={() => {
-            setModal(false);
-          }}
-          onSubmit={() => {
-            setModal(false);
-          }}
-        />
-      )}
       <div className="content-page">
         {renderHeader()}
         <div className="data-loader">
           {renderDropdown()}
-          {renderSTACButton()}
           {fileType === 'access-policy' && renderDescription()}
           {renderCatalogCollectionSelector()}
           {renderFileSelector()}
