@@ -327,6 +327,7 @@ const DataLoader = () => {
         const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
           method: 'POST',
           body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
         });
 
         if (!res.ok) {
