@@ -336,7 +336,7 @@ const DataLoader = () => {
           });
         }
 
-        stacObject.collection = `collections/${selectedCollection.id}`;
+        stacObject.collection = `${selectedCollection.id}`;
 
         const body = {
           fileContent: JSON.stringify(stacObject),
