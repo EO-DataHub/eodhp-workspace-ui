@@ -320,7 +320,7 @@ const DataLoader = () => {
         const stacObject = JSON.parse(stacContent);
 
         const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
-        parentLinkObject.href = `${selectedCollection}/${selectedCatalog}`;
+        parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/collectionName/items/itemName`;
 
         const body = {
           fileContent: stacContent,

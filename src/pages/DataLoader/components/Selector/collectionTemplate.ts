@@ -21,5 +21,10 @@ export const collectionTemplate = {
       href: 'https://example.com/simple-collection.json',
       type: 'application/json',
     },
+    {
+      rel: 'parent',
+      href: '',
+      type: 'application/json',
+    },
   ],
 };
