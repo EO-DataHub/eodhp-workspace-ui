@@ -320,7 +320,7 @@ const DataLoader = () => {
         stacObject.links[parentLinkIndex] = parentLinkObject;
 
         const body = {
-          fileContent: stacContent,
+          fileContent: stacObject,
           fileName,
         };
 
