@@ -331,12 +331,12 @@ const DataLoader = () => {
         if (!selfLinkObject) {
           stacObject.links.push({
             rel: 'self',
-            href: '',
+            href: 'catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}',
             type: 'application/json',
           });
         }
 
-        stacObject.collection = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
+        stacObject.collection = `collections/${selectedCollection.id}`;
 
         const body = {
           fileContent: JSON.stringify(stacObject),
