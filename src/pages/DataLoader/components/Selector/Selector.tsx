@@ -36,6 +36,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
   }, [catalogues]);
 
   const onCatalogueSelect = async (catalogId: string) => {
+    setSelectedCollection(null);
     const catalog = catalogues.filter((catalog) => catalog.id === catalogId)[0];
     setSelectedCatalog(catalog);
 
@@ -46,6 +47,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
       setCollections(collectionPlaceholder.collections);
+      setSelectedCollection(collectionPlaceholder.collections[0]);
     } else {
       try {
         const res = await fetch(collectionLink);
@@ -93,7 +95,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
       <div className="selector-collections-container">
         <h3>Collections for {selectedCatalog.id}</h3>
         <div className="selector-collections">
-          {selectedCollection && (
+          {selectedCollection && collections.length && (
             <select
               value={selectedCollection.id}
               onChange={(e) => onCollectionSelect(e.target.value)}
@@ -171,11 +173,11 @@ const Selector = ({ catalogues }: SelectorProps) => {
       if (!harvestRes.ok) {
         throw new Error('Failed to load data');
       }
+      setMessage('Collection successfully uploaded, please check back later to view collection');
     } catch (error) {
-      setMessage(error);
+      setMessage(error.message);
     }
     setAdding(false);
-    setMessage('Collection successfully uploaded, please check back later to view collection');
   };
 
   const renderViewSTACButtons = () => {
@@ -191,7 +193,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
             )
           }
         >
-          View {selectedCatalog.id} data
+          View {selectedCatalog.id} catalog data
         </Button>,
       );
     }
@@ -205,7 +207,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
             )
           }
         >
-          View {selectedCollection.id} data
+          View {selectedCollection.id} collection data
         </Button>,
       );
       buttons.push(
@@ -217,7 +219,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
             )
           }
         >
-          View {selectedCollection.id} items
+          View {selectedCollection.id} item data
         </Button>,
       );
     }

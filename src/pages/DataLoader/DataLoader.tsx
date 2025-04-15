@@ -69,9 +69,9 @@ const DataLoader = () => {
           <img alt="Members" src={link} />
           <div className="header-right-text">
             <span className="header-right-title">Data Loader</span> allows you to validate, upload
-            and harvest STAC files directly into your workspace.{' '}
+            and harvest STAC files directly into your workspace.
             <span
-              className="header-right-title data-loader-tutorial"
+              className="header-right-title data-loader-tutorial-text"
               onClick={() => setTutorialModal(true)}
             >
               How to use the data loader
@@ -396,15 +396,14 @@ const DataLoader = () => {
       <div className="content-page">
         {renderHeader()}
         <div className="data-loader">
+          {message && <div className="data-loader__message">{message}</div>}
           {renderDropdown()}
           {fileType === 'access-policy' && renderDescription()}
           {renderCatalogCollectionSelector()}
           {renderFileSelector()}
-          {state === 'upload' ? renderFileNameField() : null}
-          {renderButton()}
-          {message && <div className="data-loader__message">{message}</div>}
           {validationErrors.length > 0 && (
             <ul className="data-loader__errors">
+              <h3>Validation warnings</h3>
               {validationErrors.map((error) => {
                 return (
                   <li key={error} className="data-loader__errors-error">
@@ -414,6 +413,8 @@ const DataLoader = () => {
               })}
             </ul>
           )}
+          {state === 'upload' ? renderFileNameField() : null}
+          {renderButton()}
         </div>
       </div>
     </>
