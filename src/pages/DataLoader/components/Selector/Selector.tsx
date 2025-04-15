@@ -186,7 +186,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
         <Button
           onClick={() =>
             window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/catalogs`,
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}`,
               '_blank',
             )
           }
@@ -200,7 +200,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
         <Button
           onClick={() =>
             window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/catalogs/${selectedCollection.id}/colections`,
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
               '_blank',
             )
           }
@@ -212,7 +212,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
         <Button
           onClick={() =>
             window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/catalogs/commercial-data/collections/${selectedCollection.id}items`,
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}/items`,
               '_blank',
             )
           }
