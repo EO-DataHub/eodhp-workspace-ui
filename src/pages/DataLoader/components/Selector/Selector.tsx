@@ -1,8 +1,11 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
 import type { Catalog } from 'stac-js';
 
+import Refresh from '@/assets/icons/refresh.svg';
 import { Button } from '@/components/Button/Button';
 import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
@@ -34,6 +37,10 @@ const Selector = ({ catalogues }: SelectorProps) => {
     onCatalogueSelect(catalogues[0].id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [catalogues]);
+
+  const refresh = () => {
+    onCatalogueSelect(selectedCatalog.id);
+  };
 
   const onCatalogueSelect = async (catalogId: string) => {
     setSelectedCollection(null);
@@ -174,6 +181,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
         throw new Error('Failed to load data');
       }
       setMessage('Collection successfully uploaded, please check back later to view collection');
+      setAddingNewCollection(false);
     } catch (error) {
       setMessage(error.message);
     }
@@ -229,6 +237,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
   return (
     <div className="selector">
+      <img alt="refresh" src={Refresh} onClick={() => refresh()} />
       {renderCataloguesSelector()}
       {renderCollectionsContainer()}
       {addingNewCollection && renderAddNewCollection()}

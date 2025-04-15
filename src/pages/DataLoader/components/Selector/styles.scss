@@ -7,6 +7,23 @@ $width: 600px;
   width: $width;
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  img {
+    width: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: 1px solid grey;
+    padding: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s linear;
+
+    &:hover {
+      background-color: var(--background-secondary);
+    }
+  }
 
   select {
     background-color: var(--background);
@@ -34,6 +51,7 @@ $width: 600px;
       display: flex;
       margin-top: 25px;
       gap: 25px;
+      height: 40px;
     }
 
     &-new {

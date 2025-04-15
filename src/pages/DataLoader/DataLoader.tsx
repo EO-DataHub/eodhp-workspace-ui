@@ -139,7 +139,6 @@ const DataLoader = () => {
   const renderCatalogCollectionSelector = () => {
     if (fileType !== 'stac') return;
     if (!catalogues.length) {
-      setMessage('No catalogs associated to this workspace');
       return;
     }
     return <Selector catalogues={catalogues} />;
@@ -365,7 +364,9 @@ const DataLoader = () => {
 
   const harvest = async () => {
     setRunning(true);
-    setMessage('STAC file harvest in progress, check back later');
+    setMessage(
+      'In progress... There may be a slight delay while your data is processed. In the meantime, please use the buttons below to view available data.',
+    );
     try {
       const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
       if (!res.ok) {
@@ -376,6 +377,8 @@ const DataLoader = () => {
     }
     setRunning(false);
     setState('validate');
+    setValidationErrors([]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
