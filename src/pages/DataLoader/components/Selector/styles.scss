@@ -10,11 +10,25 @@ $width: 600px;
 
   &-collections {
     display: flex;
+    justify-content: space-between;
     width: 100%;
+    gap: 25px
+
+    select {
+      width: 100%;
+      height: 25px;
+    }
 
     .button {
       width: 200px;
       justify-self: right;
+      height: 25px;
+    }
+
+    &__buttons {
+      display: flex;
+      margin-top: 25px;
+      gap: 25px;
     }
 
     &-new {

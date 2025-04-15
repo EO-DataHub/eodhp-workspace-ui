@@ -23,10 +23,12 @@ const Selector = ({ catalogues }: SelectorProps) => {
     setCollections,
     selectedCollection,
     setSelectedCollection,
+    setMessage,
   } = useDataLoader();
 
   const [addingNewCollection, setAddingNewCollection] = useState<boolean>(false);
   const [newCollectionName, setNewCollectionName] = useState<string>('');
+  const [adding, setAdding] = useState<boolean>(false);
 
   useEffect(() => {
     onCatalogueSelect(catalogues[0].id);
@@ -105,13 +107,15 @@ const Selector = ({ catalogues }: SelectorProps) => {
               })}
             </select>
           )}
-          <Button
-            onClick={() => {
-              setAddingNewCollection(true);
-            }}
-          >
-            Add new collection
-          </Button>
+          {!addingNewCollection && (
+            <Button
+              onClick={() => {
+                setAddingNewCollection(true);
+              }}
+            >
+              Add new collection
+            </Button>
+          )}
         </div>
       </div>
     );
@@ -129,7 +133,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
           />
         </div>
         <div className="selector-collections-new__buttons">
-          <Button disabled={!newCollectionName} onClick={() => addNewCollection()}>
+          <Button disabled={!newCollectionName || adding} onClick={() => addNewCollection()}>
             Add new collection
           </Button>
           <Button onClick={() => setAddingNewCollection(false)}>Cancel</Button>
@@ -139,6 +143,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
   };
 
   const addNewCollection = async () => {
+    setAdding(true);
     const newTemplate = { ...collectionTemplate };
     newTemplate.id = newCollectionName;
     newTemplate.links[0].href = `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${newTemplate.id}`;
@@ -157,17 +162,67 @@ const Selector = ({ catalogues }: SelectorProps) => {
       });
 
       if (!res.ok) {
-        throw new Error();
+        throw new Error('Failed to upload access policy');
       }
 
-      try {
-        await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
-      } catch (error) {
-        console.error(error);
+      const harvestRes = await fetch(`/workspaces/${activeWorkspace.name}/harvest`, {
+        method: 'POST',
+      });
+      if (!harvestRes.ok) {
+        throw new Error('Failed to load data');
       }
     } catch (error) {
-      console.error(error);
+      setMessage(error);
     }
+    setAdding(false);
+    setMessage('Collection successfully uploaded, please check back later to view collection');
+  };
+
+  const renderViewSTACButtons = () => {
+    const buttons = [];
+
+    if (selectedCatalog) {
+      buttons.push(
+        <Button
+          onClick={() =>
+            window.open(
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${selectedCatalog.id}/catalogs`,
+              '_blank',
+            )
+          }
+        >
+          View {selectedCatalog.id} data
+        </Button>,
+      );
+    }
+    if (selectedCollection) {
+      buttons.push(
+        <Button
+          onClick={() =>
+            window.open(
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${selectedCatalog.id}/catalogs/${selectedCollection.id}/colections`,
+              '_blank',
+            )
+          }
+        >
+          View {selectedCollection.id} data
+        </Button>,
+      );
+      buttons.push(
+        <Button
+          onClick={() =>
+            window.open(
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${selectedCatalog.id}/catalogs/commercial-data/collections/${selectedCollection.id}items`,
+              '_blank',
+            )
+          }
+        >
+          View {selectedCollection.id} items
+        </Button>,
+      );
+    }
+
+    return <div className="selector-collections__buttons">{buttons}</div>;
   };
 
   return (
@@ -175,6 +230,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
       {renderCataloguesSelector()}
       {renderCollectionsContainer()}
       {addingNewCollection && renderAddNewCollection()}
+      {renderViewSTACButtons()}
     </div>
   );
 };

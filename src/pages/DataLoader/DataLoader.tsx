@@ -83,7 +83,7 @@ const DataLoader = () => {
   };
 
   const renderFileSelector = () => {
-    if (!selectedCollection) return;
+    if (!selectedCollection && fileType === 'stac') return;
     return (
       <div className="data-loader__file">
         {fileType === 'stac' ? (
@@ -367,12 +367,15 @@ const DataLoader = () => {
     setRunning(true);
     setMessage('STAC file harvest in progress, check back later');
     try {
-      await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
+      const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
+      if (!res.ok) {
+        throw new Error('Failed to load data');
+      }
     } catch (error) {
-      console.error(error);
-      setMessage('Failed to start harvest');
+      setMessage(error);
     }
     setRunning(false);
+    setState('validate');
   };
 
   return (
