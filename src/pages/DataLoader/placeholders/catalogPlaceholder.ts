@@ -68,7 +68,7 @@ export const catalogPlaceholder = {
         {
           rel: 'self',
           type: 'application/json',
-          href: 'https://staging.eodatahub.org.uk/api/catalogue/stac/catalogs/user/catalogs/npl/catalogs/processing-results/catalogs/qa-workflow/catalogs/airbus_phr_qa',
+          href: 'https://dev.eodatahub.org.uk/api/catalogue/stac/catalogs/user/catalogs/boeing/catalogs/processing-results/catalogs/convert-stac/catalogs/catalog/collections',
         },
         {
           rel: 'child',
