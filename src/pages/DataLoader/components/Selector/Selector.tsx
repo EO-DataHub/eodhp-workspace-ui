@@ -85,9 +85,13 @@ const Selector = ({ catalogues }: SelectorProps) => {
         <h3>Please select a Catalogue</h3>
         <select value={selectedCatalog.id} onChange={(e) => onCatalogueSelect(e.target.value)}>
           {catalogues.map((catalog) => {
+            const selfLink = catalog.links.filter((link) => {
+              return link.rel === 'self';
+            })[0];
+            const id = selfLink.href.split(`${activeWorkspace.name}/`)[1];
             return (
-              <option key={catalog.id} value={catalog.id}>
-                {catalog.id}
+              <option key={id} value={id}>
+                {id}
               </option>
             );
           })}

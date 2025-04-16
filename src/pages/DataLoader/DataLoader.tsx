@@ -187,6 +187,10 @@ const DataLoader = () => {
         method: harvest,
         text: 'Load',
       },
+      view: {
+        method: view,
+        text: 'View data',
+      },
     };
 
     return (
@@ -353,7 +357,7 @@ const DataLoader = () => {
           throw new Error();
         }
 
-        setState('harvest');
+        setState('view');
         setMessage('File successfully uploaded');
       } catch (error) {
         console.error(error);
@@ -379,6 +383,14 @@ const DataLoader = () => {
     setState('validate');
     setValidationErrors([]);
     if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const view = () => {
+    window.open(
+      `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}/items`,
+      '_blank',
+    );
+    setState('validate');
   };
 
   return (

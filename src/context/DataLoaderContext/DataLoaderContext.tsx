@@ -38,7 +38,7 @@ type DataLoaderProviderProps = {
   initialState?: Partial<DataLoaderContextType>;
   children: ReactNode;
 };
-type State = 'validate' | 'upload' | 'harvest';
+type State = 'validate' | 'upload' | 'harvest' | 'view';
 
 export const DataLoaderContext = createContext<DataLoaderContextType | null>(null);
 DataLoaderContext.displayName = 'DataLoaderContext';
