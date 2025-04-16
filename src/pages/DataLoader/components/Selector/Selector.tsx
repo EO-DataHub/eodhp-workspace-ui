@@ -51,7 +51,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
       const path = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
       const id = path.split('/')[0];
 
-      id === catalogId;
+      return id === catalogId;
     })[0];
     setSelectedCatalog(catalog);
 
