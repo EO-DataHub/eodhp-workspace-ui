@@ -44,7 +44,15 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
   const onCatalogueSelect = async (catalogId: string) => {
     setSelectedCollection(null);
-    const catalog = catalogues.filter((catalog) => catalog.id === catalogId)[0];
+    const catalog = catalogues.filter((catalog) => {
+      const selfLink = catalog.links.filter((link) => {
+        return link.rel === 'self';
+      })[0];
+      const path = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+      const id = path.split('/')[0];
+
+      id === catalogId;
+    })[0];
     setSelectedCatalog(catalog);
 
     // TODO: Warning message
