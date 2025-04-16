@@ -45,6 +45,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
   const onCatalogueSelect = async (catalogId: string) => {
     setSelectedCollection(null);
     const catalog = catalogues.filter((catalog) => {
+      if (!catalogId.includes('/')) return catalog.id === catalogId;
       const selfLink = catalog.links.filter((link) => {
         return link.rel === 'self';
       })[0];
