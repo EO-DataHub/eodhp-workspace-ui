@@ -386,8 +386,17 @@ const DataLoader = () => {
   };
 
   const view = () => {
+    let catalogId;
+
+    if (selectedCatalog) {
+      const selfLink = selectedCatalog.links.filter((link) => {
+        return link.rel === 'self';
+      })[0];
+      catalogId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+    }
+
     window.open(
-      `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}/items`,
+      `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${catalogId}/collections/${selectedCollection.id}/items`,
       '_blank',
     );
     setState('validate');

@@ -88,7 +88,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
             const selfLink = catalog.links.filter((link) => {
               return link.rel === 'self';
             })[0];
-            const id = selfLink.href.split(`${activeWorkspace.name}/`)[1];
+            const id = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
             return (
               <option key={id} value={id}>
                 {id}
@@ -195,12 +195,21 @@ const Selector = ({ catalogues }: SelectorProps) => {
   const renderViewSTACButtons = () => {
     const buttons = [];
 
+    let catalogId;
+
+    if (selectedCatalog) {
+      const selfLink = selectedCatalog.links.filter((link) => {
+        return link.rel === 'self';
+      })[0];
+      catalogId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+    }
+
     if (selectedCatalog) {
       buttons.push(
         <Button
           onClick={() =>
             window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}`,
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${catalogId}`,
               '_blank',
             )
           }
@@ -214,7 +223,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
         <Button
           onClick={() =>
             window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${catalogId}/collections/${selectedCollection.id}`,
               '_blank',
             )
           }
@@ -226,7 +235,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
         <Button
           onClick={() =>
             window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}/items`,
+              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${catalogId}/collections/${selectedCollection.id}/items`,
               '_blank',
             )
           }
