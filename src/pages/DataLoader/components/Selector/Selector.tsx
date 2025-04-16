@@ -48,10 +48,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
       const selfLink = catalog.links.filter((link) => {
         return link.rel === 'self';
       })[0];
-      const pathList = selfLink.href.split(`/`);
-      const id = pathList[pathList.length - 1];
-
-      return id === catalogId;
+      return selfLink.href.includes(catalogId);
     })[0];
     setSelectedCatalog(catalog);
 
