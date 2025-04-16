@@ -1,5 +1,6 @@
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, useState } from 'react';
 
+import { toast } from 'react-toastify';
 import type { Catalog, Collection } from 'stac-js';
 
 export type DataLoaderContextType = {
@@ -12,7 +13,6 @@ export type DataLoaderContextType = {
   state: State;
   setState: (value: State) => void;
 
-  message: string;
   setMessage: (value: string) => void;
 
   running: boolean;
@@ -47,7 +47,6 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
   const [files, setFiles] = useState<FileList>();
   const [fileName, setFileName] = useState<string>('');
   const [state, setState] = useState<State>('validate');
-  const [message, setMessage] = useState<string>();
   const [running, setRunning] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [fileType, setFileType] = useState<string>('stac');
@@ -55,7 +54,9 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
   const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedCollection, setSelectedCollection] = useState<Collection>();
 
-  useEffect(() => {}, []);
+  const setMessage = (message: string) => {
+    toast(message);
+  };
 
   return (
     <DataLoaderContext.Provider
@@ -66,7 +67,6 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
         setFileName,
         state,
         setState,
-        message,
         setMessage,
         running,
         setRunning,

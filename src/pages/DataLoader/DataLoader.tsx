@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import './styles.scss';
 
+import { ToastContainer } from 'react-toastify';
 import type { Catalog } from 'stac-js';
 
 import link from '@/assets/icons/link.svg';
@@ -26,7 +27,6 @@ const DataLoader = () => {
     setFileName,
     state,
     setState,
-    message,
     setMessage,
     running,
     setRunning,
@@ -357,7 +357,7 @@ const DataLoader = () => {
           throw new Error();
         }
 
-        setState('view');
+        setState('harvest');
         setMessage('File successfully uploaded');
       } catch (error) {
         console.error(error);
@@ -380,7 +380,7 @@ const DataLoader = () => {
       setMessage(error);
     }
     setRunning(false);
-    setState('validate');
+    setState('view');
     setValidationErrors([]);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
@@ -420,7 +420,6 @@ const DataLoader = () => {
       <div className="content-page">
         {renderHeader()}
         <div className="data-loader">
-          {message && <div className="data-loader__message">{message}</div>}
           {renderDropdown()}
           {fileType === 'access-policy' && renderDescription()}
           {renderCatalogCollectionSelector()}
@@ -440,6 +439,7 @@ const DataLoader = () => {
           {state === 'upload' ? renderFileNameField() : null}
           {renderButton()}
         </div>
+        <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
     </>
   );
