@@ -88,10 +88,16 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
   const renderCataloguesSelector = () => {
     if (!selectedCatalog) return;
+
+    const selfLink = selectedCatalog.links.filter((link) => {
+      return link.rel === 'self';
+    })[0];
+    const selectId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+
     return (
       <div className="selector-catalogs">
         <h3>Please select a Catalogue</h3>
-        <select value={selectedCatalog.id} onChange={(e) => onCatalogueSelect(e.target.value)}>
+        <select value={selectId} onChange={(e) => onCatalogueSelect(e.target.value)}>
           {catalogues.map((catalog) => {
             const selfLink = catalog.links.filter((link) => {
               return link.rel === 'self';
