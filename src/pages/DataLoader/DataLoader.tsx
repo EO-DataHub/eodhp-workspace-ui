@@ -334,7 +334,7 @@ const DataLoader = () => {
 
         const body = {
           fileContent: JSON.stringify(stacObject),
-          _fileName,
+          fileName: _fileName,
         };
 
         const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
@@ -377,19 +377,15 @@ const DataLoader = () => {
   };
 
   const view = () => {
-    let catalogId;
+    let collectionSelf;
 
-    if (selectedCatalog) {
-      const selfLink = selectedCatalog.links.filter((link) => {
+    if (selectedCollection) {
+      collectionSelf = selectedCollection.links.filter((link) => {
         return link.rel === 'self';
       })[0];
-      catalogId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
     }
 
-    window.open(
-      `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${catalogId}/collections/${selectedCollection.id}/items`,
-      '_blank',
-    );
+    window.open(`${collectionSelf.href}/items`, '_blank');
     setState('validate');
   };
 
