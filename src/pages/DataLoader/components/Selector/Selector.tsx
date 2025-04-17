@@ -209,51 +209,35 @@ const Selector = ({ catalogues }: SelectorProps) => {
   const renderViewSTACButtons = () => {
     const buttons = [];
 
-    let catalogId;
+    let catalogSelf;
+    let collectionSelf;
 
     if (selectedCatalog) {
-      const selfLink = selectedCatalog.links.filter((link) => {
+      catalogSelf = selectedCatalog.links.filter((link) => {
         return link.rel === 'self';
       })[0];
-      catalogId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+    }
+    if (selectedCollection) {
+      collectionSelf = selectedCollection.links.filter((link) => {
+        return link.rel === 'self';
+      })[0];
     }
 
     if (selectedCatalog) {
       buttons.push(
-        <Button
-          onClick={() =>
-            window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${catalogId}`,
-              '_blank',
-            )
-          }
-        >
+        <Button onClick={() => window.open(catalogSelf.href, '_blank')}>
           View {selectedCatalog.id} catalog data
         </Button>,
       );
     }
     if (selectedCollection) {
       buttons.push(
-        <Button
-          onClick={() =>
-            window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${catalogId}/collections/${selectedCollection.id}`,
-              '_blank',
-            )
-          }
-        >
+        <Button onClick={() => window.open(collectionSelf.href, '_blank')}>
           View {selectedCollection.id} collection data
         </Button>,
       );
       buttons.push(
-        <Button
-          onClick={() =>
-            window.open(
-              `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${catalogId}/collections/${selectedCollection.id}/items`,
-              '_blank',
-            )
-          }
-        >
+        <Button onClick={() => window.open(`${collectionSelf.href}/items`, '_blank')}>
           View {selectedCollection.id} item data
         </Button>,
       );
