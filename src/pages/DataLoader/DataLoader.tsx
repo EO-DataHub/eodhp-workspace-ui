@@ -23,7 +23,6 @@ const DataLoader = () => {
   const {
     files,
     setFiles,
-    fileName,
     setFileName,
     state,
     setState,
@@ -58,6 +57,15 @@ const DataLoader = () => {
     };
     getCatalogues();
   }, [activeWorkspace.name]);
+
+  const generateRandomString = (length = 16) => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
 
   const renderHeader = () => {
     return (
@@ -142,35 +150,6 @@ const DataLoader = () => {
       return;
     }
     return <Selector catalogues={catalogues} />;
-  };
-
-  const renderFileNameField = () => {
-    return (
-      <div className="data-loader__input">
-        <label htmlFor="data-loader-file-name">File name</label>
-        <input
-          disabled={fileType === 'access-policy'}
-          id="data-loader-file-name"
-          type="text"
-          value={fileName}
-          onChange={(e) => setFileName(e.target.value)}
-        />
-      </div>
-    );
-  };
-
-  const validateFileName = () => {
-    let valid = true;
-    // access-policy.json would cause the backend to break
-    if (fileName.includes('access-policy')) {
-      setMessage('File name cannot include access-policy');
-      valid = false;
-    }
-    if (!fileName) {
-      setMessage('File name cannot be empty');
-      valid = false;
-    }
-    return valid;
   };
 
   const renderButton = () => {
@@ -305,10 +284,6 @@ const DataLoader = () => {
   const upload = async () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if (fileType === 'stac') {
-        const valid = validateFileName();
-        if (!valid) return;
-      }
       setRunning(true);
       setMessage('Uploading file');
 
@@ -341,9 +316,16 @@ const DataLoader = () => {
 
         stacObject.collection = `${selectedCollection.id}`;
 
+        let _fileName;
+        if (fileType === 'access-policy') {
+          _fileName = 'access-policy.json';
+        } else {
+          _fileName = `${generateRandomString()}.json`;
+        }
+
         const body = {
           fileContent: JSON.stringify(stacObject),
-          fileName,
+          _fileName,
         };
 
         const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
@@ -436,7 +418,6 @@ const DataLoader = () => {
               })}
             </ul>
           )}
-          {state === 'upload' ? renderFileNameField() : null}
           {renderButton()}
         </div>
         <ToastContainer hideProgressBar position="bottom-left" theme="light" />
