@@ -74,11 +74,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
         const json = await res.json();
 
-        const filteredCollections = json.collections.filter(
-          (collection) => collection.id !== 'processing-results',
-        );
-
-        setCollections(filteredCollections);
+        setCollections(json.collections);
         if (json.collections?.length) setSelectedCollection(json.collections[0]);
       } catch (error) {
         console.error(error);

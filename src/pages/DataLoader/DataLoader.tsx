@@ -52,7 +52,11 @@ const DataLoader = () => {
           `/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs`,
         );
         const json = await res.json();
-        setCatalogues(json.catalogs);
+
+        const filteredCatalogs = json.catalogs.filter(
+          (catalog) => catalog.id !== 'processing-results',
+        );
+        setCatalogues(filteredCatalogs);
       }
     };
     getCatalogues();
