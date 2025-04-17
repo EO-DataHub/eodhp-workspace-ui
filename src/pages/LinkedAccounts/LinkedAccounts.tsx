@@ -1,7 +1,10 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
+import Cross from '@/assets/icons/cross.svg';
 import link from '@/assets/icons/link.svg';
+import Tick from '@/assets/icons/tick.svg';
 import { Button } from '@/components/Button/Button';
 import Modal from '@/components/Modal/Modal';
 import Help from '@/components/Table/Components/Help/Help';
@@ -20,6 +23,22 @@ type AccountMetaData = {
   internalName: string;
   externalName: string;
   docs: string;
+  valid?: boolean;
+};
+
+type ValidationResponse = {
+  key: string;
+  name: string;
+  contracts?: {
+    sar: boolean;
+    optical: { [key: string]: string };
+  };
+};
+
+type ContractData = {
+  options: string[];
+  key: string;
+  value: string;
 };
 
 const linkableAccounts: LinkableAccount[] = [
@@ -43,6 +62,20 @@ const LinkedAccounts = () => {
   const [running, setRunning] = useState<boolean>();
   const [modal, setModal] = useState<boolean>(false);
   const [accountToUnlink, setAccountToUnlink] = useState<AccountMetaData>();
+
+  const [legacyData, setLegacyData] = useState<ContractData>({
+    options: [],
+    key: '',
+    value: '',
+  });
+
+  const [pneoData, setPNEOData] = useState<ContractData>({
+    options: [],
+    key: '',
+    value: '',
+  });
+
+  const [sar, setSar] = useState<boolean>(false);
 
   useEffect(() => {
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
@@ -78,17 +111,18 @@ const LinkedAccounts = () => {
   const getPlaceHolderAccounts = () => {
     const initial: AccountMetaData[] = [
       {
-        value: 'the_user_will_never_see_this',
-        linked: true,
-        message: 'Linked',
-        internalName: 'airbus',
-        externalName: 'Airbus',
-        docs: linkableAccounts[0].docs,
-      },
-      {
         value: '',
         linked: false,
         message: 'Not linked',
+        internalName: 'airbus',
+        externalName: 'Airbus',
+        docs: linkableAccounts[0].docs,
+        valid: true,
+      },
+      {
+        value: 'the_user_will_never_see_this',
+        linked: true,
+        message: 'Linked',
         internalName: 'planet',
         externalName: 'Planet',
         docs: linkableAccounts[1].docs,
@@ -139,8 +173,88 @@ const LinkedAccounts = () => {
             }}
           />
         </div>
-        {account.linked ? renderUnlinkButton(account) : renderLinkButton(account)}
+        {account.valid && renderValidationOptions()}
+        {renderButton(account)}
       </div>
+    );
+  };
+
+  const renderValidationOptions = () => {
+    return (
+      <>
+        <div className="linked-accounts__validation">
+          <div className="linked-accounts__validation-radar">
+            <h3>Radar</h3>
+            {sar ? <img alt="SAR status" src={Tick} /> : <img alt="SAR status" src={Cross} />}
+          </div>
+          <div className="linked-accounts__validation-optical">
+            <h3>Optical</h3>
+            <div>Legacy Contract</div>
+            {legacyData?.options?.length ? (
+              <select
+                disabled={legacyData.options.length === 1}
+                value={legacyData.value}
+                onChange={(e) => {
+                  const copy = { ...legacyData };
+                  copy.value = e.target.value;
+                  setLegacyData(copy);
+                }}
+              >
+                {legacyData?.options?.map((option) => {
+                  return (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  );
+                })}
+              </select>
+            ) : null}
+
+            <div>PNEO Contract</div>
+            {pneoData?.options?.length ? (
+              <select
+                disabled={pneoData.options.length === 1}
+                value={pneoData.value}
+                onChange={(e) => {
+                  const copy = { ...legacyData };
+                  copy.value = e.target.value;
+                  setPNEOData(copy);
+                }}
+              >
+                {pneoData?.options?.map((option) => {
+                  return (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  );
+                })}
+              </select>
+            ) : null}
+          </div>
+        </div>
+        <span>
+          Please select your contract from the dropdowns and confirm by pressing "Link Account"
+        </span>
+      </>
+    );
+  };
+
+  const renderButton = (account: AccountMetaData) => {
+    if (account.internalName === 'airbus' && !account.linked && !account.valid) {
+      return renderValidateButton(account);
+    }
+    if (account.linked) return renderUnlinkButton(account);
+    if (!account.linked) return renderLinkButton(account);
+  };
+
+  const renderValidateButton = (account: AccountMetaData) => {
+    return (
+      <Button
+        disabled={!isWorkspaceOwner || !account.value || running}
+        onClick={() => validateAirbusKey(account)}
+      >
+        Validate API key
+      </Button>
     );
   };
 
@@ -169,13 +283,85 @@ const LinkedAccounts = () => {
     );
   };
 
+  const validateAirbusKey = async (account: AccountMetaData) => {
+    try {
+      setRunning(true);
+      setError('');
+      const body = {
+        name: 'airbus',
+        key: account.value.trim(),
+      };
+      const res = await fetch(
+        `/api/workspaces/${activeWorkspace.name}/linked-accounts/airbus/validate`,
+        {
+          method: 'POST',
+          body: JSON.stringify(body),
+        },
+      );
+      if (!res.ok) {
+        setError('Error validating account, please check your API key');
+        return;
+      }
+
+      const json: ValidationResponse = await res.json();
+      if (!json.contracts) {
+        setError('No contracts associated to this API key');
+        return;
+      }
+
+      const contracts = json.contracts;
+      setSar(contracts.sar);
+
+      const _legacyOptions: string[] = [];
+      let _legacyKey: string;
+
+      const _pneoOptions: string[] = [];
+      let _pneoKey: string;
+
+      Object.keys(contracts.optical).forEach((contractKey) => {
+        if (contracts.optical[contractKey].includes('LEGACY')) {
+          _legacyOptions.push(contractKey);
+          if (!_legacyKey) _legacyKey = contracts.optical[contractKey];
+        }
+        if (contracts.optical[contractKey].includes('PNEO')) {
+          _pneoOptions.push(contractKey);
+          if (!_pneoKey) _pneoKey = contracts.optical[contractKey];
+        }
+      });
+
+      setLegacyData({
+        options: _legacyOptions,
+        key: _legacyKey,
+        value: _legacyOptions[0],
+      });
+
+      setPNEOData({
+        options: _pneoOptions,
+        key: _pneoKey,
+        value: _pneoOptions[0],
+      });
+
+      updateData(account, 'valid', true);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setRunning(false);
+    }
+  };
+
   const linkAccount = async (account: AccountMetaData) => {
     try {
       setRunning(true);
-      const body = {
-        name: account.internalName,
-        key: account.value.trim(),
-      };
+      const body: ValidationResponse = { name: account.internalName, key: account.value.trim() };
+      if (account.internalName === 'airbus') {
+        const contracts = {
+          sar: sar,
+          optical: {},
+        };
+        contracts.optical[legacyData.value] = legacyData.key;
+        contracts.optical[pneoData.value] = pneoData.key;
+        body.contracts = contracts;
+      }
       const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`, {
         method: 'POST',
         body: JSON.stringify(body),
