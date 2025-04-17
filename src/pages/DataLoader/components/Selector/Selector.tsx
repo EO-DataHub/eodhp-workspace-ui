@@ -49,7 +49,14 @@ const Selector = ({ catalogues }: SelectorProps) => {
       const selfLink = catalog.links.filter((link) => {
         return link.rel === 'self';
       })[0];
-      return selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1].includes(catalogId);
+
+      const path = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+
+      console.log(path);
+      console.log(catalogId);
+      console.log('');
+
+      return path.includes(catalogId);
     })[0];
     setSelectedCatalog(catalog);
 
