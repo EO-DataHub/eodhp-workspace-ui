@@ -92,12 +92,12 @@ const Selector = ({ catalogues }: SelectorProps) => {
     const selfLink = selectedCatalog.links.filter((link) => {
       return link.rel === 'self';
     })[0];
-    const selectId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+    const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
 
     return (
       <div className="selector-catalogs">
         <h3>Please select a Catalogue</h3>
-        <select value={selectId} onChange={(e) => onCatalogueSelect(e.target.value)}>
+        <select value={selectedId} onChange={(e) => onCatalogueSelect(e.target.value)}>
           {catalogues.map((catalog) => {
             const selfLink = catalog.links.filter((link) => {
               return link.rel === 'self';
@@ -174,7 +174,17 @@ const Selector = ({ catalogues }: SelectorProps) => {
     const newTemplate = { ...collectionTemplate };
     newTemplate.id = newCollectionName;
     newTemplate.links[0].href = `https://${window.location.hostname}/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs/${selectedCatalog.id}/collections/${newTemplate.id}`;
-    newTemplate.links[1].href = `catalogs/${selectedCatalog.id}`;
+
+    const selfLink = selectedCatalog.links.filter((link) => {
+      return link.rel === 'self';
+    })[0];
+    const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+
+    if (!selectedId.includes('/')) {
+      newTemplate.links[1].href = `catalogs/${selectedCatalog.id}`;
+    } else {
+      newTemplate.links[1].href = `catalogs/${selectedId}`;
+    }
 
     try {
       const body = {
