@@ -52,7 +52,7 @@ export const accountsPlaceholder = {
 export const workspacesPlaceholder: Workspace[] = [
   {
     id: '5ca33d4a-bfd8-495f-8684-9b157be3f36c',
-    name: 'blueorigin',
+    name: 'dev-test-workspace',
     account: '382b1c98-eaca-4914-b3f6-f6f979d42683',
     member_group: 'prod',
     status: 'pending',

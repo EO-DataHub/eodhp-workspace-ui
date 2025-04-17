@@ -34,7 +34,9 @@
     "react-responsive-pagination": "^2.10.0",
     "react-select": "^5.8.0",
     "react-tabs": "^6.0.2",
-    "react-tooltip": "^5.28.0"
+    "react-toastify": "^11.0.5",
+    "react-tooltip": "^5.28.0",
+    "stac-js": "^0.1.4"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

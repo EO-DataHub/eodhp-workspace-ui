@@ -1,0 +1,98 @@
+$width: 600px;
+
+.selector {
+  border: 1px solid var(--background-secondary);
+  border-radius: 12px;
+  padding: 25px;
+  width: $width;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  img {
+    width: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: 1px solid grey;
+    padding: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s linear;
+
+    &:hover {
+      background-color: var(--background-secondary);
+    }
+  }
+
+  select {
+    background-color: var(--background);
+    color: var(--text-primary);
+  }
+
+  &-collections {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 25px;
+
+    select {
+      width: 100%;
+      height: 25px;
+    }
+
+    .button {
+      width: 200px;
+      justify-self: right;
+      height: 25px;
+    }
+
+    &__buttons {
+      display: flex;
+      margin-top: 25px;
+      gap: 25px;
+      height: 40px;
+    }
+
+    &-new {
+      margin: 15px 0;
+
+      &__input {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+
+        label {
+          font-size: 20px;
+          font-weight: 600;
+        }
+
+        input {
+          padding: 3px;
+          background-color: var(--background);
+          color: var(--text-primary);
+          outline: none;
+          border: 1px solid grey;
+        }
+      }
+
+      &__buttons {
+        display: flex;
+        justify-self: right;
+        gap: 25px;
+        width: 400px;
+
+        .button {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &-catalogs {
+    select {
+      width: 100%;
+      padding: 3px;
+    }
+  }
+}
