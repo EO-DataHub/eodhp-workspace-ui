@@ -293,7 +293,16 @@ const DataLoader = () => {
 
         const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
         if (parentLinkObject) {
-          parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
+          const selfLink = selectedCatalog.links.filter((link) => {
+            return link.rel === 'self';
+          })[0];
+          const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+
+          if (!selectedId.includes('/')) {
+            parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
+          } else {
+            parentLinkObject.href = `catalogs/${selectedId}/collections/${selectedCollection.id}`;
+          }
 
           const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
           stacObject.links[parentLinkIndex] = parentLinkObject;
