@@ -180,56 +180,61 @@ const LinkedAccounts = () => {
 
   const renderValidationOptions = () => {
     return (
-      <div className="linked-accounts__validation">
-        <div className="linked-accounts__validation-radar">
-          <h3>Radar</h3>
-          {sar ? <img alt="SAR status" src={Tick} /> : <img alt="SAR status" src={Cross} />}
-        </div>
-        <div className="linked-accounts__validation-optical">
-          <h3>Optical</h3>
-          <div>Legacy Contract</div>
-          {legacyData.options.length && (
-            <select
-              disabled={legacyData.options.length === 1}
-              value={legacyData.value}
-              onChange={(e) => {
-                const copy = { ...legacyData };
-                copy.value = e.target.value;
-                setLegacyData(copy);
-              }}
-            >
-              {legacyData.options.map((option) => {
-                return (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                );
-              })}
-            </select>
-          )}
+      <>
+        <div className="linked-accounts__validation">
+          <div className="linked-accounts__validation-radar">
+            <h3>Radar</h3>
+            {sar ? <img alt="SAR status" src={Tick} /> : <img alt="SAR status" src={Cross} />}
+          </div>
+          <div className="linked-accounts__validation-optical">
+            <h3>Optical</h3>
+            <div>Legacy Contract</div>
+            {legacyData?.options?.length ? (
+              <select
+                disabled={legacyData.options.length === 1}
+                value={legacyData.value}
+                onChange={(e) => {
+                  const copy = { ...legacyData };
+                  copy.value = e.target.value;
+                  setLegacyData(copy);
+                }}
+              >
+                {legacyData?.options?.map((option) => {
+                  return (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  );
+                })}
+              </select>
+            ) : null}
 
-          <div>PNEO Contract</div>
-          {pneoData.options.length && (
-            <select
-              disabled={pneoData.options.length === 1}
-              value={pneoData.value}
-              onChange={(e) => {
-                const copy = { ...legacyData };
-                copy.value = e.target.value;
-                setPNEOData(copy);
-              }}
-            >
-              {pneoData.options.map((option) => {
-                return (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                );
-              })}
-            </select>
-          )}
+            <div>PNEO Contract</div>
+            {pneoData?.options?.length ? (
+              <select
+                disabled={pneoData.options.length === 1}
+                value={pneoData.value}
+                onChange={(e) => {
+                  const copy = { ...legacyData };
+                  copy.value = e.target.value;
+                  setPNEOData(copy);
+                }}
+              >
+                {pneoData?.options?.map((option) => {
+                  return (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  );
+                })}
+              </select>
+            ) : null}
+          </div>
         </div>
-      </div>
+        <span>
+          Please select your contract from the dropdowns and confirm by pressing "Link Account"
+        </span>
+      </>
     );
   };
 
