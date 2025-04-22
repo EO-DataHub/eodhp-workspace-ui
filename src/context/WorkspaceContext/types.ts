@@ -30,8 +30,13 @@ type Block = {
 
 export type Account = {
   id: string;
+  createdAt: string;
   name: string;
   accountOwner: string;
+  billingAddress: string;
+  organizationName: string | null;
+  accountOpeningReason: string | null;
+  status: 'Approved' | 'Rejected' | 'Pending' | string;
   workspaces: Workspace[];
   last_updated: string;
 };
