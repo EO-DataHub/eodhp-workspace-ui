@@ -240,7 +240,7 @@ const DataLoader = () => {
     let data;
 
     try {
-      const res = await fetch(`https://dev.eodatahub.org.uk/api/validate-stac`, {
+      const res = await fetch(`/api/validate-stac`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
