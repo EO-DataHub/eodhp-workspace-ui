@@ -405,7 +405,13 @@ const DataLoader = () => {
       setMessage(error);
     }
     setRunning(false);
-    setState('view');
+
+    if (fileType === 'access-policy') {
+      setState('validate');
+    } else {
+      setState('view');
+    }
+
     setValidationErrors([]);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
