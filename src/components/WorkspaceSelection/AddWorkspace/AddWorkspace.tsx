@@ -15,6 +15,8 @@ const AddWorkspace = () => {
   const [addWorkspaceFields, setAddWorkspaceFields] = useState<Field[]>([]);
 
   useEffect(() => {
+    if (!accounts.length) return;
+    const filteredAccounts = accounts.filter((accounts) => accounts.status === 'Approved');
     const ADD_WORKSPACE_FIELDS: Field[] = [
       {
         externalName: 'Name',
@@ -27,7 +29,7 @@ const AddWorkspace = () => {
         internalName: 'account',
         type: 'dropdown',
         value: '',
-        options: accounts?.map((account) => {
+        options: filteredAccounts.map((account) => {
           return {
             externalName: account.name,
             internalName: account.id,
