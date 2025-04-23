@@ -240,7 +240,7 @@ const DataLoader = () => {
     let data;
 
     try {
-      const res = await fetch(`https://dev.eodatahub.org.uk/api/validate-stac`, {
+      const res = await fetch(`/api/validate-stac`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -291,71 +291,101 @@ const DataLoader = () => {
       setRunning(true);
       setMessage('Uploading file');
 
-      try {
-        const stacContent = await file.text();
-        const stacObject = JSON.parse(stacContent);
+      if (fileType === 'access-policy') {
+        try {
+          const fileContent = await file.text();
+          const fileObject = JSON.parse(fileContent);
 
-        const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
-        if (parentLinkObject) {
-          const selfLink = selectedCatalog.links.filter((link) => {
-            return link.rel === 'self';
-          })[0];
-          const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+          const _fileName = 'access-policy.json';
 
-          if (!selectedId.includes('/')) {
-            parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
-          } else {
-            parentLinkObject.href = `catalogs/${selectedId}/collections/${selectedCollection.id}`;
+          const body = {
+            fileContent: JSON.stringify(fileObject),
+            fileName: _fileName,
+          };
+
+          const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (!res.ok) {
+            setMessage(`Failed to upload ${file.name} to s3`);
+            throw new Error();
           }
 
-          const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
-          stacObject.links[parentLinkIndex] = parentLinkObject;
-        } else {
-          stacObject.links.push({
-            rel: 'parent',
-            href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
-            type: 'application/json',
+          setState('harvest');
+          setMessage('File successfully uploaded');
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        try {
+          const stacContent = await file.text();
+          const stacObject = JSON.parse(stacContent);
+
+          const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
+          if (parentLinkObject) {
+            const selfLink = selectedCatalog.links.filter((link) => {
+              return link.rel === 'self';
+            })[0];
+            const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+
+            if (!selectedId.includes('/')) {
+              parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
+            } else {
+              parentLinkObject.href = `catalogs/${selectedId}/collections/${selectedCollection.id}`;
+            }
+
+            const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
+            stacObject.links[parentLinkIndex] = parentLinkObject;
+          } else {
+            stacObject.links.push({
+              rel: 'parent',
+              href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
+              type: 'application/json',
+            });
+          }
+
+          const selfLinkObject = stacObject.links.filter((link) => link.rel === 'self')[0];
+          if (!selfLinkObject) {
+            stacObject.links.push({
+              rel: 'self',
+              href: 'catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}',
+              type: 'application/json',
+            });
+          }
+
+          stacObject.collection = `${selectedCollection.id}`;
+
+          let _fileName;
+          if (fileType === 'access-policy') {
+            _fileName = 'access-policy.json';
+          } else {
+            _fileName = `${generateRandomString()}.json`;
+          }
+
+          const body = {
+            fileContent: JSON.stringify(stacObject),
+            fileName: _fileName,
+          };
+
+          const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' },
           });
+
+          if (!res.ok) {
+            setMessage(`Failed to upload ${file.name} to s3`);
+            throw new Error();
+          }
+
+          setState('harvest');
+          setMessage('File successfully uploaded');
+        } catch (error) {
+          console.error(error);
         }
-
-        const selfLinkObject = stacObject.links.filter((link) => link.rel === 'self')[0];
-        if (!selfLinkObject) {
-          stacObject.links.push({
-            rel: 'self',
-            href: 'catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}',
-            type: 'application/json',
-          });
-        }
-
-        stacObject.collection = `${selectedCollection.id}`;
-
-        let _fileName;
-        if (fileType === 'access-policy') {
-          _fileName = 'access-policy.json';
-        } else {
-          _fileName = `${generateRandomString()}.json`;
-        }
-
-        const body = {
-          fileContent: JSON.stringify(stacObject),
-          fileName: _fileName,
-        };
-
-        const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
-          method: 'POST',
-          body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (!res.ok) {
-          setMessage(`Failed to upload ${file.name} to s3`);
-          throw new Error();
-        }
-
-        setState('harvest');
-        setMessage('File successfully uploaded');
-      } catch (error) {
-        console.error(error);
       }
     }
     setRunning(false);
@@ -375,7 +405,13 @@ const DataLoader = () => {
       setMessage(error);
     }
     setRunning(false);
-    setState('view');
+
+    if (fileType === 'access-policy') {
+      setState('validate');
+    } else {
+      setState('view');
+    }
+
     setValidationErrors([]);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
