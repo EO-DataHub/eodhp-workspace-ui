@@ -1,0 +1,18 @@
+.add-workspace {
+    &-modal {
+        width: 400px;
+        justify-self: center;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        span {
+            width: 100%;
+            border: 1px solid #ffb74d;
+            background-color: #fff4e5;
+            border-radius: 12px;
+            padding: 5px 15px;
+            color: var(--text-secondary);
+        }
+    }
+}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './styles.scss';
 
 import { MdAddCircleOutline } from 'react-icons/md';
 
@@ -52,12 +53,18 @@ const AddWorkspace = () => {
 
   const renderModalContent = () => {
     return (
-      <Form
-        fieldData={addWorkspaceFields}
-        formErrors={formErrors}
-        header={'Add new Workspace'}
-        onChange={(data) => setFormData(data)}
-      />
+      <div className="add-workspace-modal">
+        <Form
+          fieldData={addWorkspaceFields}
+          formErrors={formErrors}
+          header={'Add New Workspace'}
+          onChange={(data) => setFormData(data)}
+        />
+        <span>
+          Only Approved accounts will be shown here. You can view the status of your accounts at{' '}
+          <a href="/accounts/">accounts</a>
+        </span>
+      </div>
     );
   };
 
