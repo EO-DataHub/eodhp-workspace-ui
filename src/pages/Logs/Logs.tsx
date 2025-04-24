@@ -10,7 +10,7 @@ const Logs = () => {
 
   useEffect(() => {
     const getLogs = async () => {
-      const res = await fetch(`/workspaces/${activeWorkspace.name}/harvested_logs`, {
+      const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest_logs`, {
         method: 'POST',
       });
 
