@@ -1,12 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './styles.scss';
 
 import { LazyLog } from 'react-lazylog';
+import { ToastContainer, toast } from 'react-toastify';
 
-import Sort from '@/assets/icons/sort.svg';
+import LogIcon from '@/assets/icons/logs.svg';
+import Refresh from '@/assets/icons/refresh.svg';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import { logsPlaceholder } from './logsPlaceholder';
@@ -17,29 +20,30 @@ const Logs = () => {
 
   const [logs, setLogs] = useState<Log[]>([]);
   const [error, setError] = useState<string>();
-  const [ascend, setAscend] = useState<boolean>(true);
+  const [gettingLogs, setGettingLogs] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getLogs = async () => {
-      const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest_logs`, {
-        method: 'POST',
-      });
-
-      if (!res.ok) {
-        setError('Failed to get Logs');
-        return;
-      }
-
-      const json: LogResponse = await res.json();
-
-      setLogs(json.messages);
-    };
-
+  const getLogs = async () => {
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
       setLogs(logsPlaceholder.messages);
       return;
     }
 
+    const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest_logs`, {
+      method: 'POST',
+    });
+
+    if (!res.ok) {
+      setError('Failed to get Logs');
+      return;
+    }
+
+    const json: LogResponse = await res.json();
+    toast('Logs successfully retrieved');
+
+    setLogs(json.messages);
+  };
+
+  useEffect(() => {
     getLogs();
   }, [activeWorkspace.name]);
 
@@ -49,6 +53,14 @@ const Logs = () => {
         <div className="header-left">
           <h2>Logs</h2>
         </div>
+        <div className="header-right">
+          <img alt="Logs" className="logs__header-img" src={LogIcon} />
+          <div className="header-right-text">
+            <span className="header-right-title">Logs</span> contains recent log messages produced
+            for STAC files harvested through the{' '}
+            <span className="header-right-title">Data Loader</span>
+          </div>
+        </div>
       </div>
     );
   };
@@ -57,51 +69,51 @@ const Logs = () => {
     return <div className="logs__error">{error}</div>;
   };
 
+  const calculateContainerHeight = () => {
+    const container = document.getElementsByClassName('workspace-content')[0];
+    if (!container) return 0;
+    const containerHeight = container.clientHeight;
+    const newHeight = Math.min(containerHeight - 150, 400);
+    return `${newHeight}`;
+  };
+  const heightRef = useRef(calculateContainerHeight());
+
+  const renderLogs = () => {
+    return (
+      <LazyLog
+        enableSearch
+        follow
+        selectableLines
+        extraLines={1}
+        height={heightRef.current}
+        overscanRowCount={100}
+        text={getText()}
+      />
+    );
+  };
   const renderButtons = () => {
     return (
       <div className="logs__buttons">
         <img
           className="logs__buttons-sort"
-          src={Sort}
-          onClick={() => {
-            setAscend(!ascend);
+          src={Refresh}
+          onClick={async () => {
+            if (gettingLogs) return;
+            setGettingLogs(true);
+            toast('Refreshing logs');
+            await getLogs();
+            setGettingLogs(false);
           }}
         />
       </div>
     );
   };
 
-  const renderLogs = () => {
-    return (
-      <LazyLog
-        ref={{
-          current: '[Circular]',
-        }}
-        enableSearch
-        follow
-        selectableLines
-        extraLines={1}
-        height="300"
-        overscanRowCount={100}
-        text={getText()}
-      />
-    );
-  };
-
   const getText = () => {
-    let text;
-
-    if (ascend) {
-      text = logs.map((log) => {
-        return `[${log.datetime}] ${log.message}`;
-      });
-    } else {
-      text = logs.reverse().map((log) => {
-        return `[${log.datetime}] ${log.message}`;
-      });
-    }
-    text = text.join('\n');
-    return text;
+    const text = logs.map((log) => {
+      return `[${log.datetime}] ${log.message}`;
+    });
+    return text.join('\n');
   };
 
   return (
@@ -110,6 +122,7 @@ const Logs = () => {
       {error && renderError()}
       {renderButtons()}
       {renderLogs()}
+      <ToastContainer hideProgressBar position="bottom-left" theme="light" />
     </div>
   );
 };

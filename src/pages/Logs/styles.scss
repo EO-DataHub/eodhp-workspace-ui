@@ -1,4 +1,6 @@
 .logs {
+  flex: 1;
+
   &__buttons {
     width: 100%;
     display: flex;
@@ -10,6 +12,7 @@
       cursor: pointer;
       border: 1px solid var(--background-secondary);
       border-radius: 6px;
+      padding: 5px;
 
       &:hover {
         background-color: var(--background-secondary);
@@ -25,5 +28,11 @@
     justify-content: center;
     border-radius: 12px;
     color: var(--error);
+  }
+
+  &__header {
+    &-img {
+      width: 30px;
+    }
   }
 }
