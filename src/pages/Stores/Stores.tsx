@@ -36,8 +36,7 @@ export const Stores = () => {
             <a href={storeEndpoint} rel="noreferrer" target="_blank">
               here
             </a>
-            .
-            <p></p>
+            .<p></p>
             AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used
             with the AWS CLI or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>.
           </div>
