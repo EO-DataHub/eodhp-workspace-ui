@@ -23,9 +23,10 @@ export const Stores = () => {
       return (
         <div className="header-right-text">
           <div>
-            The <span className="header-right-title">Block Store</span> contains files associated with Jupyter
-            notebooks. Your block store is a familiar disk-like store which can be accessed efficiently from notebooks.
-            To browse the contents of these stores please use{' '}
+            The <span className="header-right-title">Block Store</span> contains files associated
+            with Jupyter notebooks. Your block store is a familiar disk-like store which can be
+            accessed efficiently from notebooks. To browse the contents of these stores please
+            use{' '}
             <a href={apphubLink} rel="noreferrer" target="_blank">
               Jupyter
             </a>
@@ -36,20 +37,20 @@ export const Stores = () => {
               here
             </a>
             <p></p>
-            AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used with the AWS CLI
-            or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>
+            AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used with
+            the AWS CLI or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>
           </div>
         </div>
       );
     } else {
       return (
         <div className="header-right-text">
-          The <span className="header-right-title">Object Store</span> contains data associated with workflows and
-          commercial data orders. Your object store uses AWS S3 - S3 can store a lot of data cheaply and can be accessed over the Internet with
-          the S3 protocol.
+          The <span className="header-right-title">Object Store</span> contains data associated with
+          workflows and commercial data orders. Your object store uses AWS S3 - S3 can store a lot
+          of data cheaply and can be accessed over the Internet with the S3 protocol.
           <p></p>
-          AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used with the AWS CLI
-          or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>
+          AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used
+          with the AWS CLI or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>
         </div>
       );
     }
