@@ -40,11 +40,14 @@ const Logs = () => {
     const json: LogResponse = await res.json();
     toast('Logs successfully retrieved');
 
-    setLogs(
-      json?.messages || [
-        { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
-      ],
-    );
+    let messages = [
+      { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
+    ];
+    if (json?.messages.length > 0) {
+      messages = json.messages;
+    }
+
+    setLogs(messages);
   };
 
   useEffect(() => {
