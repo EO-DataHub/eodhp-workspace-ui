@@ -23,25 +23,33 @@ export const Stores = () => {
       return (
         <div className="header-right-text">
           <div>
-            <span className="header-right-title">Block stores</span> To browse the contents of these
-            stores please use{' '}
+            The <span className="header-right-title">Block Store</span> contains files associated with Jupyter
+            notebooks. Your block store is a familiar disk-like store which can be accessed efficiently from notebooks.
+            To browse the contents of these stores please use{' '}
             <a href={apphubLink} rel="noreferrer" target="_blank">
               Jupyter
             </a>
           </div>
           <div>
-            Additionally, you can view the block store associated to this workspace{' '}
+            Additionally, you can view the block store associated with this workspace{' '}
             <a href={storeEndpoint} rel="noreferrer" target="_blank">
               here
             </a>
+            <p></p>
+            AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used with the AWS CLI
+            or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>
           </div>
         </div>
       );
     } else {
       return (
         <div className="header-right-text">
-          <span className="header-right-title">Object stores</span> are used to store data and
-          files. You can create multiple object stores and use them to store data and files.
+          The <span className="header-right-title">Object Store</span> contains data associated with workflows and
+          commercial data orders. Your object store uses AWS S3 - S3 can store a lot of data cheaply and can be accessed over the Internet with
+          the S3 protocol.
+          <p></p>
+          AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used with the AWS CLI
+          or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>
         </div>
       );
     }
@@ -51,7 +59,7 @@ export const Stores = () => {
     <div className="content-page stores">
       <div className="header">
         <div className="header-left">
-          <h2>Stores</h2>
+          <h2>Workspace Storage</h2>
         </div>
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />

@@ -23,7 +23,7 @@ export const navItems: NavItem[] = [
   // { label: 'Invoices', icon: invoicesIcon, content: <Invoices /> },
   { label: 'Credentials', icon: credentialsIcon, content: <Credentials /> },
   {
-    label: 'Stores',
+    label: 'Workspace Storage',
     icon: storesIcon,
     content: <Stores />,
   },
