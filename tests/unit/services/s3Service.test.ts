@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createToken } from '../../../src/services/S3Service';
+
 import { hubClient } from '../../../src/services/hubClient';
+import { createToken } from '../../../src/services/S3Service';
 
 vi.mock('../../../src/services/hubClient', () => ({
   hubClient: {
