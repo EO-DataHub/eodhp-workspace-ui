@@ -28,13 +28,15 @@ export const Stores = () => {
             accessed efficiently from notebooks. To browse the contents of these stores please use{' '}
             <a href={apphubLink} rel="noreferrer" target="_blank">
               Jupyter
-            </a>.
+            </a>
+            .
           </div>
           <div>
             Additionally, you can view the block store associated with this workspace{' '}
             <a href={storeEndpoint} rel="noreferrer" target="_blank">
               here
-            </a>.
+            </a>
+            .
             <p></p>
             AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used
             with the AWS CLI or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>.
