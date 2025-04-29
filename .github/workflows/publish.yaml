@@ -4,9 +4,7 @@ on:
   workflow_call:
   push:
     tags:
-      - v[0-9]+*
-    branches:
-      - "**"
+      - v\d.*
 
 jobs:
   prechecks:
@@ -45,19 +43,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Build Node files
         run: |
-          npm install mini-css-extract-plugin 
-          npm install css-loader 
-          npm install crypto-browserify
-          npm install stream-browserify
-          npm install browserify-zlib
+          npm install
           npm run build
-          cd dist/assets
-          for ext in js css; do
-              for file in index-*.$ext; do
-                  mv "$file" "index.$ext"
-                  echo "Renamed $file to index.$ext"
-              done
-          done
       - name: Upload app to github artefact
         uses: actions/upload-artifact@v4
         with:
@@ -76,5 +63,3 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
-      
