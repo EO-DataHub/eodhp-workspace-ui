@@ -23,6 +23,10 @@ const Logs = () => {
   const [gettingLogs, setGettingLogs] = useState<boolean>(false);
 
   const getLogs = async () => {
+    let messages = [
+      { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
+    ];
+
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
       setLogs(logsPlaceholder.messages);
       return;
@@ -40,10 +44,7 @@ const Logs = () => {
     const json: LogResponse = await res.json();
     toast('Logs successfully retrieved');
 
-    let messages = [
-      { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
-    ];
-    if (json?.messages.length > 0) {
+    if (json.messages.length > 0) {
       messages = json.messages;
     }
 
