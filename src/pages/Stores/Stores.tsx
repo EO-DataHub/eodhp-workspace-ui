@@ -25,8 +25,7 @@ export const Stores = () => {
           <div>
             The <span className="header-right-title">Block Store</span> contains files associated
             with Jupyter notebooks. Your block store is a familiar disk-like store which can be
-            accessed efficiently from notebooks. To browse the contents of these stores please
-            use{' '}
+            accessed efficiently from notebooks. To browse the contents of these stores please use{' '}
             <a href={apphubLink} rel="noreferrer" target="_blank">
               Jupyter
             </a>
@@ -37,8 +36,8 @@ export const Stores = () => {
               here
             </a>
             <p></p>
-            AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used with
-            the AWS CLI or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>
+            AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used
+            with the AWS CLI or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>
           </div>
         </div>
       );
