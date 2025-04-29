@@ -16,17 +16,17 @@ import { logsPlaceholder } from './logsPlaceholder';
 import { Log, LogResponse } from './types';
 
 const Logs = () => {
+  const defaultLog = [
+    { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
+  ];
+
   const { activeWorkspace } = useWorkspace();
 
-  const [logs, setLogs] = useState<Log[]>([]);
+  const [logs, setLogs] = useState<Log[]>(defaultLog);
   const [error, setError] = useState<string>();
   const [gettingLogs, setGettingLogs] = useState<boolean>(false);
 
   const getLogs = async () => {
-    let messages = [
-      { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
-    ];
-
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
       setLogs(logsPlaceholder.messages);
       return;
@@ -43,6 +43,8 @@ const Logs = () => {
 
     const json: LogResponse = await res.json();
     toast('Logs successfully retrieved');
+
+    let messages = defaultLog;
 
     if (json.messages.length > 0) {
       messages = json.messages;
