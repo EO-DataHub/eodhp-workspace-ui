@@ -1,23 +1,20 @@
+import { hubClient } from './hubClient';
+
 export const createToken = async (workspaceName: string): Promise<S3Credentials> => {
-  try {
-    const url = `/api/workspaces/${workspaceName}/me/s3-tokens`;
-    const response = await fetch(url, {
+  const path = `/api/workspaces/${workspaceName}/me/s3-tokens`;
+  const response = await hubClient
+    .fetch(path, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
+    })
+    .catch((error) => {
+      console.error('Error creating token:', error);
+      throw error;
     });
-    if (response.ok) {
-      const newToken: S3Credentials = await response.json();
-      return newToken;
-    }
-    if (response.status === 401 || response.status === 403) {
-      window.location.href = '/sign_in/';
-    }
-    throw new Error('Failed to create token');
-  } catch (error) {
-    console.error('Error creating token:', error);
-    throw error;
-  }
+
+  const newToken: S3Credentials = await response.json();
+  return newToken;
 };
