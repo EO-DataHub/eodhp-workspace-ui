@@ -17,7 +17,7 @@ export const Stores = () => {
   const renderTabDescription = () => {
     const apphubLink = `${window.location.origin}/apphub`;
     const environment = window.location.hostname.split('.')[0];
-    const storeEndpoint = `https://${activeWorkspace.name}.${environment}.eodatahub-workspaces.org.uk/files/workspaces/`;
+    const storeEndpoint = `https://${activeWorkspace.name}.${environment}.eodatahub-workspaces.org.uk/files/workspaces/${activeWorkspace.name}`;
 
     if (activeTab === 1) {
       return (
