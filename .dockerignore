@@ -1,0 +1,11 @@
+.env.local
+.env.example
+.gitignore
+Makefile
+
+*.env
+
+dist/
+node_modules/
+.vscode/
+.git/
