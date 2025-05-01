@@ -162,7 +162,7 @@ const Invoices = () => {
     if (!data) return;
     const values = [];
     data.datasets.forEach((dataset) => {
-      if (dataset.unit === '') return;
+      if (dataset.unit === '' || !calculationMap[dataset.unit]) return;
       values.push(dataset.data);
     });
     let total = 0;
@@ -174,7 +174,7 @@ const Invoices = () => {
     if (!data) return;
     const values = [];
     data.datasets.forEach((dataset) => {
-      if (dataset.unit !== '') return;
+      if (dataset.unit !== '' && calculationMap[dataset.unit]) return;
       values.push(dataset.data);
     });
     let total = 0;
