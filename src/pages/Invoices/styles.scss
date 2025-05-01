@@ -9,10 +9,25 @@
       flex-direction: column;
     }
 
-    &__value {
+    &__header {
       font-size: 30px;
+    }
+
+    &__costs {
+      display: flex;
+      flex-direction: column;
+
+      &-header {
+        font-size: 25px;
+      }
+
+    &-value {
+      font-size: 25px;
       color: var(--text-tertiary);
     }
+
+    }
+
 
     &__sub {
       font-size: 12px;

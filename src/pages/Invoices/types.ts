@@ -4,5 +4,6 @@ export type InvoiceData = {
     label: string;
     data: number[];
     backgroundColor: string;
+    unit: string;
   }[];
 };

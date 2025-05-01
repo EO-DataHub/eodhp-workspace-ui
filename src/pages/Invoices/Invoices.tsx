@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
@@ -12,9 +13,12 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
+import { testSkuDefinition } from '@/context/WorkspaceContext/placeholder';
+import { SKU, SKUDefinition } from '@/context/WorkspaceContext/types';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import { InvoiceData } from './types';
+import { calculationMap } from './unitCalculations';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -62,11 +66,13 @@ const options = {
       stacked: true,
       title: {
         display: true,
-        text: 'Cost (£)',
+        text: 'Usage + Costs',
       },
     },
   },
 };
+
+const skuUnits: { [key: string]: string } = {};
 
 const Invoices = () => {
   const { skus } = useWorkspace();
@@ -84,56 +90,106 @@ const Invoices = () => {
   // current and previous month. Iterate through all the skus, find the relevant dataset,
   // find the month then add all of the values together.
   useEffect(() => {
-    if (!months.length) return;
-    const datasets = [];
-    skus.forEach((sku) => {
-      let set = datasets.filter((dataset) => {
-        return dataset.label === sku.item;
-      })[0];
-      let ref = false;
-      if (!set) {
-        set = {
-          label: sku.item,
-          data: [],
-          backgroundColor: colours[datasets.length % colours.length],
-        };
-        ref = true;
-      }
-
-      const skuMonth = getMonthInt(0, new Date(sku.event_end));
-      months.forEach((month, index) => {
-        if (month === skuMonth) {
-          if (!set.data[index]) set.data[index] = 0;
-          set.data[index] += sku.quantity;
+    const getData = async () => {
+      if (!months.length) return;
+      const datasets = [];
+      for (const sku of skus) {
+        let set = null;
+        for (const ds of datasets) {
+          if (ds.label === sku.item) {
+            set = ds;
+            break;
+          }
         }
+
+        await addUnit(sku);
+        const unit = skuUnits[sku.item];
+
+        let isNew = false;
+        if (!set) {
+          set = {
+            label: `${sku.item} ${unit}`,
+            data: [],
+            backgroundColor: colours[datasets.length % colours.length],
+            unit: unit,
+          };
+          isNew = true;
+        }
+
+        const skuMonth = getMonthInt(0, new Date(sku.event_end));
+        for (let i = 0; i < months.length; i++) {
+          if (months[i] === skuMonth) {
+            if (!set.data[i]) set.data[i] = 0;
+            const method = calculationMap[unit] ? calculationMap[unit] : calculationMap.cumulative;
+            set.data[i] += method(sku);
+          }
+        }
+
+        if (isNew && set.data.length > 0) {
+          datasets.push(set);
+        }
+      }
+      setData({
+        labels: [monthsShort[months[0] - 1], monthsShort[months[1] - 1]],
+        datasets,
       });
-      if (ref && set.data.length) datasets.push(set);
-    });
-    setData({
-      labels: [monthsShort[months[0] - 1], monthsShort[months[1] - 1]],
-      datasets,
-    });
+    };
+    getData();
   }, [months, skus]);
+
+  const addUnit = async (sku: SKU) => {
+    try {
+      if (skuUnits[sku.item]) return;
+      let skuDefinition: SKUDefinition;
+      if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+        skuDefinition = testSkuDefinition;
+      } else {
+        const res = await fetch(`/api/accounting/skus/${sku.item}`);
+        skuDefinition = await res.json();
+      }
+      skuUnits[sku.item] = skuDefinition.unit;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const getMonthInt = (offset = 0, date = new Date()) => {
     date.setMonth(date.getMonth() + offset);
     return parseInt(date.toLocaleString('en-US', { month: '2-digit' }));
   };
 
-  const getTotal = (offset = 0) => {
+  const getCostsTotal = (offset = 0) => {
     if (!data) return;
-    const values = data.datasets.map((dataset) => {
-      return dataset.data;
+    const values = [];
+    data.datasets.forEach((dataset) => {
+      if (dataset.unit === '') return;
+      values.push(dataset.data);
     });
     let total = 0;
     values.forEach((value) => (total += value[value.length - (offset + 1)]));
-    return total;
+    return total.toFixed(2);
+  };
+
+  const getUsageTotal = (offset = 0) => {
+    if (!data) return;
+    const values = [];
+    data.datasets.forEach((dataset) => {
+      if (dataset.unit !== '') return;
+      values.push(dataset.data);
+    });
+    let total = 0;
+    values.forEach((value) => (total += value[value.length - (offset + 1)]));
+    return total.toFixed(2);
   };
 
   const calculateRelativeToPreviousMonth = () => {
-    const currMonthTotal = getTotal();
-    const prevMonthTotal = getTotal(1);
-    const ratio = parseFloat(((currMonthTotal / prevMonthTotal) * 100).toFixed(1));
+    const currMonthTotal = getCostsTotal();
+    const prevMonthTotal = getCostsTotal(1);
+    const ratio = parseFloat(
+      ((parseFloat(currMonthTotal) / parseFloat(prevMonthTotal)) * 100).toFixed(1),
+    );
+
+    if (isNaN(ratio)) return '';
 
     if (ratio < 100) {
       return `${(100 - ratio).toFixed(1)}% less compared to last month `;
@@ -148,8 +204,8 @@ const Invoices = () => {
 
   const renderComparison = () => {
     if (!data) return;
-    const currMonthTotal = getTotal();
-    const prevMonthTotal = getTotal(1);
+    const currMonthTotal = getCostsTotal();
+    const prevMonthTotal = getCostsTotal(1);
 
     if (!currMonthTotal || !prevMonthTotal) return;
     return <span className="invoices-value__sub">{` ${calculateRelativeToPreviousMonth()}`}</span>;
@@ -161,8 +217,21 @@ const Invoices = () => {
       {data && <Bar data={data} options={options} />}
       <div className="invoices-value-container">
         <div>
-          <span className="invoices-value__header">Current monthly costs</span>
-          <span className="invoices-value__value">{` £${getTotal()}`}</span>
+          <span className="invoices-value__header">Current monthly</span>
+          <div className="invoices-value__costs">
+            {parseFloat(getCostsTotal()) > 0 ? (
+              <div className="invoices-value__costs-item">
+                <span className="invoices-value__costs-header">Costs: </span>
+                <span className="invoices-value__costs-value">{` £${getCostsTotal()}`}</span>
+              </div>
+            ) : null}
+            {parseFloat(getUsageTotal()) > 0 ? (
+              <div className="invoices-value__costs-item">
+                <span className="invoices-value__costs-header">Usage: </span>
+                <span className="invoices-value__costs-value">{` ${getUsageTotal()}`}</span>
+              </div>
+            ) : null}
+          </div>
         </div>
         {renderComparison()}
       </div>

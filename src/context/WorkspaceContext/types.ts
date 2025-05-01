@@ -50,3 +50,10 @@ export type SKU = {
   quantity: number;
   user: string;
 };
+
+export type SKUDefinition = {
+  uuid: string;
+  sku: string;
+  name: string;
+  unit: string;
+};

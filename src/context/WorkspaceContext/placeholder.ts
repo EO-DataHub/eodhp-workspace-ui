@@ -215,8 +215,8 @@ export const workspacesPlaceholder: Workspace[] = [
 export const skuPlaceholder = [
   {
     uuid: '603be7c8-73e2-4221-8e2c-b41c0abb31c6',
-    event_start: '2025-02-16T06:42:34Z',
-    event_end: '2025-02-16T06:48:34Z',
+    event_start: '2025-04-16T06:42:34Z',
+    event_end: '2025-04-16T06:48:34Z',
     item: 'testsku',
     workspace: 'test-workspace',
     quantity: 3.14,
@@ -224,8 +224,8 @@ export const skuPlaceholder = [
   },
   {
     uuid: 'b5bc9a94-cebb-4d84-a1b8-50c9ad7cda98',
-    event_start: '2025-03-17T06:42:34Z',
-    event_end: '2025-03-17T06:48:34Z',
+    event_start: '2025-05-17T06:42:34Z',
+    event_end: '2025-05-17T06:48:34Z',
     item: 'testsku',
     workspace: 'test-workspace',
     quantity: 7,
@@ -233,8 +233,8 @@ export const skuPlaceholder = [
   },
   {
     uuid: '603be7c8-73e2-4221-8e2c-b41c0abb31c6',
-    event_start: '2025-02-16T06:42:34Z',
-    event_end: '2025-02-16T06:48:34Z',
+    event_start: '2025-04-16T06:42:34Z',
+    event_end: '2025-04-16T06:48:34Z',
     item: 'compute',
     workspace: 'test-workspace',
     quantity: 3.14,
@@ -242,8 +242,8 @@ export const skuPlaceholder = [
   },
   {
     uuid: 'b5bc9a94-cebb-4d84-a1b8-50c9ad7cda98',
-    event_start: '2025-03-17T06:42:34Z',
-    event_end: '2025-03-17T06:48:34Z',
+    event_start: '2025-05-17T06:42:34Z',
+    event_end: '2025-05-17T06:48:34Z',
     item: 'compute',
     workspace: 'test-workspace',
     quantity: 12.23,
@@ -251,8 +251,8 @@ export const skuPlaceholder = [
   },
   {
     uuid: '603be7c8-73e2-4221-8e2c-b41c0abb31c6',
-    event_start: '2025-02-16T06:42:34Z',
-    event_end: '2025-02-16T06:48:34Z',
+    event_start: '2025-04-16T06:42:34Z',
+    event_end: '2025-04-16T06:48:34Z',
     item: 'storage',
     workspace: 'test-workspace',
     quantity: 33.14,
@@ -260,14 +260,21 @@ export const skuPlaceholder = [
   },
   {
     uuid: 'b5bc9a94-cebb-4d84-a1b8-50c9ad7cda98',
-    event_start: '2025-03-17T06:42:34Z',
-    event_end: '2025-03-17T06:48:34Z',
+    event_start: '2025-05-17T06:42:34Z',
+    event_end: '2025-05-17T06:48:34Z',
     item: 'storage',
     workspace: 'test-workspace',
     quantity: 9.56,
     user: 'test_user',
   },
 ];
+
+export const testSkuDefinition = {
+  uuid: '352b473a-7ab0-4389-a5b5-dfbc6dd1770a',
+  sku: 'testsku',
+  name: 'Block storage',
+  unit: '',
+};
 
 export const tokenPlaceholder = {
   created: '2025-03-07T13:55:56Z',
