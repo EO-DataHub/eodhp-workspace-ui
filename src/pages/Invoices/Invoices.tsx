@@ -138,7 +138,7 @@ const Invoices = () => {
 
   const addUnit = async (sku: SKU) => {
     try {
-      if (skuUnits[sku.item]) return;
+      if (skuUnits[sku.item] !== undefined) return;
       let skuDefinition: SKUDefinition;
       if (import.meta.env.VITE_WORKSPACE_LOCAL) {
         skuDefinition = testSkuDefinition;
