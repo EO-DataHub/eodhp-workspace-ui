@@ -95,7 +95,7 @@ const Invoices = () => {
       for (const sku of skus) {
         let set = null;
         for (const ds of datasets) {
-          if (ds.label === sku.item) {
+          if (ds.label.trim() === sku.item) {
             set = ds;
             break;
           }
