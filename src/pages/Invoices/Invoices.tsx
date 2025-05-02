@@ -167,8 +167,7 @@ const Invoices = () => {
     let total = 0;
     values.forEach((value) => {
       // current month
-      if (!value[1]) return;
-      total += value[1][value.length - (offset + 1)];
+      total += value[value.length - (offset + 1)];
     });
     return total.toFixed(2);
   };
@@ -183,8 +182,7 @@ const Invoices = () => {
     let total = 0;
     values.forEach((value) => {
       // current month
-      if (!value[1]) return;
-      total += value[1][value.length - (offset + 1)];
+      total += value[value.length - (offset + 1)];
     });
     return total.toFixed(2);
   };
