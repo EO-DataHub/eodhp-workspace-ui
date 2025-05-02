@@ -95,7 +95,7 @@ const Invoices = () => {
       for (const sku of skus) {
         let set = null;
         for (const ds of datasets) {
-          if (ds.label.trim() === sku.item) {
+          if (ds.label.split(' ')[0] === sku.item) {
             set = ds;
             break;
           }
@@ -165,7 +165,11 @@ const Invoices = () => {
       values.push(dataset.data);
     });
     let total = 0;
-    values.forEach((value) => (total += value[value.length - (offset + 1)]));
+    values.forEach((value) => {
+      // current month
+      if (!value[1]) return;
+      total += value[1][value.length - (offset + 1)];
+    });
     return total.toFixed(2);
   };
 
@@ -177,7 +181,11 @@ const Invoices = () => {
       values.push(dataset.data);
     });
     let total = 0;
-    values.forEach((value) => (total += value[value.length - (offset + 1)]));
+    values.forEach((value) => {
+      // current month
+      if (!value[1]) return;
+      total += value[1][value.length - (offset + 1)];
+    });
     return total.toFixed(2);
   };
 
@@ -223,13 +231,23 @@ const Invoices = () => {
                 <span className="invoices-value__costs-header">Costs: </span>
                 <span className="invoices-value__costs-value">{` £${getCostsTotal()}`}</span>
               </div>
-            ) : null}
+            ) : (
+              <div className="invoices-value__costs-item">
+                <span className="invoices-value__costs-header">Costs: </span>
+                <span className="invoices-value__costs-value">{` £0`}</span>
+              </div>
+            )}
             {parseFloat(getUsageTotal()) > 0 ? (
               <div className="invoices-value__costs-item">
                 <span className="invoices-value__costs-header">Usage: </span>
                 <span className="invoices-value__costs-value">{` ${getUsageTotal()}`}</span>
               </div>
-            ) : null}
+            ) : (
+              <div className="invoices-value__costs-item">
+                <span className="invoices-value__costs-header">Usage: </span>
+                <span className="invoices-value__costs-value">{` 0`}</span>
+              </div>
+            )}
           </div>
         </div>
         {renderComparison()}
