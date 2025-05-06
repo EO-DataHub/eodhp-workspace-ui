@@ -36,6 +36,16 @@ export const ProfileTile = ({
     return colorVal;
   };
 
+  const getAssociatedColor = (inputString: string) => {
+    const letters = '0123456789ABCDEF';
+    let colorVal = '#';
+    for (let i = 0; i < 6; i++) {
+      const charCode = inputString.charCodeAt(i % inputString.length);
+      colorVal += letters[charCode % 16];
+    }
+    return colorVal;
+  };
+
   const id = Math.random().toString(36).substring(7);
 
   const tooltipPortal =
@@ -59,7 +69,7 @@ export const ProfileTile = ({
         data-tooltip-content={username}
         data-tooltip-id={`full-name-${username}-${id}`}
         style={{
-          backgroundColor: color || getRandomColor(),
+          backgroundColor: color || getAssociatedColor(username),
           borderColor: borderColor || 'none',
           border: borderColor ? undefined : 'none',
         }}
