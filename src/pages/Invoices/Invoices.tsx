@@ -72,6 +72,7 @@ const options = {
 };
 
 const skuUnits: { [key: string]: string } = {};
+const skuUnitsWarnings: string[] = [];
 
 const Invoices = () => {
   const { skus } = useWorkspace();
@@ -104,6 +105,14 @@ const Invoices = () => {
         await addUnit(sku);
         const unit = skuUnits[sku.item];
 
+        if (!unit) {
+          const warning = `Warning: No unit available for ${sku.item}. ${sku.item} will use usage not final cost`;
+          const index = skuUnitsWarnings.indexOf(warning);
+          if (index === -1) {
+            skuUnitsWarnings.push(warning);
+          }
+        }
+
         let isNew = false;
         if (!set) {
           set = {
@@ -119,6 +128,14 @@ const Invoices = () => {
         for (let i = 0; i < months.length; i++) {
           if (months[i] === skuMonth) {
             if (!set.data[i]) set.data[i] = 0;
+            if (unit !== '' && !calculationMap[unit]) {
+              const warning = `Warning: ${skuUnitsWarnings[sku.item]} has no valid conversion method for ${unit}. ${sku.item} will use usage not final cost`;
+              const index = skuUnitsWarnings.indexOf(warning);
+              if (index === -1) {
+                skuUnitsWarnings.push(warning);
+              }
+            }
+
             const method = calculationMap[unit] ? calculationMap[unit] : calculationMap.cumulative;
             set.data[i] += method(sku);
           }
@@ -216,9 +233,43 @@ const Invoices = () => {
     return <span className="invoices-value__sub">{` ${calculateRelativeToPreviousMonth()}`}</span>;
   };
 
+  const renderSKUWarnings = () => {
+    return (
+      <div className="invoices-warnings">
+        <ul>
+          {skuUnitsWarnings.map((warning) => {
+            return (
+              <li key={warning} className="invoices-warning">
+                {warning}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  };
+
+  const renderInfo = () => {
+    return (
+      <div className="invoices-info">
+        <span className="invoices-info__header">Info</span>
+        <div className="invoices-info__text">
+          <p>
+            The chart above shows the costs and usage for the current month and the previous month.
+            The costs are calculated based on the SKU definitions. If no unit is available, the
+            usage will be used instead of the final cost.
+          </p>
+          <p>
+            The final monthly bill is both the Costs <b>and</b> the Usage combined.
+          </p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="invoices">
-      <div></div>
+      {data && renderSKUWarnings()}
       {data && <Bar data={data} options={options} />}
       <div className="invoices-value-container">
         <div>
@@ -249,6 +300,7 @@ const Invoices = () => {
           </div>
         </div>
         {renderComparison()}
+        {renderInfo()}
       </div>
     </div>
   );

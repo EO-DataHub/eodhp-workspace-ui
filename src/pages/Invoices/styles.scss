@@ -31,4 +31,21 @@
       font-size: 12px;
     }
   }
+
+  &-warnings {
+     border: 1px solid var(--warning-border);
+     padding: 25px;
+     border-radius: 12px;
+     background-color: var(--warning-background);
+     color: var(--warning);
+  }
+
+  &-info {
+    margin-top: 15px;
+    border: 1px solid var(--warning-border);
+    padding: 25px;
+    border-radius: 12px;
+    background-color: var(--warning-background);
+    color: var(--warning);
+  }
 }
