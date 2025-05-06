@@ -24,7 +24,7 @@ const StringField = ({ field, value, onFieldChange }: InputFieldProps) => {
       <label>{field.externalName}</label>
       <input
         disabled={field.readOnly}
-        value={value || field.value}
+        value={value ?? field.value}
         onChange={(e) => validate(e.target.value)}
       />
       <div className="field-error">{error}</div>
