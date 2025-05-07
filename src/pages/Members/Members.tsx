@@ -9,6 +9,7 @@ import deleteIcon from '@/assets/icons/Delete.svg';
 import emailIcon from '@/assets/icons/email.svg';
 import memberGroupIcon from '@/assets/icons/member-group.svg';
 import memberIcon from '@/assets/icons/members.svg';
+import Help from '@/components/Table/Components/Help/Help';
 import Table from '@/components/Table/Table';
 import MemberButtons from '@/components/TopBar/components/MemberButtons/MemberButtons';
 import { useWorkspace } from '@/hooks/useWorkspace';
@@ -16,7 +17,8 @@ import { deleteMember } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
 const Members = () => {
-  const { members, workspaceOwner, activeWorkspace, getAndSetMembers } = useWorkspace();
+  const { members, workspaceOwner, activeWorkspace, getAndSetMembers, isWorkspaceOwner } =
+    useWorkspace();
 
   const renderHeader = () => {
     return (
@@ -40,6 +42,7 @@ const Members = () => {
   };
 
   const renderDelete = (role: 'Admin' | 'Member', member: Member) => {
+    if (!isWorkspaceOwner) return '';
     if (role === 'Admin') return '';
     return (
       <div
@@ -87,6 +90,17 @@ const Members = () => {
           {
             externalName: 'Role',
             internalName: 'role',
+            help: (
+              <Help
+                content={
+                  'Admin:  \n' +
+                  'The admin is the owner of the workspace. They are able to add and remove members from the workspace. \n \n' +
+                  'Member: \n' +
+                  'Members have access to the workspace but are unable to add or remove members.'
+                }
+                type="Tooltip"
+              />
+            ),
           },
           {
             externalName: 'Date added',
