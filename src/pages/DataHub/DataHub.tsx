@@ -154,6 +154,10 @@ export const DataHub = () => {
     }
   };
 
+  const copyIndividualKey = async (inputString: string) => {
+    await navigator.clipboard.writeText(inputString);
+  };
+
   const renderModalContent = () => {
     if (creatingToken) return <div>Creating token</div>;
     if (newTokenValue) {
@@ -163,6 +167,12 @@ export const DataHub = () => {
             <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
             <br />
             <strong>API Key:</strong> {newTokenValue}
+            <Button
+              style={{ display: 'inline-flex', marginLeft: '10px' }}
+              onClick={() => copyIndividualKey(newTokenValue)}
+            >
+              ⧉
+            </Button>
           </p>
           <p>This is your only chance to copy it!</p>
         </div>
