@@ -57,7 +57,7 @@ export const S3 = () => {
             Copy credentials to .env file
           </Button>
           <p>
-            <strong>Access Key ID:</strong>
+            <strong className="key-name">Access Key ID: </strong>
             <span className="aws-creds">{newTokenValue.accessKeyId}</span>
             <Button
               className="copy-button"
@@ -67,7 +67,7 @@ export const S3 = () => {
             </Button>
           </p>
           <p>
-            <strong>Secret Access Key:</strong>
+            <strong className="key-name">Secret Access Key: </strong>
             <span className="aws-creds">{newTokenValue.secretAccessKey}</span>
             <Button
               className="copy-button"
@@ -77,7 +77,7 @@ export const S3 = () => {
             </Button>
           </p>
           <p>
-            <strong>Session Token:</strong>
+            <strong className="key-name">Session Token: </strong>
             <span className="aws-creds">{newTokenValue.sessionToken}</span>
             <Button
               className="copy-button"
