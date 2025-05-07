@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './styles.scss';
 
 import { Button } from '@/components/Button/Button';
 import { useWorkspace } from '@/hooks/useWorkspace';
@@ -14,15 +15,11 @@ export const S3 = () => {
     await navigator.clipboard.writeText(inputString);
   };
 
-  const copyAllKeys = async (
-    access_key: string,
-    secret_access_key: string,
-    session_token: string,
-  ) => {
+  const copyAllKeys = async (accessKey: string, secretAccessKey: string, sessionToken: string) => {
     const credentials: string =
-      `ACCESS_KEY_ID=${access_key}\n` +
-      `SECRET_ACCESS_KEY=${secret_access_key}\n` +
-      `SESSION_TOKEN=${session_token}`;
+      `ACCESS_KEY_ID=${accessKey}\n` +
+      `SECRET_ACCESS_KEY=${secretAccessKey}\n` +
+      `SESSION_TOKEN=${sessionToken}`;
 
     await navigator.clipboard.writeText(credentials);
   };
@@ -61,11 +58,9 @@ export const S3 = () => {
           </Button>
           <p>
             <strong>Access Key ID:</strong>
-            <span style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
-              {newTokenValue.accessKeyId}
-            </span>
+            <span className="aws-creds">{newTokenValue.accessKeyId}</span>
             <Button
-              style={{ display: 'inline-flex', marginLeft: '10px' }}
+              className="copy-button"
               onClick={() => copyIndividualKey(newTokenValue.accessKeyId)}
             >
               ⧉
@@ -73,11 +68,9 @@ export const S3 = () => {
           </p>
           <p>
             <strong>Secret Access Key:</strong>
-            <span style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
-              {newTokenValue.secretAccessKey}
-            </span>
+            <span className="aws-creds">{newTokenValue.secretAccessKey}</span>
             <Button
-              style={{ display: 'inline-flex', marginLeft: '10px' }}
+              className="copy-button"
               onClick={() => copyIndividualKey(newTokenValue.secretAccessKey)}
             >
               ⧉
@@ -85,11 +78,9 @@ export const S3 = () => {
           </p>
           <p>
             <strong>Session Token:</strong>
-            <span style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
-              {newTokenValue.sessionToken}
-            </span>
+            <span className="aws-creds">{newTokenValue.sessionToken}</span>
             <Button
-              style={{ display: 'inline-flex', marginLeft: '10px' }}
+              className="copy-button"
               onClick={() => copyIndividualKey(newTokenValue.sessionToken)}
             >
               ⧉
