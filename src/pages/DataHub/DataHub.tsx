@@ -47,6 +47,7 @@ export const DataHub = () => {
   const [creatingToken, setCreatingToken] = useState<boolean>(false);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState<boolean>(false);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
   const [tokenFormInputs, setTokenFormInputs] = useState<Field[]>([]);
 
   useEffect(() => {
@@ -56,7 +57,6 @@ export const DataHub = () => {
         internalName: 'name',
         value: 'API Token',
         type: 'string',
-        min: 1,
         max: 128,
       },
       {
@@ -106,6 +106,7 @@ export const DataHub = () => {
   }, [activeWorkspace]);
 
   const handleCreateToken = async () => {
+    if (!validate()) return;
     try {
       setCreatingToken(true);
       const newToken: DataHubToken = await createToken(
@@ -124,6 +125,20 @@ export const DataHub = () => {
     } finally {
       setCreatingToken(false);
     }
+  };
+
+  const validate = () => {
+    const errors = [];
+
+    if (!formData['name']) {
+      errors.push('Name required');
+    }
+    if (!formData['expires']) {
+      errors.push('Expiration required');
+    }
+
+    setFormErrors(errors);
+    return !errors.length;
   };
 
   const handleDeleteToken = async (tokenId: string) => {
@@ -156,6 +171,7 @@ export const DataHub = () => {
     return (
       <Form
         fieldData={tokenFormInputs}
+        formErrors={formErrors}
         header={'Create Token'}
         onChange={(formData) => setFormData(formData)}
       />
