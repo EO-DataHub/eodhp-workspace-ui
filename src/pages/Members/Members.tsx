@@ -60,7 +60,7 @@ const Members = () => {
   const renderTable = () => {
     if (!members) return;
     const rows = members.map((member) => {
-      const role = workspaceOwner === member.id ? 'Admin' : 'Member';
+      const role = workspaceOwner === member.username ? 'Admin' : 'Member';
 
       return {
         email: member.email,
