@@ -43,9 +43,9 @@ export const Stores = () => {
     } else {
       return (
         <div className="header-right-text">
-          The <span className="header-right-title">Object Store</span> contains data associated with
-          workflows and commercial data orders. Your object store uses AWS S3 - S3 can store a lot
-          of data cheaply and can be accessed over the Internet with the S3 protocol.
+          Your <span className="header-right-title">Object Store</span> uses AWS S3. S3 can store a lot
+          of data cheaply and can be accessed over the Internet with the S3 protocol. Data associated
+          with workflows and commercial data orders can be found in the object store.
           <p></p>
           AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used
           with the AWS CLI or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>.
