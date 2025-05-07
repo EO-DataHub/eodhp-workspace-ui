@@ -71,8 +71,7 @@ const AddWorkspace = () => {
   };
 
   const isDnsCompliant = (domain: string) => {
-    const domainRegex = /^(?!-)[a-zA-Z0-9-]{1,63}(?<!-)$/;
-    if (domain.length > 253) return false;
+    const domainRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
     const labels = domain.split('.');
     return labels.every((label) => domainRegex.test(label));
@@ -80,6 +79,14 @@ const AddWorkspace = () => {
 
   const validate = () => {
     const errors = [];
+
+    if (formData.name?.length > 50) {
+      errors.push('Name cannot exceed 50 characters');
+    }
+    if (formData.name?.length < 3) {
+      errors.push('Name must be at least 3 characters');
+    }
+
     if (!formData.name) {
       errors.push('Name cannot be empty');
     }
@@ -87,7 +94,9 @@ const AddWorkspace = () => {
       errors.push('Account cannot be empty');
     }
     if (formData.name && !isDnsCompliant(formData.name)) {
-      errors.push('Name must be DNS compliant. e.g workspace_name not workspace name');
+      errors.push(
+        'Invalid name: only lowercase letters, numbers, and hyphens are allowed, and it can’t start or end with a hyphen.',
+      );
     }
     setFormErrors(errors);
     return !errors.length;

@@ -53,6 +53,11 @@
     color: var(--error);
   }
 
+  &__success {
+    color: var(--success);
+    font-weight: 600;
+  }
+
   &__validation {
     display: flex;
     max-width: 600px;

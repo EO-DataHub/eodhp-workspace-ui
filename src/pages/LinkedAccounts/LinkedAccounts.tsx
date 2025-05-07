@@ -117,15 +117,16 @@ const LinkedAccounts = () => {
         internalName: 'airbus',
         externalName: 'Airbus',
         docs: linkableAccounts[0].docs,
-        valid: true,
+        valid: false,
       },
       {
-        value: 'the_user_will_never_see_this',
-        linked: true,
+        value: '',
+        linked: false,
         message: 'Linked',
         internalName: 'planet',
         externalName: 'Planet',
         docs: linkableAccounts[1].docs,
+        valid: true,
       },
     ];
     setData(initial);
@@ -173,7 +174,10 @@ const LinkedAccounts = () => {
             }}
           />
         </div>
-        {account.valid && renderValidationOptions()}
+        {account.valid && account.internalName === 'airbus' && renderValidationOptions()}
+        {account.valid && account.internalName === 'planet' && (
+          <div className="linked-accounts__success">API key is valid</div>
+        )}
         {renderButton(account)}
       </div>
     );
@@ -240,19 +244,22 @@ const LinkedAccounts = () => {
   };
 
   const renderButton = (account: AccountMetaData) => {
-    if (account.internalName === 'airbus' && !account.linked && !account.valid) {
-      return renderValidateButton(account);
+    if (!account.linked && !account.valid) {
+      return renderValidateButton(account, account.internalName);
     }
+
     if (account.linked) return renderUnlinkButton(account);
     if (!account.linked) return renderLinkButton(account);
   };
 
-  const renderValidateButton = (account: AccountMetaData) => {
+  const renderValidateButton = (account: AccountMetaData, type: string) => {
+    const onClick = () => {
+      if (type === 'airbus') validateAirbusKey(account);
+      else if (type === 'planet') validatePlanetKey(account);
+    };
+
     return (
-      <Button
-        disabled={!isWorkspaceOwner || !account.value || running}
-        onClick={() => validateAirbusKey(account)}
-      >
+      <Button disabled={!isWorkspaceOwner || !account.value || running} onClick={onClick}>
         Validate API key
       </Button>
     );
@@ -341,6 +348,35 @@ const LinkedAccounts = () => {
         value: _pneoOptions[0],
       });
 
+      updateData(account, 'valid', true);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  const validatePlanetKey = async (account: AccountMetaData) => {
+    try {
+      setRunning(true);
+      setError('');
+      const body = {
+        name: 'planet',
+        key: account.value.trim(),
+      };
+      const res = await fetch(
+        `/api/workspaces/${activeWorkspace.name}/linked-accounts/planet/validate`,
+        {
+          method: 'POST',
+          body: JSON.stringify(body),
+        },
+      );
+      if (!res.ok) {
+        setError('Error validating Planet account, please check your API key');
+        return;
+      }
+
+      // If we get here, status is 200
       updateData(account, 'valid', true);
     } catch (error) {
       setError(error);
