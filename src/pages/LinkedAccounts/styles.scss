@@ -53,6 +53,11 @@
     color: var(--error);
   }
 
+  &__success {
+    color: var(--success);
+    font-weight: 600;
+  }
+
   &__validation {
     display: flex;
     max-width: 600px;
@@ -74,26 +79,5 @@
       display: flex;
       flex-direction: column;
     }
-  }
-}
-
-.linked-accounts__account-valid-message {
-  color: #2e7d32;
-  font-weight: 600;
-  padding: 0.75rem 1rem;
-  margin-top: 0.75rem;
-  animation: fadeOut 10s forwards;
-  transition: opacity 0.5s ease;
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  85% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
   }
 }

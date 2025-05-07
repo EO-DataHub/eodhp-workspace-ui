@@ -176,7 +176,7 @@ const LinkedAccounts = () => {
         </div>
         {account.valid && account.internalName === 'airbus' && renderValidationOptions()}
         {account.valid && account.internalName === 'planet' && (
-          <div className="linked-accounts__account-valid-message">API key is valid.</div>
+          <div className="linked-accounts__success">API key is valid</div>
         )}
         {renderButton(account)}
       </div>
