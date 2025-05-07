@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './styles.scss';
 
 import { Button } from '@/components/Button/Button';
 import { useWorkspace } from '@/hooks/useWorkspace';
@@ -9,6 +10,19 @@ export const S3 = () => {
   const [newTokenValue, setNewTokenValue] = useState<S3Credentials | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const copyIndividualKey = async (inputString: string) => {
+    await navigator.clipboard.writeText(inputString);
+  };
+
+  const copyAllKeys = async (accessKey: string, secretAccessKey: string, sessionToken: string) => {
+    const credentials: string =
+      `ACCESS_KEY_ID=${accessKey}\n` +
+      `SECRET_ACCESS_KEY=${secretAccessKey}\n` +
+      `SESSION_TOKEN=${sessionToken}`;
+
+    await navigator.clipboard.writeText(credentials);
+  };
 
   const handleCreateToken = async () => {
     try {
@@ -31,14 +45,46 @@ export const S3 = () => {
 
       {newTokenValue ? (
         <div className="new-token-message">
+          <Button
+            onClick={() =>
+              copyAllKeys(
+                newTokenValue.accessKeyId,
+                newTokenValue.secretAccessKey,
+                newTokenValue.sessionToken,
+              )
+            }
+          >
+            Copy credentials to .env file
+          </Button>
           <p>
-            <strong>Access Key ID:</strong> {newTokenValue.accessKeyId}
+            <strong className="key-name">Access Key ID: </strong>
+            <span className="aws-creds">{newTokenValue.accessKeyId}</span>
+            <Button
+              className="copy-button"
+              onClick={() => copyIndividualKey(newTokenValue.accessKeyId)}
+            >
+              ⧉
+            </Button>
           </p>
           <p>
-            <strong>Secret Access Key:</strong> {newTokenValue.secretAccessKey}
+            <strong className="key-name">Secret Access Key: </strong>
+            <span className="aws-creds">{newTokenValue.secretAccessKey}</span>
+            <Button
+              className="copy-button"
+              onClick={() => copyIndividualKey(newTokenValue.secretAccessKey)}
+            >
+              ⧉
+            </Button>
           </p>
           <p>
-            <strong>Session Token:</strong> {newTokenValue.sessionToken}
+            <strong className="key-name">Session Token: </strong>
+            <span className="aws-creds">{newTokenValue.sessionToken}</span>
+            <Button
+              className="copy-button"
+              onClick={() => copyIndividualKey(newTokenValue.sessionToken)}
+            >
+              ⧉
+            </Button>
           </p>
           <p>
             <strong>Expiration:</strong> {newTokenValue.expiration}
