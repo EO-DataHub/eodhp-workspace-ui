@@ -167,10 +167,7 @@ export const DataHub = () => {
             <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
             <br />
             <strong>API Key:</strong> {newTokenValue}
-            <Button
-              style={{ display: 'inline-flex', marginLeft: '10px' }}
-              onClick={() => copyIndividualKey(newTokenValue)}
-            >
+            <Button className="copy-button" onClick={() => copyIndividualKey(newTokenValue)}>
               ⧉
             </Button>
           </p>
