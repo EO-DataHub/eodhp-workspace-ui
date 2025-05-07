@@ -84,7 +84,7 @@ export const S3 = () => {
             </Button>
           </p>
           <p>
-            <strong>Session Token:</strong>{' '}
+            <strong>Session Token:</strong>
             <span style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
               {newTokenValue.sessionToken}
             </span>
