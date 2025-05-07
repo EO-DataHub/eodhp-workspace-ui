@@ -27,15 +27,6 @@ export const ProfileTile = ({
     return (firstName[0] + lastName[0]).toUpperCase();
   };
 
-  const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let colorVal = '#';
-    for (let i = 0; i < 6; i++) {
-      colorVal += letters[Math.floor(Math.random() * 16)];
-    }
-    return colorVal;
-  };
-
   const getAssociatedColor = (inputString: string) => {
     const letters = '0123456789ABCDEF';
     let colorVal = '#';
