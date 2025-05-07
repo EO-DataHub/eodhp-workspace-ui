@@ -143,7 +143,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         let _workspaceOwner = '';
 
         accounts.forEach((account) => {
-          if (account.workspaces.length) {
+          if (account.workspaces?.length) {
             account.workspaces.forEach((workspace) => {
               if (activeWorkspace.id === workspace.id) {
                 _isWorkspaceOwner = true;
