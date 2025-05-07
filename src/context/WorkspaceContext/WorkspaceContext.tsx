@@ -136,28 +136,30 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
           if (!res.ok) {
             throw new Error('Error getting accounts');
           }
-          const json = await res.json();
-          accounts = json.data.accounts;
+          accounts = await res.json();
         }
 
-        // TODO: When we can select the account, we should not iterate through all
-        // available accounts, but only the selected one.
+        let _isWorkspaceOwner = false;
+        let _workspaceOwner = '';
+
         accounts.forEach((account) => {
-          if (account.workspaces.length) {
-            account.workspaces.map((workspace) => {
+          if (account.workspaces?.length) {
+            account.workspaces.forEach((workspace) => {
               if (activeWorkspace.id === workspace.id) {
-                setIsWorkspaceOwner(true);
-                setWorkspaceOwner(account.accountOwner);
+                _isWorkspaceOwner = true;
+                _workspaceOwner = account.accountOwner;
               }
             });
           }
         });
+
+        setIsWorkspaceOwner(_isWorkspaceOwner);
+        setWorkspaceOwner(_workspaceOwner);
       } catch (error) {
-        console.error('Error fetching accounts');
-        //TODO: Testing only, remove in prod
-        setIsWorkspaceOwner(true);
+        console.error(error.message);
       }
     };
+    if (!activeWorkspace) return;
     checkWorkspaceOwnership();
   }, [activeWorkspace]);
 

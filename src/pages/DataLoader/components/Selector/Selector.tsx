@@ -190,7 +190,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
     try {
       const body = {
         fileContent: JSON.stringify(newTemplate),
-        fileName: `${newTemplate.id}.json`,
+        fileName: `${selectedCatalog.id}_$_${newTemplate.id}.json`,
       };
 
       const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
