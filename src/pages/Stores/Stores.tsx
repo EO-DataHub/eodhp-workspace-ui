@@ -17,31 +17,38 @@ export const Stores = () => {
   const renderTabDescription = () => {
     const apphubLink = `${window.location.origin}/apphub`;
     const environment = window.location.hostname.split('.')[0];
-    const storeEndpoint = `https://${activeWorkspace.name}.${environment}.eodatahub-workspaces.org.uk/files/workspaces/`;
+    const storeEndpoint = `https://${activeWorkspace.name}.${environment}.eodatahub-workspaces.org.uk/files/workspaces/${activeWorkspace.name}`;
 
     if (activeTab === 1) {
       return (
         <div className="header-right-text">
           <div>
-            <span className="header-right-title">Block stores</span> To browse the contents of these
-            stores please use{' '}
+            The <span className="header-right-title">Block Store</span> contains files associated
+            with Jupyter notebooks. Your block store is a familiar disk-like store which can be
+            accessed efficiently from notebooks. To browse the contents of these stores please use{' '}
             <a href={apphubLink} rel="noreferrer" target="_blank">
               Jupyter
             </a>
+            .
           </div>
           <div>
-            Additionally, you can view the block store associated to this workspace{' '}
+            Additionally, you can view the block store associated with this workspace{' '}
             <a href={storeEndpoint} rel="noreferrer" target="_blank">
               here
             </a>
+            .
           </div>
         </div>
       );
     } else {
       return (
         <div className="header-right-text">
-          <span className="header-right-title">Object stores</span> are used to store data and
-          files. You can create multiple object stores and use them to store data and files.
+          Your <span className="header-right-title">Object Store</span> uses AWS S3. S3 can store a
+          lot of data cheaply and can be accessed over the Internet with the S3 protocol. Data
+          associated with workflows and commercial data orders can be found in the object store.
+          <p></p>
+          AWS credentials can be generated on the <strong>Credentials</strong> tab and can be used
+          with the AWS CLI or S3cmd. e.g. <code>aws s3 ls</code> or <code>s3cmd ls</code>.
         </div>
       );
     }
@@ -51,7 +58,7 @@ export const Stores = () => {
     <div className="content-page stores">
       <div className="header">
         <div className="header-left">
-          <h2>Stores</h2>
+          <h2>Workspace Storage</h2>
         </div>
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />

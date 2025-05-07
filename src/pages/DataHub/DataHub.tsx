@@ -47,6 +47,7 @@ export const DataHub = () => {
   const [creatingToken, setCreatingToken] = useState<boolean>(false);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState<boolean>(false);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
   const [tokenFormInputs, setTokenFormInputs] = useState<Field[]>([]);
 
   useEffect(() => {
@@ -56,7 +57,6 @@ export const DataHub = () => {
         internalName: 'name',
         value: 'API Token',
         type: 'string',
-        min: 1,
         max: 128,
       },
       {
@@ -106,6 +106,7 @@ export const DataHub = () => {
   }, [activeWorkspace]);
 
   const handleCreateToken = async () => {
+    if (!validate()) return;
     try {
       setCreatingToken(true);
       const newToken: DataHubToken = await createToken(
@@ -126,6 +127,20 @@ export const DataHub = () => {
     }
   };
 
+  const validate = () => {
+    const errors = [];
+
+    if (!formData['name']) {
+      errors.push('Name required');
+    }
+    if (!formData['expires']) {
+      errors.push('Expiration required');
+    }
+
+    setFormErrors(errors);
+    return !errors.length;
+  };
+
   const handleDeleteToken = async (tokenId: string) => {
     try {
       setLoading(true);
@@ -139,6 +154,10 @@ export const DataHub = () => {
     }
   };
 
+  const copyIndividualKey = async (inputString: string) => {
+    await navigator.clipboard.writeText(inputString);
+  };
+
   const renderModalContent = () => {
     if (creatingToken) return <div>Creating token</div>;
     if (newTokenValue) {
@@ -148,6 +167,9 @@ export const DataHub = () => {
             <strong>Token ID:</strong> {tokens[tokens.length - 1]?.id}
             <br />
             <strong>API Key:</strong> {newTokenValue}
+            <Button className="copy-button" onClick={() => copyIndividualKey(newTokenValue)}>
+              ⧉
+            </Button>
           </p>
           <p>This is your only chance to copy it!</p>
         </div>
@@ -156,6 +178,7 @@ export const DataHub = () => {
     return (
       <Form
         fieldData={tokenFormInputs}
+        formErrors={formErrors}
         header={'Create Token'}
         onChange={(formData) => setFormData(formData)}
       />
