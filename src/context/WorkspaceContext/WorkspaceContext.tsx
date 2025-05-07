@@ -136,8 +136,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
           if (!res.ok) {
             throw new Error('Error getting accounts');
           }
-          const json = await res.json();
-          accounts = json.data.accounts;
+          accounts = await res.json();
         }
 
         let _isWorkspaceOwner = false;
