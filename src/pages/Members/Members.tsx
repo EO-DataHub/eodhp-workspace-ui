@@ -4,7 +4,6 @@ import React from 'react';
 
 import './styles.scss';
 
-import calendarIcon from '@/assets/icons/calendar.svg';
 import deleteIcon from '@/assets/icons/Delete.svg';
 import emailIcon from '@/assets/icons/email.svg';
 import memberGroupIcon from '@/assets/icons/member-group.svg';
@@ -66,10 +65,10 @@ const Members = () => {
       const role = workspaceOwner === member.username ? 'Admin' : 'Member';
 
       return {
-        email: member.email,
+        username: `${member.username}`,
         name: `${member.firstName} ${member.lastName}`,
+        email: member.email,
         role: role,
-        date: new Date().toDateString(),
         delete: renderDelete(role, member),
       };
     });
@@ -78,14 +77,19 @@ const Members = () => {
       <Table
         headers={[
           {
-            externalName: 'Email',
-            internalName: 'email',
-            icon: emailIcon,
+            externalName: 'Username',
+            internalName: 'username',
+            icon: memberIcon,
           },
           {
             externalName: 'Name',
             internalName: 'name',
             icon: memberIcon,
+          },
+          {
+            externalName: 'Email',
+            internalName: 'email',
+            icon: emailIcon,
           },
           {
             externalName: 'Role',
@@ -101,11 +105,6 @@ const Members = () => {
                 type="Tooltip"
               />
             ),
-          },
-          {
-            externalName: 'Date added',
-            internalName: 'date',
-            icon: calendarIcon,
           },
           {
             externalName: '',
