@@ -65,7 +65,7 @@ const options = {
       stacked: true,
       title: {
         display: true,
-        text: 'Usage + Costs',
+        text: 'Usage',
       },
     },
   },
@@ -136,7 +136,11 @@ const Invoices = () => {
               }
             }
 
-            const method = calculationMap[unit] ? calculationMap[unit] : calculationMap.cumulative;
+            // Ignore costs for now
+            // const method = calculationMap[unit] ? calculationMap[unit] : calculationMap.cumulative;
+
+            const method = calculationMap.cumulative;
+
             set.data[i] += method(sku);
           }
         }
@@ -174,21 +178,6 @@ const Invoices = () => {
     return parseInt(date.toLocaleString('en-US', { month: '2-digit' }));
   };
 
-  const getCostsTotal = (offset = 0) => {
-    if (!data) return;
-    const values = [];
-    data.datasets.forEach((dataset) => {
-      if (dataset.unit === '' || !calculationMap[dataset.unit]) return;
-      values.push(dataset.data);
-    });
-    let total = 0;
-    values.forEach((value) => {
-      // current month
-      total += value[value.length - (offset + 1)];
-    });
-    return total.toFixed(2);
-  };
-
   const getUsageTotal = (offset = 0) => {
     if (!data) return;
     const values = [];
@@ -199,14 +188,16 @@ const Invoices = () => {
     let total = 0;
     values.forEach((value) => {
       // current month
+      const val = value[value.length - (offset + 1)];
+      if (typeof val !== 'number') return;
       total += value[value.length - (offset + 1)];
     });
     return total.toFixed(2);
   };
 
   const calculateRelativeToPreviousMonth = () => {
-    const currMonthTotal = getCostsTotal();
-    const prevMonthTotal = getCostsTotal(1);
+    const currMonthTotal = getUsageTotal();
+    const prevMonthTotal = getUsageTotal(1);
     const ratio = parseFloat(
       ((parseFloat(currMonthTotal) / parseFloat(prevMonthTotal)) * 100).toFixed(1),
     );
@@ -226,8 +217,8 @@ const Invoices = () => {
 
   const renderComparison = () => {
     if (!data) return;
-    const currMonthTotal = getCostsTotal();
-    const prevMonthTotal = getCostsTotal(1);
+    const currMonthTotal = getUsageTotal();
+    const prevMonthTotal = getUsageTotal(1);
 
     if (!currMonthTotal || !prevMonthTotal) return;
     return <span className="invoices-value__sub">{` ${calculateRelativeToPreviousMonth()}`}</span>;
@@ -255,14 +246,25 @@ const Invoices = () => {
         <span className="invoices-info__header">Info</span>
         <div className="invoices-info__text">
           <p>
-            The chart above shows the costs and usage for the current month and the previous month.
-            The costs are calculated based on the SKU definitions. If no unit is available, the
-            usage will be used instead of the final cost.
-          </p>
-          <p>
-            The final monthly bill is both the Costs <b>and</b> the Usage combined.
+            The chart above shows the usage for the current and previous month. The costs are
+            calculated based on the SKU definitions. If no unit is available, the usage will be used
+            instead of the final cost.
           </p>
         </div>
+      </div>
+    );
+  };
+
+  const renderUsage = () => {
+    return parseFloat(getUsageTotal()) > 0 ? (
+      <div className="invoices-value__costs-item">
+        <span className="invoices-value__costs-header">Usage: </span>
+        <span className="invoices-value__costs-value">{` ${getUsageTotal()}`}</span>
+      </div>
+    ) : (
+      <div className="invoices-value__costs-item">
+        <span className="invoices-value__costs-header">Usage: </span>
+        <span className="invoices-value__costs-value">{` 0`}</span>
       </div>
     );
   };
@@ -274,30 +276,7 @@ const Invoices = () => {
       <div className="invoices-value-container">
         <div>
           <span className="invoices-value__header">Current monthly</span>
-          <div className="invoices-value__costs">
-            {parseFloat(getCostsTotal()) > 0 ? (
-              <div className="invoices-value__costs-item">
-                <span className="invoices-value__costs-header">Costs: </span>
-                <span className="invoices-value__costs-value">{` £${getCostsTotal()}`}</span>
-              </div>
-            ) : (
-              <div className="invoices-value__costs-item">
-                <span className="invoices-value__costs-header">Costs: </span>
-                <span className="invoices-value__costs-value">{` £0`}</span>
-              </div>
-            )}
-            {parseFloat(getUsageTotal()) > 0 ? (
-              <div className="invoices-value__costs-item">
-                <span className="invoices-value__costs-header">Usage: </span>
-                <span className="invoices-value__costs-value">{` ${getUsageTotal()}`}</span>
-              </div>
-            ) : (
-              <div className="invoices-value__costs-item">
-                <span className="invoices-value__costs-header">Usage: </span>
-                <span className="invoices-value__costs-value">{` 0`}</span>
-              </div>
-            )}
-          </div>
+          <div className="invoices-value__costs">{renderUsage()}</div>
         </div>
         {renderComparison()}
         {renderInfo()}
