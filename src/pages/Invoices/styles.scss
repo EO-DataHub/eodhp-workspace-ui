@@ -1,5 +1,11 @@
 .invoices {
-  padding: 25px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  &-container {
+    width: 1000px;
+  }
 
   &-value {
     &-container {

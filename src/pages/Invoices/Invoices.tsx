@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
@@ -12,12 +13,12 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
-import { testSkuDefinition } from '@/context/WorkspaceContext/placeholder';
+import memberGroupIcon from '@/assets/icons/member-group.svg';
+import { pricesPlaceholder, testSkuDefinition } from '@/context/WorkspaceContext/placeholder';
 import { SKU, SKUDefinition } from '@/context/WorkspaceContext/types';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
-import { InvoiceData } from './types';
-import { calculationMap } from './unitCalculations';
+import { InvoiceData, Price } from './types';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -78,11 +79,25 @@ const Invoices = () => {
   const { skus } = useWorkspace();
   const [months, setMonths] = useState<number[]>([]);
   const [data, setData] = useState<InvoiceData>();
+  const [prices, setPrices] = useState<Price[]>([]);
 
   useEffect(() => {
     const currentMonth = getMonthInt();
     const previousMonth = getMonthInt(-1);
     setMonths([previousMonth, currentMonth]);
+  }, []);
+
+  useEffect(() => {
+    const getPrices = async () => {
+      if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+        setPrices(pricesPlaceholder);
+      } else {
+        const res = await fetch('/api/accounting/prices');
+        const _prices = await res.json();
+        setPrices(_prices);
+      }
+    };
+    getPrices();
   }, []);
 
   // We need to get the data in the correct for for chart.js.
@@ -105,8 +120,9 @@ const Invoices = () => {
         await addUnit(sku);
         const unit = skuUnits[sku.item];
 
-        if (!unit) {
-          const warning = `Warning: No unit available for ${sku.item}. ${sku.item} will use usage not final cost`;
+        const price = getSKUPrice(sku.item);
+        if (!price) {
+          const warning = `Warning: No pricing available for ${sku.item}. ${sku.item} will use usage not final cost`;
           const index = skuUnitsWarnings.indexOf(warning);
           if (index === -1) {
             skuUnitsWarnings.push(warning);
@@ -120,6 +136,7 @@ const Invoices = () => {
             data: [],
             backgroundColor: colours[datasets.length % colours.length],
             unit: unit,
+            price: price?.price,
           };
           isNew = true;
         }
@@ -128,20 +145,7 @@ const Invoices = () => {
         for (let i = 0; i < months.length; i++) {
           if (months[i] === skuMonth) {
             if (!set.data[i]) set.data[i] = 0;
-            if (unit !== '' && !calculationMap[unit]) {
-              const warning = `Warning: ${skuUnitsWarnings[sku.item]} has no valid conversion method for ${unit}. ${sku.item} will use usage not final cost`;
-              const index = skuUnitsWarnings.indexOf(warning);
-              if (index === -1) {
-                skuUnitsWarnings.push(warning);
-              }
-            }
-
-            // Ignore costs for now
-            // const method = calculationMap[unit] ? calculationMap[unit] : calculationMap.cumulative;
-
-            const method = calculationMap.cumulative;
-
-            set.data[i] += method(sku);
+            set.data[i] += sku.quantity;
           }
         }
 
@@ -156,6 +160,10 @@ const Invoices = () => {
     };
     getData();
   }, [months, skus]);
+
+  const getSKUPrice = (skuName: string): Price => {
+    return prices.filter((price) => price.sku === skuName)[0];
+  };
 
   const addUnit = async (sku: SKU) => {
     try {
@@ -181,8 +189,7 @@ const Invoices = () => {
   const getUsageTotal = (offset = 0) => {
     if (!data) return;
     const values = [];
-    data.datasets.forEach((dataset) => {
-      if (dataset.unit !== '' && calculationMap[dataset.unit]) return;
+    data.datasets?.forEach((dataset) => {
       values.push(dataset.data);
     });
     let total = 0;
@@ -193,6 +200,20 @@ const Invoices = () => {
       total += value[value.length - (offset + 1)];
     });
     return total.toFixed(2);
+  };
+
+  const getCostsTotal = (offset = 0) => {
+    if (!data) return;
+    const values = [];
+    data.datasets?.forEach((dataset) => {
+      values.push(dataset.data.map((d) => d * dataset.price));
+    });
+    let total = 0;
+    values.forEach((value) => {
+      // current month
+      total += value[value.length - (offset + 1)];
+    });
+    return total.toFixed(4);
   };
 
   const calculateRelativeToPreviousMonth = () => {
@@ -225,6 +246,7 @@ const Invoices = () => {
   };
 
   const renderSKUWarnings = () => {
+    if (!skuUnitsWarnings.length) return;
     return (
       <div className="invoices-warnings">
         <ul>
@@ -247,8 +269,8 @@ const Invoices = () => {
         <div className="invoices-info__text">
           <p>
             The chart above shows the usage for the current and previous month. The costs are
-            calculated based on the SKU definitions. If no unit is available, the usage will be used
-            instead of the final cost.
+            calculated based on the SKU definitions. If the unit or pice is unavailable, the usage
+            will be used instead of the final cost.
           </p>
         </div>
       </div>
@@ -269,17 +291,55 @@ const Invoices = () => {
     );
   };
 
-  return (
-    <div className="invoices">
-      {data && renderSKUWarnings()}
-      {data && <Bar data={data} options={options} />}
-      <div className="invoices-value-container">
-        <div>
-          <span className="invoices-value__header">Current monthly</span>
-          <div className="invoices-value__costs">{renderUsage()}</div>
+  const renderCosts = () => {
+    if (skuUnitsWarnings.length) return;
+    const total = getCostsTotal();
+    if (parseFloat(total) <= 0) return;
+    return (
+      <div className="invoices-value__costs-item">
+        <span className="invoices-value__costs-header">Costs: </span>
+        <span className="invoices-value__costs-value">{` £${total}`}</span>
+      </div>
+    );
+  };
+
+  const renderHeader = () => {
+    return (
+      <div className="header">
+        <div className="header-left">
+          <h2>Members</h2>
         </div>
-        {renderComparison()}
+        <div className="header-right">
+          <img alt="Members" src={memberGroupIcon} />
+          <div className="header-right-text">
+            <span className="header-right-title">Members area</span> is dedicated to managing the
+            members associated to this workspace.
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const thisMonthUsage = getUsageTotal();
+  const prevMonthUsage = getUsageTotal();
+
+  return (
+    <div className="invoices content-page">
+      {renderHeader()}
+      <div className="invoices-container">
         {renderInfo()}
+        {data && renderSKUWarnings()}
+        {data && thisMonthUsage && prevMonthUsage && <Bar data={data} options={options} />}
+        <div className="invoices-value-container">
+          <div>
+            <span className="invoices-value__header">Current monthly</span>
+            <div className="invoices-value__costs">
+              {renderUsage()}
+              {renderCosts()}
+            </div>
+          </div>
+          {renderComparison()}
+        </div>
       </div>
     </div>
   );

@@ -1119,7 +1119,7 @@ export const testSkuDefinition = {
   uuid: '352b473a-7ab0-4389-a5b5-dfbc6dd1770a',
   sku: 'testsku',
   name: 'Block storage',
-  unit: '',
+  unit: 's',
 };
 
 export const tokenPlaceholder = {
@@ -1132,3 +1132,48 @@ export const tokenPlaceholder = {
   user_id: '15ccb16f-9fd7-4009-ab87-e977b4c50cda',
   workspace: 'new-workspace',
 };
+
+export const pricesPlaceholder = [
+  {
+    uuid: '23b8fb77-1fe5-4f79-959d-e7223ee0ae34',
+    sku: 'cpu-seconds',
+    valid_from: '2025-01-02T00:00:00Z',
+    valid_until: null,
+    price: 0.0000012,
+  },
+  {
+    uuid: '77fb3dc0-bcbd-4ec0-8e06-ee341af6b1e6',
+    sku: 'testsku',
+    valid_from: '2025-03-10T15:47:39Z',
+    valid_until: null,
+    price: 0.1,
+  },
+  {
+    uuid: 'c5b87f3b-5027-4fdf-a618-0189693a2bd0',
+    sku: 'testsku2',
+    valid_from: '2025-03-10T15:47:58Z',
+    valid_until: null,
+    price: 4e-8,
+  },
+  {
+    uuid: '23b8fb77-1fe5-4f79-959d-e7223ee0ae34',
+    sku: 'AWS-S3-API-CALLS',
+    valid_from: '2025-01-02T00:00:00Z',
+    valid_until: null,
+    price: 0.0000012,
+  },
+  {
+    uuid: '23b8fb77-1fe5-4f79-959d-e7223ee0ae34',
+    sku: 'AWS-S3-DATA-TRANSFER-OUT',
+    valid_from: '2025-01-02T00:00:00Z',
+    valid_until: null,
+    price: 0.0000012,
+  },
+  {
+    uuid: '23b8fb77-1fe5-4f79-959d-e7223ee0ae34',
+    sku: 'AWS-S3-STORAGE',
+    valid_from: '2025-01-02T00:00:00Z',
+    valid_until: null,
+    price: 0.0000012,
+  },
+];
