@@ -132,8 +132,8 @@ const Invoices = () => {
         let isNew = false;
         if (!set) {
           set = {
-            label: `${sku.item} ${unit}`,
-            data: [],
+            label: `${sku.item}`,
+            data: [0, 0],
             backgroundColor: colours[datasets.length % colours.length],
             unit: unit,
             price: price?.price,
@@ -144,13 +144,16 @@ const Invoices = () => {
         const skuMonth = getMonthInt(0, new Date(sku.event_end));
         for (let i = 0; i < months.length; i++) {
           if (months[i] === skuMonth) {
-            if (!set.data[i]) set.data[i] = 0;
             set.data[i] += sku.quantity;
           }
         }
 
         if (isNew && set.data.length > 0) {
-          datasets.push(set);
+          let sum = 0;
+          set.data.forEach((val) => (sum += val));
+          if (sum > 0) {
+            datasets.push(set);
+          }
         }
       }
       setData({
@@ -194,7 +197,6 @@ const Invoices = () => {
     });
     let total = 0;
     values.forEach((value) => {
-      // current month
       const val = value[value.length - (offset + 1)];
       if (typeof val !== 'number') return;
       total += value[value.length - (offset + 1)];
@@ -327,8 +329,8 @@ const Invoices = () => {
     <div className="invoices content-page">
       {renderHeader()}
       <div className="invoices-container">
-        {renderInfo()}
         {data && renderSKUWarnings()}
+        {renderInfo()}
         {data && thisMonthUsage && prevMonthUsage && <Bar data={data} options={options} />}
         <div className="invoices-value-container">
           <div>

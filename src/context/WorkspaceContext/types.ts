@@ -48,7 +48,7 @@ export type SKU = {
   item: string;
   workspace: string;
   quantity: number;
-  user: string;
+  user?: string;
 };
 
 export type SKUDefinition = {
