@@ -3,15 +3,43 @@
   align-items: center;
   flex-direction: column;
 
+  &-tabs {
+    display: flex;
+    justify-content: left;
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: 25px;
+    width: 100%;
+
+    &__tab {
+      width: 150px;
+      display: flex;
+      justify-content: center;
+      transition: all 0.2s linear;
+      background-color: rgb(158 158 158);
+      color: grey;
+      cursor: pointer;
+
+      &:hover {
+        background-color: lightgrey;
+      }
+    }
+
+    &__tab.active {
+      background-color: white;
+      color: black;
+      font-weight: 600;
+      cursor: not-allowed;
+    }
+  }
+
   &-container {
     width: 1000px;
   }
 
   &-value {
     &-container {
+      width: 100%;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
     }
 
@@ -22,6 +50,7 @@
     &__costs {
       display: flex;
       flex-direction: column;
+      justify-self: left;
 
       &-header {
         font-size: 25px;
@@ -39,6 +68,7 @@
   }
 
   &-warnings {
+    width: 100%;
     border: 1px solid var(--warning-border);
     padding: 25px;
     border-radius: 12px;
