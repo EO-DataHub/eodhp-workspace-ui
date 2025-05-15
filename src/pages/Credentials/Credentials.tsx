@@ -23,8 +23,8 @@ export const Credentials = () => {
         <div className="header-right">
           <img alt="Cloud" src={cloudIcon} />
           <div className="header-right-text">
-            <span className="header-right-title">Credentials </span> are used as a way to
-            authenticate with external services.
+            <span className="header-right-title">Credentials </span> are used to authenticate with
+            external services.
           </div>
         </div>
       </div>
@@ -37,11 +37,11 @@ export const Credentials = () => {
       >
         <TabList className="tab-list">
           <Tab className="tab">
-            <TbApi />
+            <TbApi size={18} style={{ marginRight: '6px' }} />
             DataHub API Key
           </Tab>
           <Tab className="tab">
-            <SiAmazons3 />
+            <SiAmazons3 size={18} style={{ marginRight: '6px' }} />
             S3 Token
           </Tab>
         </TabList>
@@ -51,6 +51,7 @@ export const Credentials = () => {
             <DataHub />
           </div>
         </TabPanel>
+
         <TabPanel>
           <div className="tab-content">
             <S3 />

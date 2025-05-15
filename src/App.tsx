@@ -14,7 +14,7 @@ export const App = () => {
   const [content, setContent] = useState<React.ReactNode>();
   return (
     <div
-      className={`workspace ${import.meta.env.VITE_WORKSPACE_LOCAL ? 'dark-theme' : ''}`}
+      className={`workspace ${import.meta.env.VITE_WORKSPACE_LOCAL ? 'light-theme' : ''}`}
       id="workspace"
     >
       <div className="page-view">
