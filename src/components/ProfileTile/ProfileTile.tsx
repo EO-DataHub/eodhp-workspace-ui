@@ -27,11 +27,12 @@ export const ProfileTile = ({
     return (firstName[0] + lastName[0]).toUpperCase();
   };
 
-  const getRandomColor = () => {
+  const getAssociatedColor = (inputString: string) => {
     const letters = '0123456789ABCDEF';
     let colorVal = '#';
     for (let i = 0; i < 6; i++) {
-      colorVal += letters[Math.floor(Math.random() * 16)];
+      const charCode = inputString.charCodeAt(i % inputString.length);
+      colorVal += letters[charCode % 16];
     }
     return colorVal;
   };
@@ -59,7 +60,7 @@ export const ProfileTile = ({
         data-tooltip-content={username}
         data-tooltip-id={`full-name-${username}-${id}`}
         style={{
-          backgroundColor: color || getRandomColor(),
+          backgroundColor: color || getAssociatedColor(username),
           borderColor: borderColor || 'none',
           border: borderColor ? undefined : 'none',
         }}
