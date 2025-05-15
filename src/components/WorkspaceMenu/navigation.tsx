@@ -1,11 +1,9 @@
 import credentialsIcon from '@/assets/icons/credentials.svg';
 import linkedAccountsIcon from '@/assets/icons/linked-accounts.svg';
-import logsIcon from '@/assets/icons/logs.svg';
 import membersIcon from '@/assets/icons/members.svg';
 import storesIcon from '@/assets/icons/stores.svg';
 import uploadIcon from '@/assets/icons/upload.svg';
 import { Credentials } from '@/pages/Credentials/Credentials';
-import Logs from '@/pages/DataLoader/components/Logs/Logs';
 import DataLoader from '@/pages/DataLoader/DataLoader';
 import LinkedAccounts from '@/pages/LinkedAccounts/LinkedAccounts';
 import Members from '@/pages/Members/Members';
