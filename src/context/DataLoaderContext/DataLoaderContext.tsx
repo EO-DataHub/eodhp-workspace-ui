@@ -32,6 +32,9 @@ export type DataLoaderContextType = {
 
   selectedCollection: Collection;
   setSelectedCollection: (value: Collection) => void;
+
+  pageState: string;
+  setPageState: (value: 'data-loader' | 'logs') => void;
 };
 
 type DataLoaderProviderProps = {
@@ -53,6 +56,7 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
   const [selectedCatalog, setSelectedCatalog] = useState<Catalog>();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedCollection, setSelectedCollection] = useState<Collection>();
+  const [pageState, setPageState] = useState<'data-loader' | 'logs'>('data-loader');
 
   const setMessage = (message: string) => {
     toast(message);
@@ -80,6 +84,8 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
         setCollections,
         selectedCollection,
         setSelectedCollection,
+        pageState,
+        setPageState,
         ...initialState,
       }}
     >

@@ -100,4 +100,33 @@ $width: 600px;
       overflow-x: auto;
     }
   }
+
+  &-tabs {
+    display: flex;
+    justify-content: left;
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: 25px;
+    width: 100%;
+
+    &__tab {
+      width: 150px;
+      display: flex;
+      justify-content: center;
+      transition: all 0.2s linear;
+      background-color: rgb(158 158 158);
+      color: grey;
+      cursor: pointer;
+
+      &:hover {
+        background-color: lightgrey;
+      }
+    }
+
+    &__tab.active {
+      background-color: white;
+      color: black;
+      font-weight: 600;
+      cursor: not-allowed;
+    }
+  }
 }

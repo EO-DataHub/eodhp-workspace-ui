@@ -8,8 +8,8 @@ import './styles.scss';
 import { LazyLog } from 'react-lazylog';
 import { ToastContainer, toast } from 'react-toastify';
 
-import LogIcon from '@/assets/icons/logs.svg';
 import Refresh from '@/assets/icons/refresh.svg';
+import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import { logsPlaceholder } from './logsPlaceholder';
@@ -21,13 +21,18 @@ const Logs = () => {
   ];
 
   const { activeWorkspace } = useWorkspace();
+  const { pageState } = useDataLoader();
 
   const [logs, setLogs] = useState<Log[]>(defaultLog);
   const [error, setError] = useState<string>();
   const [gettingLogs, setGettingLogs] = useState<boolean>(false);
 
-  const getLogs = async () => {
+  const pollingRef = useRef(null);
+
+  const getLogs = async (refresh = false) => {
+    const toastMessage = refresh ? 'Logs successfully retrieved' : 'Logs refreshed';
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+      toast(toastMessage);
       setLogs(logsPlaceholder.messages);
       return;
     }
@@ -42,7 +47,7 @@ const Logs = () => {
     }
 
     const json: LogResponse = await res.json();
-    toast('Logs successfully retrieved');
+    toast(toastMessage);
 
     let messages = defaultLog;
 
@@ -54,26 +59,17 @@ const Logs = () => {
   };
 
   useEffect(() => {
-    getLogs();
-  }, [activeWorkspace.name]);
+    if (pageState !== 'logs') return;
+    if (pollingRef.current) return;
+    // Poll  the endpoint every 10 seconds
+    pollingRef.current = setInterval(() => {
+      getLogs();
+    }, 10000);
+  }, [pageState]);
 
-  const renderHeader = () => {
-    return (
-      <div className="header">
-        <div className="header-left">
-          <h2>Logs</h2>
-        </div>
-        <div className="header-right">
-          <img alt="Logs" className="logs__header-img" src={LogIcon} />
-          <div className="header-right-text">
-            <span className="header-right-title">Logs</span> contains recent log messages produced
-            for STAC files harvested through the{' '}
-            <span className="header-right-title">Data Loader</span>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  useEffect(() => {
+    getLogs(true);
+  }, [activeWorkspace.name]);
 
   const renderError = () => {
     return <div className="logs__error">{error}</div>;
@@ -128,7 +124,6 @@ const Logs = () => {
 
   return (
     <div className="content-page logs">
-      {renderHeader()}
       {error && renderError()}
       {renderButtons()}
       {renderLogs()}

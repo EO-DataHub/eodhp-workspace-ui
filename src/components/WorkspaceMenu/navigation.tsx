@@ -5,9 +5,9 @@ import membersIcon from '@/assets/icons/members.svg';
 import storesIcon from '@/assets/icons/stores.svg';
 import uploadIcon from '@/assets/icons/upload.svg';
 import { Credentials } from '@/pages/Credentials/Credentials';
+import Logs from '@/pages/DataLoader/components/Logs/Logs';
 import DataLoader from '@/pages/DataLoader/DataLoader';
 import LinkedAccounts from '@/pages/LinkedAccounts/LinkedAccounts';
-import Logs from '@/pages/Logs/Logs';
 import Members from '@/pages/Members/Members';
 import { Stores } from '@/pages/Stores/Stores';
 
@@ -28,10 +28,5 @@ export const navItems: NavItem[] = [
     label: 'Workspace Storage',
     icon: storesIcon,
     content: <Stores />,
-  },
-  {
-    label: 'Logs',
-    icon: logsIcon,
-    content: <Logs />,
   },
 ];
