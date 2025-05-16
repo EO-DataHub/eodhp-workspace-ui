@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import './index.scss';
 import { DataLoaderProvider } from './context/DataLoaderContext/DataLoaderContext';
+import { InvoicesProvider } from './context/InvoicesContext/InvoicesContext';
 import { WorkspaceProvider } from './context/WorkspaceContext/WorkspaceContext';
 
 const enableMocking = async () => {
@@ -26,7 +27,9 @@ enableMocking().then(() => {
     <StrictMode>
       <WorkspaceProvider>
         <DataLoaderProvider>
-          <App />
+          <InvoicesProvider>
+            <App />
+          </InvoicesProvider>
         </DataLoaderProvider>
       </WorkspaceProvider>
     </StrictMode>,
