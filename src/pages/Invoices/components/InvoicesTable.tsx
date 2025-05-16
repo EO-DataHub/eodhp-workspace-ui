@@ -19,20 +19,35 @@ const headers = [
     internalName: 'event_end',
     externalName: 'Issue date',
   },
+  {
+    internalName: 'price',
+    externalName: 'Price (£)',
+  },
 ];
 
 const InvoicesTable = () => {
   const { skus } = useWorkspace();
+  const { getSKUPrice } = useInvoices();
 
-  const [rows, setRows] = useState<SKU[]>(() =>
-    skus.map((sku) => {
-      const copy = { ...sku };
-      copy.event_end = new Date(sku.event_end).toDateString();
-      return copy;
-    }),
-  );
-
-  useEffect(() => {}, [skus]);
+  const rows = skus.map((sku) => {
+    const copy = { ...sku };
+    copy.event_end = new Date(sku.event_end).toDateString();
+    copy.quantity = parseFloat(copy.quantity.toPrecision(3));
+    const skuPrice = getSKUPrice(sku.item);
+    let price: string | number;
+    const sig3 = new Intl.NumberFormat(undefined, {
+      minimumSignificantDigits: 3,
+      maximumSignificantDigits: 3,
+      useGrouping: false,
+    });
+    if (skuPrice) {
+      const raw = skuPrice.price * sku.quantity;
+      price = sig3.format(raw);
+    } else {
+      price = 'Missing pricing';
+    }
+    return { ...copy, price };
+  });
 
   return (
     <div style={{ width: '100%' }}>

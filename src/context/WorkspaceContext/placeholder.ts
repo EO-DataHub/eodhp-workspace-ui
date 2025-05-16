@@ -219,7 +219,7 @@ export const skuPlaceholder = [
     event_end: '2025-04-25T11:00:00Z',
     item: 'AWS-S3-STORAGE',
     workspace: 'new-workspace',
-    quantity: 0.010828794973113303,
+    quantity: 100000,
   },
   {
     uuid: 'dd26e66e-2e65-5f2e-8120-95536a21b411',
@@ -227,7 +227,7 @@ export const skuPlaceholder = [
     event_end: '2025-04-25T12:00:00Z',
     item: 'AWS-S3-STORAGE',
     workspace: 'new-workspace',
-    quantity: 0.01573044040559338,
+    quantity: 0.00000000000001573044040559338,
   },
   {
     uuid: 'f9ea873b-b3d9-564a-92f4-efc076ad98fb',
@@ -235,7 +235,7 @@ export const skuPlaceholder = [
     event_end: '2025-04-25T13:00:00Z',
     item: 'AWS-S3-STORAGE',
     workspace: 'new-workspace',
-    quantity: 0.015721173812404215,
+    quantity: 1000.015721,
   },
   {
     uuid: '1ea4c2c6-2438-5e96-a000-f9c3945fc53b',
@@ -1069,11 +1069,11 @@ export const pricesPlaceholder = [
     valid_until: null,
     price: 0.0000012,
   },
-  // {
-  //   uuid: '23b8fb77-1fe5-4f79-959d-e7223ee0ae34',
-  //   sku: 'AWS-S3-STORAGE',
-  //   valid_from: '2025-01-02T00:00:00Z',
-  //   valid_until: null,
-  //   price: 0.0000012,
-  // },
+  {
+    uuid: '23b8fb77-1fe5-4f79-959d-e7223ee0ae34',
+    sku: 'AWS-S3-STORAGE',
+    valid_from: '2025-01-02T00:00:00Z',
+    valid_until: null,
+    price: 0.0000012,
+  },
 ];

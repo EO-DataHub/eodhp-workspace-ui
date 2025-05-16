@@ -18,6 +18,7 @@ export type InvoicesContextType = {
   calculateRelativeToPreviousMonth: () => string;
   getCostsTotal: (offset?: number) => string;
   getUsageTotal: (offset?: number) => string;
+  getSKUPrice: (skuName: string) => Price;
 };
 
 type InvoicesProviderProps = {
@@ -237,6 +238,7 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
         calculateRelativeToPreviousMonth,
         getCostsTotal,
         getUsageTotal,
+        getSKUPrice,
         ...initialState,
       }}
     >
