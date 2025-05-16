@@ -15,34 +15,34 @@ export const accountsPlaceholder = {
         status: 'Approved',
         workspaces: [
           {
-            id: '42d9f8b7-c76e-44a5-b29f-d2e9f3d2a4bc',
-            name: 'alex-smith-workspace',
-            account: 'a9f1c3b2-64d3-47a1-bf10-c9b3f7e1234d',
-            member_group: 'development',
-            status: 'active',
+            id: '5ca33d4a-bfd8-495f-8684-9b157be3f36c',
+            name: 'dev-test-workspace',
+            account: '382b1c98-eaca-4914-b3f6-f6f979d42683',
+            member_group: 'prod',
+            status: 'pending',
             stores: [
               {
                 object: [
                   {
-                    store_id: '19c4b5a7-1f3d-40d4-b2e1-a4d9e2b3a4f1',
-                    name: 'workspaces-sample-test',
-                    path: 'alex-smith-workspace/',
-                    env_var: 'S3_BUCKET_WORKSPACE_TEST',
+                    store_id: '1f5ec48d-1aba-4e91-b552-3bc33a13a0e8',
+                    name: 'workspaces-9c11f5-dev',
+                    path: 'lockheed/',
+                    env_var: 'S3_BUCKET_WORKSPACE',
                     access_point_arn:
-                      'arn:aws:s3:eu-west-2:123456789012:accesspoint/sample-test-alex-smith-s3',
+                      'arn:aws:s3:us-east-1:804469581367:accesspoint/df8d1c-boeing-s3',
                   },
                 ],
                 block: [
                   {
-                    store_id: '3f7a9c1b-0d4e-4f2a-b3d2-c8e9f2d4a7e1',
-                    name: 'sample-test-AlexSmith-storage',
-                    access_point_id: 'fsap-0123abc456d789012',
-                    mount_point: 'fs-1234abcd5678efgh',
+                    store_id: 'e8b75974-1e6a-45a9-8384-866724e53815',
+                    name: '130079-dev-boeing-pv',
+                    access_point_id: 'fsap-153ef4cc8ff1',
+                    mount_point: 'fs-07025eb296b5',
                   },
                 ],
               },
             ],
-            last_updated: '2025-01-15T10:23:45.678901Z',
+            last_updated: '2025-01-23T15:08:57.594775Z',
           },
         ],
         last_updated: '2025-01-23T13:54:49.383718Z',
