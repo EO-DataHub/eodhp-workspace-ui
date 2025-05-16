@@ -1,31 +1,15 @@
 import './TopBar.scss';
 
-import { useEffect, useState } from 'react';
-
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import MemberButtons from './components/MemberButtons/MemberButtons';
 import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
 import Warning from '../../assets/icons/warning.svg';
-import { Button } from '../Button/Button';
 import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 export const TopBar = () => {
   const { activeWorkspace, isWorkspaceOwner, members, availableWorkspaces, accounts } =
     useWorkspace();
-  const [isLightTheme, setIsLightTheme] = useState(false);
-
-  useEffect(() => {
-    const workspace = document.getElementById('workspace');
-    if (workspace) {
-      if (workspace.classList.contains('light-theme') && !isLightTheme) {
-        workspace.classList.remove('light-theme');
-      }
-      if (!workspace.classList.contains('light-theme') && isLightTheme) {
-        workspace.classList.add('light-theme');
-      }
-    }
-  }, [isLightTheme]);
 
   const renderMemberButtons = () => {
     if (!isWorkspaceOwner) return null;
@@ -35,13 +19,6 @@ export const TopBar = () => {
 
   return (
     <div className="top-bar__container">
-      <div className="disclaimer">
-        {import.meta.env.VITE_WORKSPACE_LOCAL ? (
-          <Button className="theme-switcher" onClick={() => setIsLightTheme(!isLightTheme)}>
-            Set theme to {isLightTheme ? 'dark' : 'light'}
-          </Button>
-        ) : null}
-      </div>
       <div className="top-bar">
         {activeWorkspace ? (
           <div className="top-bar__left">

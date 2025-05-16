@@ -1,13 +1,9 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 
+import { MdDelete } from 'react-icons/md';
 import './styles.scss';
 
-import deleteIcon from '@/assets/icons/Delete.svg';
-import emailIcon from '@/assets/icons/email.svg';
 import memberGroupIcon from '@/assets/icons/member-group.svg';
-import memberIcon from '@/assets/icons/members.svg';
 import Help from '@/components/Table/Components/Help/Help';
 import Table from '@/components/Table/Table';
 import MemberButtons from '@/components/TopBar/components/MemberButtons/MemberButtons';
@@ -16,11 +12,61 @@ import { deleteMember } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
 const Members = () => {
-  const { members, workspaceOwner, activeWorkspace, getAndSetMembers, isWorkspaceOwner } =
-    useWorkspace();
+  const { members, workspaceOwner, activeWorkspace, getAndSetMembers } = useWorkspace();
 
-  const renderHeader = () => {
-    return (
+  const handleDelete = async (member: Member) => {
+    try {
+      await deleteMember(activeWorkspace.name, member.username);
+      await getAndSetMembers();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const headers = [
+    { externalName: 'Username', internalName: 'username' },
+    { externalName: 'Name', internalName: 'name' },
+    { externalName: 'Email', internalName: 'email' },
+    {
+      externalName: 'Role',
+      internalName: 'role',
+      help: (
+        <Help
+          content={
+            'Admin:\nThe admin is the owner of the workspace. They can add and remove members.\n\nMember:\nMembers can view the workspace but not manage members.'
+          }
+          type="Tooltip"
+        />
+      ),
+    },
+    { externalName: '', internalName: 'delete' },
+  ];
+
+  const rows =
+    members?.map((member) => {
+      const role = workspaceOwner === member.username ? 'Admin' : 'Member';
+
+      return {
+        username: member.username,
+        name: `${member.firstName} ${member.lastName}`,
+        email: member.email,
+        role,
+        delete:
+          role !== 'Admin' ? (
+            <button
+              aria-label={`Delete ${member.username}`}
+              className="table-column-delete-button"
+              style={{ all: 'unset' }}
+              onClick={() => handleDelete(member)}
+            >
+              <MdDelete size={22} />
+            </button>
+          ) : null,
+      };
+    }) ?? [];
+
+  return (
+    <div className="content-page">
       <div className="header">
         <div className="header-left">
           <h2>Members</h2>
@@ -33,95 +79,10 @@ const Members = () => {
           </div>
         </div>
       </div>
-    );
-  };
 
-  const renderButtons = () => {
-    return <MemberButtons hideRemoveButton />;
-  };
+      <MemberButtons hideRemoveButton />
 
-  const renderDelete = (role: 'Admin' | 'Member', member: Member) => {
-    if (!isWorkspaceOwner) return '';
-    if (role === 'Admin') return '';
-    return (
-      <div
-        onClick={async () => {
-          try {
-            await deleteMember(activeWorkspace.name, member.username);
-            await getAndSetMembers();
-          } catch (error) {
-            console.error(error);
-          }
-        }}
-      >
-        <img alt="delete" className="table-column-delete" src={deleteIcon} />
-      </div>
-    );
-  };
-
-  const renderTable = () => {
-    if (!members) return;
-    const rows = members.map((member) => {
-      const role = workspaceOwner === member.username ? 'Admin' : 'Member';
-
-      return {
-        username: `${member.username}`,
-        name: `${member.firstName} ${member.lastName}`,
-        email: member.email,
-        role: role,
-        delete: renderDelete(role, member),
-      };
-    });
-
-    return (
-      <Table
-        headers={[
-          {
-            externalName: 'Username',
-            internalName: 'username',
-            icon: memberIcon,
-          },
-          {
-            externalName: 'Name',
-            internalName: 'name',
-            icon: memberIcon,
-          },
-          {
-            externalName: 'Email',
-            internalName: 'email',
-            icon: emailIcon,
-          },
-          {
-            externalName: 'Role',
-            internalName: 'role',
-            help: (
-              <Help
-                content={
-                  'Admin:  \n' +
-                  'The admin is the owner of the workspace. They are able to add and remove members from the workspace. \n \n' +
-                  'Member: \n' +
-                  'Members have access to the workspace but are unable to add or remove members.'
-                }
-                type="Tooltip"
-              />
-            ),
-          },
-          {
-            externalName: '',
-            internalName: 'delete',
-          },
-        ]}
-        maxRowsPerPage={10}
-        rows={rows}
-      />
-    );
-  };
-
-  return (
-    <div className="content-page">
-      {renderHeader()}
-      {renderButtons()}
-      {renderTable()}
+      <Table headers={headers} maxRowsPerPage={10} rows={rows} />
     </div>
   );
 };
