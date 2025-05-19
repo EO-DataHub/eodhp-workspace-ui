@@ -3,6 +3,7 @@ import './styles.scss';
 
 import { ToastContainer, toast } from 'react-toastify';
 
+import CopyIcon from '@/assets/icons/copy.svg';
 import { Button } from '@/components/Button/Button';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { createToken } from '@/services/S3Service';
@@ -85,7 +86,7 @@ export const S3 = () => {
               className="copy-button"
               onClick={() => copyIndividualKey(newTokenValue.accessKeyId)}
             >
-              ⧉
+              <img alt="copy" src={CopyIcon} />
             </Button>
           </div>
           <div className="new-token-section">
@@ -97,7 +98,7 @@ export const S3 = () => {
               className="copy-button"
               onClick={() => copyIndividualKey(newTokenValue.secretAccessKey)}
             >
-              ⧉
+              <img alt="copy" src={CopyIcon} />
             </Button>
           </div>
           <div className="new-token-section">
@@ -109,7 +110,7 @@ export const S3 = () => {
               className="copy-button"
               onClick={() => copyIndividualKey(newTokenValue.sessionToken)}
             >
-              ⧉
+              <img alt="copy" src={CopyIcon} />
             </Button>
           </div>
           <div className="new-token-section">
