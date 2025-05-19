@@ -10,12 +10,8 @@ import { useWorkspace } from '../../hooks/useWorkspace';
 
 import './WorkspaceMenu.scss';
 
-type WorkspaceMenuProps = {
-  setContent: (content: React.ReactNode) => void;
-};
-
-export const WorkspaceMenu = ({ setContent }: WorkspaceMenuProps) => {
-  const { selectedItemPath, setSelectedItemPath } = useWorkspace();
+export const WorkspaceMenu = () => {
+  const { selectedItemPath, setSelectedItemPath, setContent } = useWorkspace();
 
   const [expandedSet, setExpandedSet] = useState<Set<string>>(new Set());
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles.scss';
 
 import DataTable, { TableColumn } from 'react-data-table-component';
 

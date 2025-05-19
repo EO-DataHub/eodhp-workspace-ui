@@ -56,7 +56,7 @@ const Members = () => {
             <button
               aria-label={`Delete ${member.username}`}
               className="table-column-delete-button"
-              style={{ all: 'unset' }}
+              style={{ all: 'unset', cursor: 'pointer' }}
               onClick={() => handleDelete(member)}
             >
               <MdDelete size={22} />

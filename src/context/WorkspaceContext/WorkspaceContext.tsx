@@ -1,5 +1,12 @@
 /* eslint-disable no-constant-condition */
-import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
+import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import { getMembers } from '@/services/members/members';
 import { Member } from '@/services/members/types';
@@ -8,6 +15,9 @@ import { accountsPlaceholder, skuPlaceholder, workspacesPlaceholder } from './pl
 import { Account, SKU, Workspace } from './types';
 
 export type WorkspaceContextType = {
+  content: React.ReactNode;
+  setContent: (content: React.ReactNode) => void;
+
   availableWorkspaces: Workspace[];
   setAvailableWorkspaces?: Dispatch<SetStateAction<Workspace[]>>;
 
@@ -42,6 +52,7 @@ export const WorkspaceContext = createContext<WorkspaceContextType | null>(null)
 WorkspaceContext.displayName = 'WorkspaceContext';
 
 export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProviderProps) => {
+  const [content, setContent] = useState<React.ReactNode>();
   const [availableWorkspaces, setAvailableWorkspaces] = useState<Workspace[]>();
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace>();
   const [activeApplication, setActiveApplication] = useState<string | undefined>();
@@ -210,6 +221,8 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   return (
     <WorkspaceContext.Provider
       value={{
+        content,
+        setContent,
         availableWorkspaces,
         activeWorkspace,
         setActiveWorkspace,
