@@ -7,7 +7,7 @@
   width: 100vw;
   height: 100vh;
   z-index: 10000;
-  background-color: rgb(59 59 59 / 62.4%);
+  background-color: rgb(0 0 0 / 90%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,7 +30,7 @@
       min-height: 200px;
       max-width: 750px;
       border-radius: 12px;
-      background-color: var(--background-secondary);
+      background-color: #fff;
       color: var(--text-primary);
     }
 

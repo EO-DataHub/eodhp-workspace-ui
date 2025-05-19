@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
 
 import './styles.scss';
 import '../../styles/main.scss';
@@ -25,9 +25,25 @@ const Modal = ({
   hideCancel,
   hideSubmit,
 }: ModalProps) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onCancel();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onCancel]);
+
   return (
     <div className="modal">
-      <div className="modal-content-container">
+      <div ref={modalRef} className="modal-content-container">
         <div className="modal-content">{content}</div>
         <div className="modal-content-buttons">
           {!hideCancel && <Button onClick={() => onCancel()}>{cancelText || 'Cancel'}</Button>}

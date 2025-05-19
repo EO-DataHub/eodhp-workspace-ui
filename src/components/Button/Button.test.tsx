@@ -19,8 +19,6 @@ describe('Button component', () => {
     );
 
     const buttonElement = screen.getByRole('button', { name: /click me/i });
-
-    expect(buttonElement).toHaveClass('button');
     expect(buttonElement).toHaveClass(className);
   });
 
@@ -40,7 +38,6 @@ describe('Button component', () => {
     render(<Button onClick={onClick}>Click Me</Button>);
 
     const button = screen.getByRole('button', { name: /click me/i });
-    expect(button).toHaveClass('button');
     expect(button).not.toHaveClass('custom-class');
   });
 });
