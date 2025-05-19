@@ -13,6 +13,7 @@ import Modal from '@/components/Modal/Modal';
 import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
+import Logs from './components/Logs/Logs';
 import Selector from './components/Selector/Selector';
 import DataLoaderTutorial from './components/Tutorial/DataLoaderTutorial';
 import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
@@ -35,6 +36,8 @@ const DataLoader = () => {
     setFileType,
     selectedCollection,
     selectedCatalog,
+    pageState,
+    setPageState,
   } = useDataLoader();
 
   const [tutorialModal, setTutorialModal] = useState<boolean>(false);
@@ -429,6 +432,62 @@ const DataLoader = () => {
     setState('validate');
   };
 
+  const renderTabs = () => {
+    return (
+      <div className="data-loader-tabs">
+        <div
+          className={`data-loader-tabs__tab ${pageState === 'data-loader' ? 'active' : null}`}
+          onClick={() => setPageState('data-loader')}
+        >
+          Data Loader
+        </div>
+        <div
+          className={`data-loader-tabs__tab ${pageState === 'logs' ? 'active' : null}`}
+          onClick={() => setPageState('logs')}
+        >
+          Logs
+        </div>
+      </div>
+    );
+  };
+
+  const renderContent = () => {
+    const componentMap = {
+      'data-loader': renderDataLoader,
+      logs: renderLogs,
+    };
+
+    return componentMap[pageState]();
+  };
+
+  const renderLogs = () => {
+    return <Logs />;
+  };
+
+  const renderDataLoader = () => {
+    return (
+      <div className="data-loader">
+        {renderDropdown()}
+        {fileType === 'access-policy' && renderDescription()}
+        {renderCatalogCollectionSelector()}
+        {renderFileSelector()}
+        {validationErrors.length > 0 && (
+          <ul className="data-loader__errors">
+            <h3>Validation warnings</h3>
+            {validationErrors.map((error) => {
+              return (
+                <li key={error} className="data-loader__errors-error">
+                  {error}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {renderButton()}
+      </div>
+    );
+  };
+
   return (
     <>
       {tutorialModal && (
@@ -446,25 +505,8 @@ const DataLoader = () => {
       )}
       <div className="content-page">
         {renderHeader()}
-        <div className="data-loader">
-          {renderDropdown()}
-          {fileType === 'access-policy' && renderDescription()}
-          {renderCatalogCollectionSelector()}
-          {renderFileSelector()}
-          {validationErrors.length > 0 && (
-            <ul className="data-loader__errors">
-              <h3>Validation warnings</h3>
-              {validationErrors.map((error) => {
-                return (
-                  <li key={error} className="data-loader__errors-error">
-                    {error}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-          {renderButton()}
-        </div>
+        {renderTabs()}
+        {renderContent()}
         <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
     </>
