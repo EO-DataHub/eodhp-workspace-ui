@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import './DataHub.scss';
 
+import CopyIcon from '@/assets/icons/copy.svg';
 import deleteIcon from '@/assets/icons/Delete.svg';
 import { Button } from '@/components/Button/Button';
 import { Field } from '@/components/Form/Fields/types';
@@ -168,7 +169,7 @@ export const DataHub = () => {
             <br />
             <strong>API Key:</strong> {newTokenValue}
             <Button className="copy-button" onClick={() => copyIndividualKey(newTokenValue)}>
-              ⧉
+              <img alt="copy" src={CopyIcon} />
             </Button>
           </p>
           <p>This is your only chance to copy it!</p>
