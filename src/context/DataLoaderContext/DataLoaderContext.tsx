@@ -78,10 +78,8 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
 
   const pollingRef = useRef(null);
 
-  const getLogs = async (refresh = false) => {
-    const toastMessage = refresh ? 'Logs successfully retrieved' : 'Logs refreshed';
+  const getLogs = async () => {
     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
-      toast(toastMessage);
       setLogs(logsPlaceholder.messages);
       return;
     }
@@ -96,7 +94,6 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
     }
 
     const json: LogResponse = await res.json();
-    toast(toastMessage);
 
     let messages = defaultLog;
 
@@ -118,7 +115,7 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
 
   useEffect(() => {
     if (!activeWorkspace) return;
-    getLogs(true);
+    getLogs();
   }, [activeWorkspace]);
 
   const setMessage = (message: string) => {
