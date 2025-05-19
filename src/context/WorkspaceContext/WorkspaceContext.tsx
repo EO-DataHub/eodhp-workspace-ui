@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react';
 
 import { getMembers } from '@/services/members/members';
@@ -72,20 +73,39 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   // SKU stands for stock-keeping unit defined https://github.com/EO-DataHub/accounting-service/blob/9583a1217ca6be898b700bd9a9cae59a51fca727/accounting_service/models.py#L64
   useEffect(() => {
     if (!activeWorkspace) return;
-    const func = async () => {
-      let skus: SKU[];
+    const fetchAllSkus = async () => {
       if (import.meta.env.VITE_WORKSPACE_LOCAL) {
-        skus = skuPlaceholder;
-      } else {
-        const res = await fetch(`/api/workspaces/${activeWorkspace.name}/accounting/usage-data`);
-        if (!res.ok) {
-          throw new Error('Error getting accounts');
-        }
-        skus = await res.json();
+        return skuPlaceholder;
       }
-      setSKUs(skus);
+
+      const all: SKU[] = [];
+      let after: string | undefined = undefined;
+      const limit = 1000;
+
+      while (true) {
+        const params = new URLSearchParams({ limit: String(limit) });
+        if (after) params.set('after', after);
+
+        const res = await fetch(
+          `/api/workspaces/${activeWorkspace.name}/accounting/usage-data?${params.toString()}`,
+        );
+        if (!res.ok) {
+          throw new Error('Error fetching usage data');
+        }
+        const batch: SKU[] = await res.json();
+        if (batch.length === 0) break;
+        all.push(...batch);
+        after = batch[batch.length - 1].uuid;
+      }
+
+      return all;
     };
-    func();
+
+    fetchAllSkus()
+      .then(setSKUs)
+      .catch((err) => {
+        console.error(err);
+      });
   }, [activeWorkspace]);
 
   const getAndSetWorkspaces = async () => {
