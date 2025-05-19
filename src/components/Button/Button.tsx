@@ -1,18 +1,18 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
-import './Button.scss';
+import { ReactNode } from 'react';
 
-type ButtonProps = {
-  onClick: () => void;
+import { Button as RadixButton, ButtonProps as RadixButtonProps } from '@radix-ui/themes';
+
+type CustomButtonProps = {
+  icon?: ReactNode;
   children: ReactNode;
   className?: string;
-  icon?: ReactNode;
-} & ButtonHTMLAttributes<HTMLButtonElement>;
+} & RadixButtonProps;
 
-export const Button = ({ onClick, children, className, icon, ...rest }: ButtonProps) => {
+export const Button = ({ icon, children, className, ...rest }: CustomButtonProps) => {
   return (
-    <button className={`button ${className}`} onClick={onClick} {...rest}>
-      {icon && <span className="button__icon">{icon}</span>}
+    <RadixButton className={className} {...rest}>
+      {icon && <span style={{ marginRight: '0.5rem', display: 'inline-flex' }}>{icon}</span>}
       {children}
-    </button>
+    </RadixButton>
   );
 };
