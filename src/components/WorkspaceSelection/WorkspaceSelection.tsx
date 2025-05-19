@@ -10,7 +10,7 @@ export const WorkspaceSelection = () => {
 
   return (
     <div className="workspace-selection content-border">
-      <p className="workspace-selection__title">Other Workspaces</p>
+      <p className="workspace-selection__title">Select Workspace</p>
       <div className="workspace-selection__tiles">
         {availableWorkspaces?.map((workspace) => (
           <ProfileTile
