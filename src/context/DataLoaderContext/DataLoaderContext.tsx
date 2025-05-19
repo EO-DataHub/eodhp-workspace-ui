@@ -1,7 +1,12 @@
-import { ReactNode, createContext, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { ReactNode, createContext, useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-toastify';
 import type { Catalog, Collection } from 'stac-js';
+
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { logsPlaceholder } from '@/pages/DataLoader/components/Logs/logsPlaceholder';
+import { Log, LogResponse } from '@/pages/DataLoader/components/Logs/types';
 
 export type DataLoaderContextType = {
   files: FileList;
@@ -35,6 +40,10 @@ export type DataLoaderContextType = {
 
   pageState: string;
   setPageState: (value: 'data-loader' | 'logs') => void;
+
+  pollingRef: React.MutableRefObject<() => void>;
+  logs: Log[];
+  logsError: string;
 };
 
 type DataLoaderProviderProps = {
@@ -47,6 +56,8 @@ export const DataLoaderContext = createContext<DataLoaderContextType | null>(nul
 DataLoaderContext.displayName = 'DataLoaderContext';
 
 export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderProviderProps) => {
+  const { activeWorkspace } = useWorkspace();
+
   const [files, setFiles] = useState<FileList>();
   const [fileName, setFileName] = useState<string>('');
   const [state, setState] = useState<State>('validate');
@@ -57,6 +68,58 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
   const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedCollection, setSelectedCollection] = useState<Collection>();
   const [pageState, setPageState] = useState<'data-loader' | 'logs'>('data-loader');
+
+  const defaultLog = [
+    { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
+  ];
+
+  const [logs, setLogs] = useState<Log[]>(defaultLog);
+  const [logsError, setLogsError] = useState<string>();
+
+  const pollingRef = useRef(null);
+
+  const getLogs = async (refresh = false) => {
+    const toastMessage = refresh ? 'Logs successfully retrieved' : 'Logs refreshed';
+    if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+      toast(toastMessage);
+      setLogs(logsPlaceholder.messages);
+      return;
+    }
+
+    const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest_logs`, {
+      method: 'POST',
+    });
+
+    if (!res.ok) {
+      setLogsError('Failed to get Logs');
+      return;
+    }
+
+    const json: LogResponse = await res.json();
+    toast(toastMessage);
+
+    let messages = defaultLog;
+
+    if (json.messages.length > 0) {
+      messages = json.messages;
+    }
+
+    setLogs(messages);
+  };
+
+  useEffect(() => {
+    if (pageState !== 'logs') return;
+    if (pollingRef.current) return;
+    // Poll  the endpoint every 10 seconds
+    pollingRef.current = setInterval(() => {
+      getLogs();
+    }, 10000);
+  }, [pageState]);
+
+  useEffect(() => {
+    if (!activeWorkspace) return;
+    getLogs(true);
+  }, [activeWorkspace]);
 
   const setMessage = (message: string) => {
     toast(message);
@@ -86,6 +149,9 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
         setSelectedCollection,
         pageState,
         setPageState,
+        pollingRef,
+        logs,
+        logsError,
         ...initialState,
       }}
     >

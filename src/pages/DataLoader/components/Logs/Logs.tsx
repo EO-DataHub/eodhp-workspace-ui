@@ -2,77 +2,19 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import './styles.scss';
 
 import { LazyLog } from 'react-lazylog';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
-import Refresh from '@/assets/icons/refresh.svg';
 import { useDataLoader } from '@/hooks/useDataLoader';
-import { useWorkspace } from '@/hooks/useWorkspace';
-
-import { logsPlaceholder } from './logsPlaceholder';
-import { Log, LogResponse } from './types';
 
 const Logs = () => {
-  const defaultLog = [
-    { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
-  ];
-
-  const { activeWorkspace } = useWorkspace();
-  const { pageState } = useDataLoader();
-
-  const [logs, setLogs] = useState<Log[]>(defaultLog);
-  const [error, setError] = useState<string>();
-  const [gettingLogs, setGettingLogs] = useState<boolean>(false);
-
-  const pollingRef = useRef(null);
-
-  const getLogs = async (refresh = false) => {
-    const toastMessage = refresh ? 'Logs successfully retrieved' : 'Logs refreshed';
-    if (import.meta.env.VITE_WORKSPACE_LOCAL) {
-      toast(toastMessage);
-      setLogs(logsPlaceholder.messages);
-      return;
-    }
-
-    const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest_logs`, {
-      method: 'POST',
-    });
-
-    if (!res.ok) {
-      setError('Failed to get Logs');
-      return;
-    }
-
-    const json: LogResponse = await res.json();
-    toast(toastMessage);
-
-    let messages = defaultLog;
-
-    if (json.messages.length > 0) {
-      messages = json.messages;
-    }
-
-    setLogs(messages);
-  };
-
-  useEffect(() => {
-    if (pageState !== 'logs') return;
-    if (pollingRef.current) return;
-    // Poll  the endpoint every 10 seconds
-    pollingRef.current = setInterval(() => {
-      getLogs();
-    }, 10000);
-  }, [pageState]);
-
-  useEffect(() => {
-    getLogs(true);
-  }, [activeWorkspace.name]);
+  const { logsError, logs } = useDataLoader();
 
   const renderError = () => {
-    return <div className="logs__error">{error}</div>;
+    return <div className="logs__error">{logsError}</div>;
   };
 
   const calculateContainerHeight = () => {
@@ -97,23 +39,6 @@ const Logs = () => {
       />
     );
   };
-  const renderButtons = () => {
-    return (
-      <div className="logs__buttons">
-        <img
-          className="logs__buttons-sort"
-          src={Refresh}
-          onClick={async () => {
-            if (gettingLogs) return;
-            setGettingLogs(true);
-            toast('Refreshing logs');
-            await getLogs();
-            setGettingLogs(false);
-          }}
-        />
-      </div>
-    );
-  };
 
   const getText = () => {
     const text = logs.map((log) => {
@@ -124,8 +49,7 @@ const Logs = () => {
 
   return (
     <div className="content-page logs">
-      {error && renderError()}
-      {renderButtons()}
+      {logsError && renderError()}
       {renderLogs()}
       <ToastContainer hideProgressBar position="bottom-left" theme="light" />
     </div>
