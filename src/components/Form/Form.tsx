@@ -10,6 +10,7 @@ import FormErrors from './Info/Error/FormErrors';
 interface FormProps {
   fieldData: Field[];
   header: string | ReactElement;
+  description?: string | ReactElement;
   onChange: (formData: { [key: string]: string }) => void;
   formErrors?: string[];
 }
@@ -20,7 +21,7 @@ const FIELD_MAP: { [key: string]: React.FC<InputFieldProps> } = {
   dropdown: DropdownField,
 };
 
-const Form = ({ fieldData, header, onChange, formErrors }: FormProps) => {
+const Form = ({ fieldData, header, description, onChange, formErrors }: FormProps) => {
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -68,6 +69,7 @@ const Form = ({ fieldData, header, onChange, formErrors }: FormProps) => {
   return (
     <div className="form">
       <h2>{header}</h2>
+      <div>{description}</div>
       {constructFields()}
       {formErrors?.length ? <FormErrors errors={formErrors} /> : null}
     </div>

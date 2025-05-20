@@ -1,10 +1,14 @@
 .add-workspace {
   &-modal {
-    width: 400px;
+    width: 100%;
     justify-self: center;
     display: flex;
     flex-direction: column;
     gap: 15px;
+
+    &-description {
+      margin: 15px 0px 15px 0px;
+    }
 
     span {
       width: 100%;

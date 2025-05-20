@@ -44,11 +44,29 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
 
   const [formData, setFormData] = useState<{ [key: string]: string }>(initialFormData);
 
+  const getModalDescription = () => {
+    return (
+      <div>
+        <div>
+          Here you can add new members to your workspace using their username. Your username can be
+          found by clicking on your profile icon on the far right of the header.
+        </div>
+        <div>
+          You can find out more{' '}
+          <a href="/docs/account-setup/workspaces/member-management/" target="_blank">
+            here
+          </a>
+        </div>
+      </div>
+    );
+  };
+
   const renderModalContent = () => {
     if (modalStatus === 'add') {
       return (
         <div className="top-bar-form-container">
           <Form
+            description={getModalDescription()}
             fieldData={ADD_MEMBER_FIELDS}
             header={'Add member'}
             onChange={(data) => setFormData(data)}
