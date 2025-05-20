@@ -49,10 +49,8 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
       <div>
         <div>
           Here you can add new members to your workspace using their username. Your username can be
-          found by clicking on your profile icon on the far right of the header.
-        </div>
-        <div>
-          You can find out more{' '}
+          found by clicking on your profile icon on the far right of the header. You can find out
+          more{' '}
           <a href="/docs/account-setup/workspaces/member-management/" target="_blank">
             here
           </a>

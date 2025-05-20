@@ -59,10 +59,7 @@ const AddWorkspace = () => {
         <div>
           A workspace will allow workflows, data and results to be stored on the Hub. It provides
           the facility for users to analyze data, process datasets, make commercial orders and
-          generate value-added outputs within the hosted Hub environment.
-        </div>
-        <div>
-          You can find out more{' '}
+          generate value-added outputs within the hosted Hub environment. You can find out more{' '}
           <a href="/docs/account-setup/workspaces/" target="_blank">
             here
           </a>

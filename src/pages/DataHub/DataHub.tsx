@@ -192,10 +192,7 @@ export const DataHub = () => {
       <div>
         <div>
           You will require an API key if you wish to securely connect to your workspace using
-          external tools or services
-        </div>
-        <div>
-          You can find out more{' '}
+          external tools or services. You can find out more{' '}
           <a href="/docs/account-setup/workspaces/workspace-credentials/" target="_blank">
             here
           </a>
