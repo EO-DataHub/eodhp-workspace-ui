@@ -94,7 +94,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
       const limit = 1000;
 
       while (true) {
-        const params = new URLSearchParams({ limit: String(limit) });
+        const params = new URLSearchParams({ limit: String(limit), 'time-aggregation': 'day' });
         if (after) params.set('after', after);
 
         const res = await fetch(
