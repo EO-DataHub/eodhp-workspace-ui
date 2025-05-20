@@ -9,7 +9,7 @@ import 'react-tabs/style/react-tabs.css';
 import { useWorkspace } from './hooks/useWorkspace';
 
 export const App = () => {
-  const { activeWorkspace, accounts, content } = useWorkspace();
+  const { activeWorkspace, content } = useWorkspace();
 
   return (
     <Theme accentColor="indigo" appearance="light" grayColor="gray" radius="large" scaling="100%">
@@ -22,8 +22,8 @@ export const App = () => {
 
           <div className="content">
             <WorkspaceSelection />
-            {activeWorkspace && accounts?.length ? <WorkspaceMenu /> : null}
-            {activeWorkspace && accounts?.length ? (
+            {activeWorkspace ? <WorkspaceMenu /> : null}
+            {activeWorkspace ? (
               <div className="workspace-content content-border">{content}</div>
             ) : null}
           </div>
