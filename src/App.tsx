@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { Theme } from '@radix-ui/themes';
 
 import { TopBar } from '@/components/TopBar/TopBar';
@@ -11,9 +9,8 @@ import 'react-tabs/style/react-tabs.css';
 import { useWorkspace } from './hooks/useWorkspace';
 
 export const App = () => {
-  const { activeWorkspace, accounts } = useWorkspace();
+  const { activeWorkspace, accounts, content } = useWorkspace();
 
-  const [content, setContent] = useState<React.ReactNode>();
   return (
     <Theme accentColor="indigo" appearance="light" grayColor="gray" radius="large" scaling="100%">
       <div
@@ -25,7 +22,7 @@ export const App = () => {
 
           <div className="content">
             <WorkspaceSelection />
-            {activeWorkspace && accounts?.length ? <WorkspaceMenu setContent={setContent} /> : null}
+            {activeWorkspace && accounts?.length ? <WorkspaceMenu /> : null}
             {activeWorkspace && accounts?.length ? (
               <div className="workspace-content content-border">{content}</div>
             ) : null}

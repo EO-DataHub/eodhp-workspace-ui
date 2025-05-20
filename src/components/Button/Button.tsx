@@ -10,7 +10,7 @@ type CustomButtonProps = {
 
 export const Button = ({ icon, children, className, ...rest }: CustomButtonProps) => {
   return (
-    <RadixButton className={className} {...rest}>
+    <RadixButton className={className} style={{ cursor: 'pointer' }} {...rest}>
       {icon && <span style={{ marginRight: '0.5rem', display: 'inline-flex' }}>{icon}</span>}
       {children}
     </RadixButton>
