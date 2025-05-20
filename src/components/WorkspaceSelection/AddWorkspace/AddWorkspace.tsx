@@ -53,10 +53,26 @@ const AddWorkspace = () => {
   const [formData, setFormData] = useState<{ [key: string]: string }>(getInitialFormData());
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
+  const getModalDescription = () => {
+    return (
+      <div className="add-workspace-modal-description">
+        <div>
+          A workspace will allow workflows, data and results to be stored on the Hub. It provides
+          the facility for users to analyze data, process datasets, make commercial orders and
+          generate value-added outputs within the hosted Hub environment. You can find out more{' '}
+          <a href="/docs/account-setup/workspaces/" target="_blank">
+            here
+          </a>
+        </div>
+      </div>
+    );
+  };
+
   const renderModalContent = () => {
     return (
       <div className="add-workspace-modal">
         <Form
+          description={getModalDescription()}
           fieldData={addWorkspaceFields}
           formErrors={formErrors}
           header={'Add New Workspace'}
