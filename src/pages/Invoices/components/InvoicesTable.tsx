@@ -27,10 +27,11 @@ const headers = [
 ];
 
 const InvoicesTable = () => {
-  const { getSKUPrice, getSKUUnit, skus, selectedMonth } = useInvoices();
+  const { getSKUPrice, getSKUUnit, skus, selectedMonth, breakdown, setPricingValid } =
+    useInvoices();
 
   let copy = [...skus];
-  if (!isNaN(selectedMonth)) {
+  if (breakdown === 'month' && !isNaN(selectedMonth)) {
     const currentYear = new Date().getFullYear();
 
     copy = copy.filter((sku) => {
@@ -58,6 +59,7 @@ const InvoicesTable = () => {
       price = sig3.format(raw);
     } else {
       price = 'Missing pricing';
+      setPricingValid(false);
     }
     return { ...copy, price, unit };
   });

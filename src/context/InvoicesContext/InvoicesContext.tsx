@@ -31,6 +31,7 @@ export type InvoicesContextType = {
   getSKUPrice: (skuName: string) => Price;
   getSKUUnit: (skuName: string) => string;
   pricingValid: boolean;
+  setPricingValid: (valid: boolean) => void;
   monthsShort: string[];
   getMonthInt: (offset?: number, date?: Date) => number;
   selectedMonth: number;
@@ -146,14 +147,10 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
   useEffect(() => {
     const getPrices = async () => {
       if (import.meta.env.VITE_WORKSPACE_LOCAL) {
-        const _pricingValid = !pricesPlaceholder.filter((price) => !price.price).length;
-        setPricingValid(_pricingValid);
         setPrices(pricesPlaceholder);
       } else {
         const res = await fetch('/api/accounting/prices');
         const _prices: Price[] = await res.json();
-        const _pricingValid = !!_prices.filter((price) => price.price).length;
-        setPricingValid(_pricingValid);
         setPrices(_prices);
       }
     };
@@ -315,6 +312,7 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
         setBreakdown,
         getSKUUnit,
         pricingValid,
+        setPricingValid,
         monthsShort,
         getMonthInt,
         selectedMonth,
