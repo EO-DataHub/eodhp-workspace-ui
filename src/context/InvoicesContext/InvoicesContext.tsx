@@ -28,6 +28,7 @@ export type InvoicesContextType = {
   getCostsTotal: (offset?: number) => string;
   getUsageTotal: (offset?: number) => string;
   getSKUPrice: (skuName: string) => Price;
+  getSKUUnit: (skuName: string) => string;
 };
 
 type InvoicesProviderProps = {
@@ -213,6 +214,10 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
     return prices.filter((price) => price.sku === skuName)[0];
   };
 
+  const getSKUUnit = (skuName: string): string => {
+    return skuUnits[skuName];
+  };
+
   const addUnit = async (sku: SKU) => {
     try {
       if (skuUnits[sku.item] !== undefined) return;
@@ -294,6 +299,7 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
         skus,
         breakdown,
         setBreakdown,
+        getSKUUnit,
         ...initialState,
       }}
     >

@@ -20,16 +20,21 @@ const headers = [
     internalName: 'price',
     externalName: 'Price (£)',
   },
+  {
+    internalName: 'unit',
+    externalName: 'Unit',
+  },
 ];
 
 const InvoicesTable = () => {
-  const { getSKUPrice, skus } = useInvoices();
+  const { getSKUPrice, getSKUUnit, skus } = useInvoices();
 
   const rows = skus.map((sku) => {
     const copy = { ...sku };
     copy.event_end = new Date(sku.event_end).toDateString();
     copy.quantity = parseFloat(copy.quantity.toPrecision(3));
     const skuPrice = getSKUPrice(sku.item);
+    const unit = getSKUUnit(sku.item);
     let price: string | number;
     const sig3 = new Intl.NumberFormat(undefined, {
       minimumSignificantDigits: 3,
@@ -42,7 +47,7 @@ const InvoicesTable = () => {
     } else {
       price = 'Missing pricing';
     }
-    return { ...copy, price };
+    return { ...copy, price, unit };
   });
 
   return (

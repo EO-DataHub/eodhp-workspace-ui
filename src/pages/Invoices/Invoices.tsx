@@ -4,6 +4,7 @@ import React from 'react';
 import './styles.scss';
 
 import InvoicesIcon from '@/assets/icons/invoices.svg';
+import Help from '@/components/Table/Components/Help/Help';
 import { useInvoices } from '@/hooks/useInvoices';
 
 import InvoicesChart from './components/InvoicesChart';
@@ -60,8 +61,14 @@ const Invoices = () => {
 
   const renderBreakdown = () => {
     return (
-      <div>
-        <span>Breakdown</span>
+      <div className="invoices-breakdown">
+        <div className="invoices-breakdown__header">
+          <span>Breakdown</span>
+          <Help
+            content="Select if you wish the data to be presented for each day. Or aggregated over the whole month"
+            type="Tooltip"
+          />
+        </div>
         <select value={breakdown} onChange={(e) => setBreakdown(e.target.value)}>
           <option value="month">Month</option>
           <option value="day">Day</option>
