@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import Table from '@/components/Table/Table';
-import { SKU } from '@/context/WorkspaceContext/types';
 import { useInvoices } from '@/hooks/useInvoices';
-import { useWorkspace } from '@/hooks/useWorkspace';
 
 const headers = [
   {
@@ -26,8 +23,7 @@ const headers = [
 ];
 
 const InvoicesTable = () => {
-  const { skus } = useWorkspace();
-  const { getSKUPrice } = useInvoices();
+  const { getSKUPrice, skus } = useInvoices();
 
   const rows = skus.map((sku) => {
     const copy = { ...sku };

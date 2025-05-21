@@ -1,16 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-constant-condition */
 import { ReactNode, createContext, useEffect, useState } from 'react';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { InvoiceData, Price } from '@/pages/Invoices/types';
 
-import { pricesPlaceholder, testSkuDefinition } from '../WorkspaceContext/placeholder';
+import {
+  pricesPlaceholder,
+  skuPlaceholder,
+  testSkuDefinition,
+} from '../WorkspaceContext/placeholder';
 import { SKU, SKUDefinition } from '../WorkspaceContext/types';
 
 export type InvoicesContextType = {
   pageState: State;
   setPageState: (value: State) => void;
 
+  breakdown: Breakdown;
+  setBreakdown: (breakdown: Breakdown) => void;
+
+  skus: SKU[];
   data: InvoiceData;
   skuUnitsWarnings: string[];
   skuUnits: { [key: string]: string };
@@ -26,6 +35,7 @@ type InvoicesProviderProps = {
   children: ReactNode;
 };
 type State = 'chart' | 'table';
+type Breakdown = 'month' | 'day' | string;
 
 export const InvoicesContext = createContext<InvoicesContextType | null>(null);
 InvoicesContext.displayName = 'InvoicesContext';
@@ -63,11 +73,53 @@ const skuUnitsWarnings: string[] = [];
 
 export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProviderProps) => {
   const [pageState, setPageState] = useState<State>('chart');
+  const [breakdown, setBreakdown] = useState<Breakdown>('month');
+  const [skus, setSKUs] = useState<SKU[]>([]);
 
-  const { skus } = useWorkspace();
+  const { activeWorkspace } = useWorkspace();
   const [months, setMonths] = useState<number[]>([]);
   const [data, setData] = useState<InvoiceData>();
   const [prices, setPrices] = useState<Price[]>([]);
+
+  // Attempt to get SKUs from workspace services. Will use placeholder data locally.
+  // SKU stands for stock-keeping unit defined https://github.com/EO-DataHub/accounting-service/blob/9583a1217ca6be898b700bd9a9cae59a51fca727/accounting_service/models.py#L64
+  useEffect(() => {
+    if (!activeWorkspace) return;
+    const fetchAllSkus = async () => {
+      if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+        return skuPlaceholder;
+      }
+
+      const all: SKU[] = [];
+      let after: string | undefined = undefined;
+      const limit = 1000;
+
+      while (true) {
+        const params = new URLSearchParams({ limit: String(limit) });
+        if (breakdown) params.set('time-aggregation', breakdown);
+        if (after) params.set('after', after);
+
+        const res = await fetch(
+          `/api/workspaces/${activeWorkspace.name}/accounting/usage-data?${params.toString()}`,
+        );
+        if (!res.ok) {
+          throw new Error('Error fetching usage data');
+        }
+        const batch: SKU[] = await res.json();
+        if (batch.length === 0) break;
+        all.push(...batch);
+        after = batch[batch.length - 1].uuid;
+      }
+
+      return all;
+    };
+
+    fetchAllSkus()
+      .then(setSKUs)
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [activeWorkspace, breakdown]);
 
   useEffect(() => {
     const currentMonth = getMonthInt();
@@ -239,6 +291,9 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
         getCostsTotal,
         getUsageTotal,
         getSKUPrice,
+        skus,
+        breakdown,
+        setBreakdown,
         ...initialState,
       }}
     >

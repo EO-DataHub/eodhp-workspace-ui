@@ -18,6 +18,8 @@ const Invoices = () => {
     getCostsTotal,
     skuUnitsWarnings,
     calculateRelativeToPreviousMonth,
+    breakdown,
+    setBreakdown,
   } = useInvoices();
 
   const renderHeader = () => {
@@ -52,6 +54,18 @@ const Invoices = () => {
         >
           Table
         </div>
+      </div>
+    );
+  };
+
+  const renderBreakdown = () => {
+    return (
+      <div>
+        <span>Breakdown</span>
+        <select value={breakdown} onChange={(e) => setBreakdown(e.target.value)}>
+          <option value="month">Month</option>
+          <option value="day">Day</option>
+        </select>
       </div>
     );
   };
@@ -124,6 +138,7 @@ const Invoices = () => {
     <div className="invoices content-page">
       {renderHeader()}
       {renderTabs()}
+      {renderBreakdown()}
       {renderContent()}
       <div className="invoices-value-container">
         {data && renderSKUWarnings()}
