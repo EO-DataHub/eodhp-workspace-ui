@@ -7,7 +7,8 @@ import { InvoiceData, Price } from '@/pages/Invoices/types';
 
 import {
   pricesPlaceholder,
-  skuPlaceholder,
+  skuDayPlaceholder,
+  skuMonthPlaceholder,
   testSkuDefinition,
 } from '../WorkspaceContext/placeholder';
 import { SKU, SKUDefinition } from '../WorkspaceContext/types';
@@ -29,6 +30,11 @@ export type InvoicesContextType = {
   getUsageTotal: (offset?: number) => string;
   getSKUPrice: (skuName: string) => Price;
   getSKUUnit: (skuName: string) => string;
+  pricingValid: boolean;
+  monthsShort: string[];
+  getMonthInt: (offset?: number, date?: Date) => number;
+  selectedMonth: number;
+  setSelectedMonth: (monthInt: number) => void;
 };
 
 type InvoicesProviderProps = {
@@ -73,7 +79,7 @@ const skuUnits: { [key: string]: string } = {};
 const skuUnitsWarnings: string[] = [];
 
 export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProviderProps) => {
-  const [pageState, setPageState] = useState<State>('chart');
+  const [pageState, setPageState] = useState<State>('table');
   const [breakdown, setBreakdown] = useState<Breakdown>('month');
   const [skus, setSKUs] = useState<SKU[]>([]);
 
@@ -81,6 +87,14 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
   const [months, setMonths] = useState<number[]>([]);
   const [data, setData] = useState<InvoiceData>();
   const [prices, setPrices] = useState<Price[]>([]);
+  const [pricingValid, setPricingValid] = useState<boolean>(false);
+
+  const getMonthInt = (offset = 0, date = new Date()) => {
+    date.setMonth(date.getMonth() + offset);
+    return parseInt(date.toLocaleString('en-US', { month: '2-digit' }));
+  };
+
+  const [selectedMonth, setSelectedMonth] = useState<number>(getMonthInt(-1));
 
   // Attempt to get SKUs from workspace services. Will use placeholder data locally.
   // SKU stands for stock-keeping unit defined https://github.com/EO-DataHub/accounting-service/blob/9583a1217ca6be898b700bd9a9cae59a51fca727/accounting_service/models.py#L64
@@ -88,7 +102,8 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
     if (!activeWorkspace) return;
     const fetchAllSkus = async () => {
       if (import.meta.env.VITE_WORKSPACE_LOCAL) {
-        return skuPlaceholder;
+        if (breakdown === 'month') return skuMonthPlaceholder;
+        if (breakdown === 'day') return skuDayPlaceholder;
       }
 
       const all: SKU[] = [];
@@ -131,10 +146,14 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
   useEffect(() => {
     const getPrices = async () => {
       if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+        const _pricingValid = !pricesPlaceholder.filter((price) => !price.price).length;
+        setPricingValid(_pricingValid);
         setPrices(pricesPlaceholder);
       } else {
         const res = await fetch('/api/accounting/prices');
-        const _prices = await res.json();
+        const _prices: Price[] = await res.json();
+        const _pricingValid = !!_prices.filter((price) => price.price).length;
+        setPricingValid(_pricingValid);
         setPrices(_prices);
       }
     };
@@ -204,11 +223,6 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
     };
     getData();
   }, [months, skus]);
-
-  const getMonthInt = (offset = 0, date = new Date()) => {
-    date.setMonth(date.getMonth() + offset);
-    return parseInt(date.toLocaleString('en-US', { month: '2-digit' }));
-  };
 
   const getSKUPrice = (skuName: string): Price => {
     return prices.filter((price) => price.sku === skuName)[0];
@@ -300,6 +314,11 @@ export const InvoicesProvider = ({ initialState = {}, children }: InvoicesProvid
         breakdown,
         setBreakdown,
         getSKUUnit,
+        pricingValid,
+        monthsShort,
+        getMonthInt,
+        selectedMonth,
+        setSelectedMonth,
         ...initialState,
       }}
     >

@@ -27,9 +27,21 @@ const headers = [
 ];
 
 const InvoicesTable = () => {
-  const { getSKUPrice, getSKUUnit, skus } = useInvoices();
+  const { getSKUPrice, getSKUUnit, skus, selectedMonth } = useInvoices();
 
-  const rows = skus.map((sku) => {
+  let copy = [...skus];
+  if (!isNaN(selectedMonth)) {
+    const currentYear = new Date().getFullYear();
+
+    copy = copy.filter((sku) => {
+      const date = new Date(sku.event_end);
+      const monthInt = date.getMonth();
+      const yearInt = date.getFullYear();
+      return yearInt === currentYear && monthInt === selectedMonth;
+    });
+  }
+
+  const rows = copy.map((sku) => {
     const copy = { ...sku };
     copy.event_end = new Date(sku.event_end).toDateString();
     copy.quantity = parseFloat(copy.quantity.toPrecision(3));

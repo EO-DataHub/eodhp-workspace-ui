@@ -21,6 +21,11 @@ const Invoices = () => {
     calculateRelativeToPreviousMonth,
     breakdown,
     setBreakdown,
+    pricingValid,
+    monthsShort,
+    getMonthInt,
+    selectedMonth,
+    setSelectedMonth,
   } = useInvoices();
 
   const renderHeader = () => {
@@ -43,12 +48,14 @@ const Invoices = () => {
   const renderTabs = () => {
     return (
       <div className="invoices-tabs">
-        <div
-          className={`invoices-tabs__tab ${pageState === 'chart' ? 'active' : null}`}
-          onClick={() => setPageState('chart')}
-        >
-          Chart
-        </div>
+        {pricingValid ? (
+          <div
+            className={`invoices-tabs__tab ${pageState === 'chart' ? 'active' : null}`}
+            onClick={() => setPageState('chart')}
+          >
+            Chart
+          </div>
+        ) : null}
         <div
           className={`invoices-tabs__tab ${pageState === 'table' ? 'active' : null}`}
           onClick={() => setPageState('table')}
@@ -62,17 +69,35 @@ const Invoices = () => {
   const renderBreakdown = () => {
     return (
       <div className="invoices-breakdown">
-        <div className="invoices-breakdown__header">
-          <span>Breakdown</span>
-          <Help
-            content="Select if you wish the data to be presented for each day. Or aggregated over the whole month"
-            type="Tooltip"
-          />
+        <div>
+          <div className="invoices-breakdown__header">
+            <span>Breakdown</span>
+            <Help
+              content="Select if you wish the data to be presented for each day. Or aggregated over the whole month"
+              type="Tooltip"
+            />
+          </div>
+          <select value={breakdown} onChange={(e) => setBreakdown(e.target.value)}>
+            <option value="month">Month</option>
+            <option value="day">Day</option>
+          </select>
         </div>
-        <select value={breakdown} onChange={(e) => setBreakdown(e.target.value)}>
-          <option value="month">Month</option>
-          <option value="day">Day</option>
-        </select>
+        {breakdown === 'month' ? (
+          <div>
+            <div className="invoices-breakdown__header">
+              <span>Month</span>
+              <Help content="Select which month you wish to view data for" type="Tooltip" />
+            </div>
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+            >
+              <option value=""></option>
+              <option value={getMonthInt(-1)}>{monthsShort[getMonthInt(-1)]}</option>
+              <option value={getMonthInt(0)}>{monthsShort[getMonthInt(0)]}</option>
+            </select>
+          </div>
+        ) : null}
       </div>
     );
   };
@@ -88,20 +113,6 @@ const Invoices = () => {
     if (!thisMonthUsage || !prevMonthUsage || !data) return;
 
     return componentMap[pageState];
-  };
-
-  const renderUsage = () => {
-    return parseFloat(getUsageTotal()) > 0 ? (
-      <div className="invoices-value__costs-item">
-        <span className="invoices-value__costs-header">Usage: </span>
-        <span className="invoices-value__costs-value">{` ${getUsageTotal()}`}</span>
-      </div>
-    ) : (
-      <div className="invoices-value__costs-item">
-        <span className="invoices-value__costs-header">Usage: </span>
-        <span className="invoices-value__costs-value">{` 0`}</span>
-      </div>
-    );
   };
 
   const renderCosts = () => {
@@ -149,14 +160,13 @@ const Invoices = () => {
       {renderContent()}
       <div className="invoices-value-container">
         {data && renderSKUWarnings()}
-        <div>
-          <span className="invoices-value__header">Current monthly</span>
-          <div className="invoices-value__costs">
-            {renderUsage()}
-            {renderCosts()}
+        {pricingValid ? (
+          <div>
+            <span className="invoices-value__header">Current monthly</span>
+            <div className="invoices-value__costs">{renderCosts()}</div>
           </div>
-        </div>
-        {renderComparison()}
+        ) : null}
+        {pricingValid ? renderComparison() : null}
       </div>
     </div>
   );
