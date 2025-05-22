@@ -156,6 +156,7 @@ export const DataHub = () => {
       setLoading(true);
       await deleteToken(activeWorkspace.name, tokenId);
       setTokens(tokens.filter((token) => token.id !== tokenId));
+      setMessage('Token deleted.');
     } catch (error) {
       console.error('Failed to delete token:', error);
       setMessage('Failed to delete token.');
