@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
-import { ToastContainer, toast } from 'react-toastify';
-
+import { ToastContainer } from 'react-toastify';
 import type { Catalog } from 'stac-js';
 
 import Refresh from '@/assets/icons/refresh.svg';

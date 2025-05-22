@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import '@/styles/main.scss';
 import './styles.scss';
 
-import { ToastContainer, toast } from 'react-toastify';
-
 import { IoMdPersonAdd } from 'react-icons/io';
 import { MdPersonRemove } from 'react-icons/md';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { Button } from '@/components/Button/Button';
 import { Field } from '@/components/Form/Fields/types';
