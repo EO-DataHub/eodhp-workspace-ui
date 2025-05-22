@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 import type { Catalog } from 'stac-js';
 
 import Refresh from '@/assets/icons/refresh.svg';
@@ -55,7 +57,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
     })[0];
     setSelectedCatalog(catalog);
 
-    // TODO: Warning message
+    setMessage('Catalogue not found'); // Warning message
     if (!catalog.links.length) return;
 
     const collectionLink = catalog.links.filter((link) => link.rel === 'collections')[0]?.href;
@@ -68,7 +70,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
         const res = await fetch(collectionLink);
 
         if (!res.ok) {
-          // TODO: Display this error to the user
+          setMessage('Failed to fetch collections');
           throw new Error('Failed to fetch collections');
         }
 
@@ -111,6 +113,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
             );
           })}
         </select>
+        <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
     );
   };
@@ -145,6 +148,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
             </Button>
           )}
         </div>
+        <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
     );
   };
@@ -166,6 +170,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
           </Button>
           <Button onClick={() => setAddingNewCollection(false)}>Cancel</Button>
         </div>
+        <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
     );
   };
@@ -264,6 +269,7 @@ const Selector = ({ catalogues }: SelectorProps) => {
       {renderCollectionsContainer()}
       {addingNewCollection && renderAddNewCollection()}
       {renderViewSTACButtons()}
+      <ToastContainer hideProgressBar position="bottom-left" theme="light" />
     </div>
   );
 };

@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import './styles.scss';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 import { MdDelete } from 'react-icons/md';
 
 import { ProfileTile } from '@/components/ProfileTile/ProfileTile';
@@ -14,6 +16,10 @@ interface DeleteRowProps {
   member: Member;
   onDeleteSuccess: () => void;
 }
+
+const setMessage = (message: string) => {
+    toast(message);
+  };
 
 const DeleteRow = ({ member, onDeleteSuccess }: DeleteRowProps) => {
   const { activeWorkspace } = useWorkspace();
@@ -41,11 +47,13 @@ const DeleteRow = ({ member, onDeleteSuccess }: DeleteRowProps) => {
             } catch (error) {
               console.error(error);
               console.error(`Error deleting ${member.username}`);
+              setMessage(`Error deleting ${member.username}`);
             }
           }}
         >
           Remove
         </div>
+        <ToastContainer hideProgressBar position="bottom-left" theme="light" />
         <div
           className="delete-row__warning-no"
           onClick={(e) => {

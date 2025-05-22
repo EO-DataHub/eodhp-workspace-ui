@@ -4,6 +4,8 @@
 import { useEffect, useState } from 'react';
 import './DataHub.scss';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 import CopyIcon from '@/assets/icons/copy.svg';
 import deleteIcon from '@/assets/icons/Delete.svg';
 import { Button } from '@/components/Button/Button';
@@ -51,6 +53,10 @@ export const DataHub = () => {
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const [tokenFormInputs, setTokenFormInputs] = useState<Field[]>([]);
 
+  const setMessage = (message: string) => {
+    toast(message);
+  };
+
   useEffect(() => {
     const TOKEN_FORM_INPUTS: Field[] = [
       {
@@ -97,6 +103,7 @@ export const DataHub = () => {
         setTokens(_tokens);
       } catch (error) {
         console.error('Failed to fetch tokens:', error);
+        setMessage('Failed to fetch tokens.');
         setError('Failed to fetch tokens.');
       } finally {
         setLoading(false);
@@ -121,6 +128,7 @@ export const DataHub = () => {
       setFormData(getDefaultFormValues());
     } catch (error) {
       console.error('Failed to create token:', error);
+      setMessage('Failed to create token:');
       setFormData(getDefaultFormValues());
       setError('Failed to create token.');
     } finally {
@@ -149,6 +157,7 @@ export const DataHub = () => {
       setTokens(tokens.filter((token) => token.id !== tokenId));
     } catch (error) {
       console.error('Failed to delete token:', error);
+      setMessage('Failed to delete token.');
       setError('Failed to delete token.');
     } finally {
       setLoading(false);
@@ -259,6 +268,7 @@ export const DataHub = () => {
       </Button>
 
       {tokens.length > 0 ? <Table headers={tableHeaders} maxRowsPerPage={10} rows={rows} /> : null}
+      <ToastContainer hideProgressBar position="bottom-left" theme="light" />
     </div>
   );
 };

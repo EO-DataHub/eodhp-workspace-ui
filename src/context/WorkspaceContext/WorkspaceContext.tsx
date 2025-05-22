@@ -8,6 +8,8 @@ import React, {
   useState,
 } from 'react';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 import { getMembers } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
@@ -62,6 +64,10 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   const [members, setMembers] = useState<Member[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [skus, setSKUs] = useState<SKU[]>([]);
+
+  const setMessage = (message: string) => {
+    toast(message);
+  };
 
   useEffect(() => {
     const func = async () => {
@@ -148,6 +154,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
       setActiveWorkspace(newWorkspace);
     } catch (error) {
       console.error('Error retrieving workspaces');
+      setMessage('Error retrieving workspaces');
       if (storedWorkspace) setActiveWorkspace(storedWorkspace);
     }
   };
@@ -210,6 +217,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     } catch (error) {
       console.error(error);
       console.error('Error getting workspace members');
+      setMessage('Error getting workspace members');
     }
   };
 
