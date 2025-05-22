@@ -252,6 +252,5 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     >
       {children}
     </WorkspaceContext.Provider>
-    <ToastContainer hideProgressBar position="bottom-left" theme="light" />
   );
 };

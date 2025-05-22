@@ -126,9 +126,10 @@ export const DataHub = () => {
       setTokens([...tokens, tokenData]);
       setNewTokenValue(token);
       setFormData(getDefaultFormValues());
+      setMessage('Token created.');
     } catch (error) {
       console.error('Failed to create token:', error);
-      setMessage('Failed to create token:');
+      setMessage('Failed to create token.');
       setFormData(getDefaultFormValues());
       setError('Failed to create token.');
     } finally {
