@@ -161,6 +161,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
 
   useEffect(() => {
     getAndSetWorkspaces();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
