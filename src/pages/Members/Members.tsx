@@ -44,7 +44,7 @@ const Members = () => {
 
   const rows =
     members?.map((member) => {
-      const role = workspaceOwner === member.username ? 'Admin' : 'Member';
+      const role = workspaceOwner === member.id ? 'Admin' : 'Member';
 
       return {
         username: member.username,
@@ -52,7 +52,7 @@ const Members = () => {
         email: member.email,
         role,
         delete:
-          role !== 'Admin' ? (
+          role !== 'Admin' ? null : (
             <button
               aria-label={`Delete ${member.username}`}
               className="table-column-delete-button"
@@ -61,7 +61,7 @@ const Members = () => {
             >
               <MdDelete size={22} />
             </button>
-          ) : null,
+          ),
       };
     }) ?? [];
 
