@@ -92,7 +92,7 @@ const Invoices = () => {
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
             >
-              <option value=""></option>
+              <option value="">All</option>
               <option value={getMonthInt(-1)}>{monthsShort[getMonthInt(-1)]}</option>
               <option value={getMonthInt(0)}>{monthsShort[getMonthInt(0)]}</option>
             </select>
