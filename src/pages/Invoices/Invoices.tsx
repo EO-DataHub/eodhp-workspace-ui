@@ -16,9 +16,7 @@ const Invoices = () => {
     setPageState,
     data,
     getUsageTotal,
-    getCostsTotal,
     skuUnitsWarnings,
-    calculateRelativeToPreviousMonth,
     breakdown,
     setBreakdown,
     pricingValid,
@@ -38,7 +36,7 @@ const Invoices = () => {
           <img alt="Members" src={InvoicesIcon} />
           <div className="header-right-text">
             <span className="header-right-title">Invoices area</span> allows you to see a breakdown
-            of the current and previous months total usage.
+            of the months usage
           </div>
         </div>
       </div>
@@ -93,6 +91,7 @@ const Invoices = () => {
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
             >
               <option value="">All</option>
+              <option value={getMonthInt(-2)}>{monthsShort[getMonthInt(-2)]}</option>
               <option value={getMonthInt(-1)}>{monthsShort[getMonthInt(-1)]}</option>
               <option value={getMonthInt(0)}>{monthsShort[getMonthInt(0)]}</option>
             </select>
@@ -113,26 +112,6 @@ const Invoices = () => {
     if (!thisMonthUsage || !prevMonthUsage || !data) return;
 
     return componentMap[pageState];
-  };
-
-  const renderCosts = () => {
-    if (skuUnitsWarnings.length) return;
-    const total = getCostsTotal();
-    if (parseFloat(total) <= 0) return;
-    return (
-      <div className="invoices-value__costs-item">
-        <span className="invoices-value__costs-header">Costs: </span>
-        <span className="invoices-value__costs-value">{` £${total}`}</span>
-      </div>
-    );
-  };
-  const renderComparison = () => {
-    if (!data) return;
-    const currMonthTotal = getUsageTotal();
-    const prevMonthTotal = getUsageTotal(1);
-
-    if (!currMonthTotal || !prevMonthTotal) return;
-    return <span className="invoices-value__sub">{` ${calculateRelativeToPreviousMonth()}`}</span>;
   };
 
   const renderSKUWarnings = () => {
@@ -158,16 +137,7 @@ const Invoices = () => {
       {renderTabs()}
       {renderBreakdown()}
       {renderContent()}
-      <div className="invoices-value-container">
-        {data && renderSKUWarnings()}
-        {pricingValid ? (
-          <div>
-            <span className="invoices-value__header">Current monthly</span>
-            <div className="invoices-value__costs">{renderCosts()}</div>
-          </div>
-        ) : null}
-        {pricingValid ? renderComparison() : null}
-      </div>
+      <div className="invoices-value-container">{data && renderSKUWarnings()}</div>
     </div>
   );
 };
