@@ -4,6 +4,7 @@ import './styles.scss';
 
 import { IoMdPersonAdd } from 'react-icons/io';
 import { MdPersonRemove } from 'react-icons/md';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { Button } from '@/components/Button/Button';
 import { Field } from '@/components/Form/Fields/types';
@@ -33,6 +34,10 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
   const [modal, setModal] = useState<boolean>(false);
   const [modalStatus, setModalStatus] = useState<'add' | 'remove'>();
   const [formErrors, setFormErrors] = useState<string[]>([]);
+
+  const setMessage = (message: string) => {
+    toast(message);
+  };
 
   const initialFormData = () => {
     const data = {};
@@ -124,6 +129,7 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
               setModal(false);
             } catch (error) {
               setFormErrors(['Error adding member']);
+              setMessage('Error adding member');
             }
           }}
         />
@@ -149,6 +155,7 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
             Remove Member
           </Button>
         )}
+        <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
     </>
   );
