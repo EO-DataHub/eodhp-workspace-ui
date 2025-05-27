@@ -45,7 +45,7 @@ const Members = () => {
 
   const getDelete = (role, member) => {
     if (!isWorkspaceOwner) return null;
-    if (role !== 'Admin') return null;
+    if (role === 'Admin') return null;
     return (
       <button
         aria-label={`Delete ${member.username}`}
