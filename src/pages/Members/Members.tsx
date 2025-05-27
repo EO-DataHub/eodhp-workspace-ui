@@ -12,7 +12,8 @@ import { deleteMember } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
 const Members = () => {
-  const { members, workspaceOwner, activeWorkspace, getAndSetMembers } = useWorkspace();
+  const { members, workspaceOwner, activeWorkspace, getAndSetMembers, isWorkspaceOwner } =
+    useWorkspace();
 
   const handleDelete = async (member: Member) => {
     try {
@@ -52,7 +53,7 @@ const Members = () => {
         email: member.email,
         role,
         delete:
-          role === 'Admin' ? null : (
+          isWorkspaceOwner && role === 'Admin' ? null : (
             <button
               aria-label={`Delete ${member.username}`}
               className="table-column-delete-button"
