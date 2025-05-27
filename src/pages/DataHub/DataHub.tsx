@@ -230,7 +230,7 @@ export const DataHub = () => {
 
   const rows = tokens.reverse().map((token) => {
     const expiry = new Date(token.expiry).toDateString();
-    token.expiration = expiry;
+    token.expiry = expiry;
     return {
       name: token.name,
       scope: token.scope,
