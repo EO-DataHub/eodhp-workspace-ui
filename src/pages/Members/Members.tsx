@@ -52,7 +52,7 @@ const Members = () => {
         email: member.email,
         role,
         delete:
-          role !== 'Admin' ? null : (
+          role === 'Admin' ? null : (
             <button
               aria-label={`Delete ${member.username}`}
               className="table-column-delete-button"
