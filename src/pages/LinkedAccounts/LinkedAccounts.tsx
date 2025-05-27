@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import './styles.scss';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 import Cross from '@/assets/icons/cross.svg';
 import link from '@/assets/icons/link.svg';
 import Tick from '@/assets/icons/tick.svg';
@@ -63,6 +65,10 @@ const LinkedAccounts = () => {
   const [modal, setModal] = useState<boolean>(false);
   const [accountToUnlink, setAccountToUnlink] = useState<AccountMetaData>();
 
+  const setMessage = (message: string) => {
+    toast(message);
+  };
+
   const [legacyData, setLegacyData] = useState<ContractData>({
     options: [],
     key: '',
@@ -90,6 +96,7 @@ const LinkedAccounts = () => {
     const res = await fetch(`/api/workspaces/${activeWorkspace.name}/linked-accounts`);
     if (!res.ok) {
       setError('Failed to get linked accounts');
+      setMessage('Failed to get linked accounts');
       return;
     }
     const accounts: string[] = await res.json();
@@ -307,12 +314,14 @@ const LinkedAccounts = () => {
       );
       if (!res.ok) {
         setError('Error validating account, please check your API key');
+        setMessage('Error validating account, please check your API key');
         return;
       }
 
       const json: ValidationResponse = await res.json();
       if (!json.contracts) {
         setError('No contracts associated to this API key');
+        setMessage('No contracts associated to this API key');
         return;
       }
 
@@ -373,6 +382,7 @@ const LinkedAccounts = () => {
       );
       if (!res.ok) {
         setError('Error validating Planet account, please check your API key');
+        setMessage('Error validating Planet account, please check your API key');
         return;
       }
 
@@ -404,6 +414,7 @@ const LinkedAccounts = () => {
       });
       if (!res.ok) {
         setError('Error linking account');
+        setMessage('Error linking account');
         return;
       }
       updateData(account, 'linked', true);
@@ -426,6 +437,7 @@ const LinkedAccounts = () => {
       );
       if (!res.ok) {
         setError('Error linking account');
+        setMessage('Error linking account');
         return;
       }
       updateData(account, 'linked', true);
@@ -469,6 +481,7 @@ const LinkedAccounts = () => {
             <div key={account.internalName}>{renderAccount(account)}</div>
           ))}
         </div>
+        <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
     </>
   );

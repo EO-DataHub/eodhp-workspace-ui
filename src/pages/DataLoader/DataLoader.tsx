@@ -321,6 +321,7 @@ const DataLoader = () => {
           setMessage('File successfully uploaded');
         } catch (error) {
           console.error(error);
+          setMessage('File not uploaded');
         }
       } else {
         try {
@@ -388,6 +389,7 @@ const DataLoader = () => {
           setMessage('File successfully uploaded');
         } catch (error) {
           console.error(error);
+          setMessage('File not uploaded');
         }
       }
     }
