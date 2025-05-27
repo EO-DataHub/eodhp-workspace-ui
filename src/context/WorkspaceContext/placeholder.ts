@@ -57,7 +57,6 @@ export const workspacesPlaceholder: Workspace[] = [
     id: '5ca33d4a-bfd8-495f-8684-9b157be3f36c',
     name: 'dev-test-workspace',
     account: '382b1c98-eaca-4914-b3f6-f6f979d42683',
-    member_group: 'prod',
     status: 'pending',
     owner: 'isaacjenkinstpz',
     stores: [
@@ -87,7 +86,6 @@ export const workspacesPlaceholder: Workspace[] = [
     id: 'd389681e-9df9-44c1-82bf-26563e7b18f1',
     name: 'boeing',
     account: 'd7735edf-1900-43fb-bc2f-408229d3b054',
-    member_group: 'prod',
     owner: 'isaacjenkinstpz',
     status: 'ready',
     stores: [
@@ -117,7 +115,6 @@ export const workspacesPlaceholder: Workspace[] = [
     id: '85b445c0-76cc-452a-9427-cfd7823c8b4c',
     name: 'boeing',
     account: '68c90563-5826-4146-afad-e665c1028602',
-    member_group: 'prod',
     status: 'pending',
     owner: 'isaacjenkinstpz',
     stores: [
@@ -147,7 +144,6 @@ export const workspacesPlaceholder: Workspace[] = [
     id: 'e1752484-cff6-49e7-a56b-0d9d5070f586',
     name: 'lockheed',
     account: 'cf24be86-af59-4e92-a5a6-7872b7eac777',
-    member_group: 'dev',
     owner: 'isaacjenkinstpz',
     status: 'failed',
     stores: [
@@ -177,7 +173,6 @@ export const workspacesPlaceholder: Workspace[] = [
     id: 'df13a0ce-08ad-4dd7-90b6-d275b711e879',
     name: 'lockheed',
     account: 'a00ef332-4aff-4071-b3ff-aeb073ee9db2',
-    member_group: 'qa',
     owner: 'isaacjenkinstpz',
     status: 'failed',
     stores: [
