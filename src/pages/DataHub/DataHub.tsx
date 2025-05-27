@@ -229,6 +229,8 @@ export const DataHub = () => {
   };
 
   const rows = tokens.reverse().map((token) => {
+    const expiry = new Date(token.expiration).toDateString();
+    token.expiration = expiry;
     return {
       name: token.name,
       scope: token.scope,

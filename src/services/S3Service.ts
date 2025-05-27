@@ -16,5 +16,7 @@ export const createToken = async (workspaceName: string): Promise<S3Credentials>
     });
 
   const newToken: S3Credentials = await response.json();
+  const expiry = new Date(newToken.expiration).toDateString();
+  newToken.expiration = expiry;
   return newToken;
 };
