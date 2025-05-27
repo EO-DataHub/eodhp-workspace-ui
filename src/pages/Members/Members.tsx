@@ -44,7 +44,7 @@ const Members = () => {
 
   const rows =
     members?.map((member) => {
-      const role = workspaceOwner === member.id ? 'Admin' : 'Member';
+      const role = workspaceOwner === member.username ? 'Admin' : 'Member';
 
       return {
         username: member.username,

@@ -191,7 +191,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         });
 
         setIsWorkspaceOwner(_isWorkspaceOwner);
-        setWorkspaceOwner(activeWorkspace.account);
+        setWorkspaceOwner(activeWorkspace.owner);
       } catch (error) {
         console.error(error.message);
       }
