@@ -2,7 +2,7 @@ export type Workspace = {
   id: string;
   name: string;
   account: string;
-  member_group: string;
+  owner: string;
   status: string;
   stores: Store[];
   last_updated: string;

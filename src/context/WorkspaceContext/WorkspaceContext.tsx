@@ -179,21 +179,19 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         }
 
         let _isWorkspaceOwner = false;
-        let _workspaceOwner = '';
 
         accounts.forEach((account) => {
           if (account.workspaces?.length) {
             account.workspaces.forEach((workspace) => {
               if (activeWorkspace.id === workspace.id) {
                 _isWorkspaceOwner = true;
-                _workspaceOwner = account.accountOwner;
               }
             });
           }
         });
 
         setIsWorkspaceOwner(_isWorkspaceOwner);
-        setWorkspaceOwner(_workspaceOwner);
+        setWorkspaceOwner(activeWorkspace.owner);
       } catch (error) {
         console.error(error.message);
       }

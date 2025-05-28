@@ -12,7 +12,8 @@ import { deleteMember } from '@/services/members/members';
 import { Member } from '@/services/members/types';
 
 const Members = () => {
-  const { members, workspaceOwner, activeWorkspace, getAndSetMembers } = useWorkspace();
+  const { members, workspaceOwner, activeWorkspace, getAndSetMembers, isWorkspaceOwner } =
+    useWorkspace();
 
   const handleDelete = async (member: Member) => {
     try {
@@ -42,6 +43,21 @@ const Members = () => {
     { externalName: '', internalName: 'delete' },
   ];
 
+  const getDelete = (role, member) => {
+    if (!isWorkspaceOwner) return null;
+    if (role === 'Admin') return null;
+    return (
+      <button
+        aria-label={`Delete ${member.username}`}
+        className="table-column-delete-button"
+        style={{ all: 'unset', cursor: 'pointer' }}
+        onClick={() => handleDelete(member)}
+      >
+        <MdDelete size={22} />
+      </button>
+    );
+  };
+
   const rows =
     members?.map((member) => {
       const role = workspaceOwner === member.username ? 'Admin' : 'Member';
@@ -51,17 +67,7 @@ const Members = () => {
         name: `${member.firstName} ${member.lastName}`,
         email: member.email,
         role,
-        delete:
-          role !== 'Admin' ? (
-            <button
-              aria-label={`Delete ${member.username}`}
-              className="table-column-delete-button"
-              style={{ all: 'unset', cursor: 'pointer' }}
-              onClick={() => handleDelete(member)}
-            >
-              <MdDelete size={22} />
-            </button>
-          ) : null,
+        delete: getDelete(role, member),
       };
     }) ?? [];
 
