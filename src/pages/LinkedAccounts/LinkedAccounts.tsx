@@ -172,7 +172,7 @@ const LinkedAccounts = () => {
         </div>
         <div className="linked-accounts__account-input">
           <input
-            disabled={account.linked}
+            disabled={account.linked || !isWorkspaceOwner}
             placeholder="Enter your API key"
             type={account.linked ? 'password' : 'text'}
             value={account.value}
@@ -475,6 +475,20 @@ const LinkedAccounts = () => {
       )}
       <div className="content-page">
         {renderHeader()}
+        {!isWorkspaceOwner && (
+          <div
+            style={{
+              backgroundColor: '#fff8e1',
+              color: '#8a6d3b',
+              padding: '1rem',
+              borderRadius: '5px',
+              marginBottom: '1rem',
+              border: '1px solid #faebcc',
+            }}
+          >
+            You have view-only access. Only workspace owners can edit or link API keys.
+          </div>
+        )}
         {<div className="linked-accounts__error">{error}</div>}
         <div className="linked-accounts">
           {data.map((account) => (

@@ -8,9 +8,9 @@ type CustomButtonProps = {
   className?: string;
 } & RadixButtonProps;
 
-export const Button = ({ icon, children, className, ...rest }: CustomButtonProps) => {
+export const Button = ({ icon, children, className = '', ...rest }: CustomButtonProps) => {
   return (
-    <RadixButton className={className} style={{ cursor: 'pointer' }} {...rest}>
+    <RadixButton className={className} {...rest}>
       {icon && <span style={{ marginRight: '0.5rem', display: 'inline-flex' }}>{icon}</span>}
       {children}
     </RadixButton>
