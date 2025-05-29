@@ -38,6 +38,13 @@ button {
   border: none;
 }
 
+button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  pointer-events: all;
+}
+
 h1,
 h2,
 h3,

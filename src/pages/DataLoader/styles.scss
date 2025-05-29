@@ -104,7 +104,6 @@ $width: 600px;
   &-tabs {
     display: flex;
     justify-content: left;
-    border-bottom: 1px solid lightgrey;
     margin-bottom: 25px;
     width: 100%;
 
@@ -113,17 +112,14 @@ $width: 600px;
       display: flex;
       justify-content: center;
       transition: all 0.2s linear;
-      background-color: rgb(158 158 158);
-      color: grey;
+      background-color: #fff;
+      color: black;
       cursor: pointer;
-
-      &:hover {
-        background-color: lightgrey;
-      }
     }
 
     &__tab.active {
       background-color: white;
+      border-bottom: 2px solid var(--button-bg);
       color: black;
       font-weight: 600;
       cursor: not-allowed;
