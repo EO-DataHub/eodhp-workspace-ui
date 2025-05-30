@@ -1,7 +1,7 @@
 {
   "name": "eodhp-vite-react-starter",
   "private": true,
-  "version": "0.1.12",
+  "version": "0.1.19",
   "type": "module",
   "engines": {
     "node": "20.12.2"
@@ -28,6 +28,7 @@
     "@radix-ui/themes": "^3.2.1",
     "aws-amplify": "^6.6.4-storage-browser.4db9fef.0",
     "chart.js": "^4.4.8",
+    "luxon": "^3.6.1",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
     "react-data-table-component": "^7.7.0",

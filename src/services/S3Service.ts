@@ -1,3 +1,5 @@
+import { convertUTCToLocalTime } from '@/utils/time';
+
 import { hubClient } from './hubClient';
 
 export const createToken = async (workspaceName: string): Promise<S3Credentials> => {
@@ -16,7 +18,6 @@ export const createToken = async (workspaceName: string): Promise<S3Credentials>
     });
 
   const newToken: S3Credentials = await response.json();
-  const expiry = new Date(newToken.expiration).toDateString();
-  newToken.expiration = expiry;
+  newToken.expiration = convertUTCToLocalTime(newToken.expiration);
   return newToken;
 };

@@ -7,6 +7,7 @@ import type { Catalog, Collection } from 'stac-js';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { logsPlaceholder } from '@/pages/DataLoader/components/Logs/logsPlaceholder';
 import { Log, LogResponse } from '@/pages/DataLoader/components/Logs/types';
+import { displayUTCTime } from '@/utils/time';
 
 export type DataLoaderContextType = {
   files: FileList;
@@ -70,7 +71,11 @@ export const DataLoaderProvider = ({ initialState = {}, children }: DataLoaderPr
   const [pageState, setPageState] = useState<'data-loader' | 'logs'>('data-loader');
 
   const defaultLog = [
-    { datetime: new Date().toDateString(), message: 'No logs to display', level: 'Error' },
+    {
+      datetime: displayUTCTime(new Date().toISOString()),
+      message: 'No logs to display',
+      level: 'Error',
+    },
   ];
 
   const [logs, setLogs] = useState<Log[]>(defaultLog);

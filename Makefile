@@ -5,6 +5,14 @@ version ?= $(shell jq -r .version package.json)
 .SILENT:
 MAKEFLAGS += --no-print-directory
 
+.PHONY: init
+init:
+	$(npm) install
+
+.PHONY: run-dev
+run-dev:
+	export VITE_WORKSPACE_LOCAL=true && $(npm) run dev
+
 .PHONY: build
 build:
 	$(npm) run build

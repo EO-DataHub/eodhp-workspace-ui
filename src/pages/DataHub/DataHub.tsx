@@ -15,6 +15,7 @@ import Modal from '@/components/Modal/Modal';
 import Table from '@/components/Table/Table';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { createToken, deleteToken, listTokens } from '@/services/credentialsService';
+import { convertUTCToLocalTime } from '@/utils/time';
 
 import { tokensPlaceholder } from './placeholder';
 
@@ -229,15 +230,11 @@ export const DataHub = () => {
   };
 
   const rows = tokens.reverse().map((token) => {
-    const expiry = new Date(token.expiry).toDateString();
-    token.expiry = expiry;
-    const created = new Date(token.created).toDateString();
-    token.expiry = created;
     return {
       name: token.name,
       scope: token.scope,
-      created: token.created,
-      expiry: token.expiry,
+      created: convertUTCToLocalTime(token.created),
+      expiry: convertUTCToLocalTime(token.expiry),
       delete: renderDelete(token),
     };
   });

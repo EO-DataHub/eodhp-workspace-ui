@@ -5,6 +5,7 @@ import { LazyLog } from 'react-lazylog';
 import { ToastContainer } from 'react-toastify';
 
 import { useDataLoader } from '@/hooks/useDataLoader';
+import { displayUTCTime } from '@/utils/time';
 
 const Logs = () => {
   const { logsError, logs } = useDataLoader();
@@ -38,7 +39,7 @@ const Logs = () => {
 
   const getText = () => {
     const text = logs.map((log) => {
-      return `[${log.datetime}] ${log.message}`;
+      return `[${displayUTCTime(log.datetime)}] ${log.message}`;
     });
     return text.join('\n');
   };
