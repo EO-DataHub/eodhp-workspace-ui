@@ -13,7 +13,7 @@ const headers = [
     externalName: 'Quantity',
   },
   {
-    internalName: 'event_end',
+    internalName: 'event_start',
     externalName: 'Issue date',
   },
   {
@@ -35,7 +35,7 @@ const InvoicesTable = () => {
     const currentYear = new Date().getFullYear();
 
     copy = copy.filter((sku) => {
-      const date = new Date(sku.event_end);
+      const date = new Date(sku.event_start);
       const monthInt = date.getMonth();
       const yearInt = date.getFullYear();
       return yearInt === currentYear && monthInt === selectedMonth;
@@ -44,7 +44,7 @@ const InvoicesTable = () => {
 
   const rows = copy.map((sku) => {
     const copy = { ...sku };
-    copy.event_end = new Date(sku.event_end).toDateString();
+    copy.event_start = new Date(sku.event_start).toDateString();
     copy.quantity = parseFloat(copy.quantity.toPrecision(3));
     const skuPrice = getSKUPrice(sku.item);
     const unit = getSKUUnit(sku.item);

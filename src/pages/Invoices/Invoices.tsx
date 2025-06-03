@@ -91,9 +91,16 @@ const Invoices = () => {
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
             >
               <option value="">All</option>
-              <option value={getMonthInt(-2)}>{monthsShort[getMonthInt(-2)]}</option>
-              <option value={getMonthInt(-1)}>{monthsShort[getMonthInt(-1)]}</option>
-              <option value={getMonthInt(0)}>{monthsShort[getMonthInt(0)]}</option>
+              {monthsShort.map((month, index) => {
+                const monthOption = new Date();
+                monthOption.setDate(1);
+                monthOption.setMonth(index);
+                return (
+                  <option key={month} value={getMonthInt(-1, monthOption)}>
+                    {month}
+                  </option>
+                );
+              })}
             </select>
           </div>
         ) : null}

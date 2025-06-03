@@ -1082,8 +1082,8 @@ export const skuDayPlaceholder = [
 export const skuMonthPlaceholder = [
   {
     uuid: 'd09fb9c4-3575-55c8-a7e4-d9f6dbff9fe3',
-    event_start: '2025-04-01T00:00:00Z',
-    event_end: '2025-05-01T00:00:00Z',
+    event_start: '2025-12-01T00:00:00Z',
+    event_end: '2026-01-01T00:00:00Z',
     item: 'AWS-S3-API-CALLS',
     workspace: 'dev-test-workspace',
     quantity: 20,
