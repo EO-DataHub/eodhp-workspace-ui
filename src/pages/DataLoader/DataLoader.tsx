@@ -78,18 +78,18 @@ const DataLoader = () => {
     return (
       <div className="header">
         <div className="header-left">
-          <h2>Data Loader</h2>
+          <h2>Metadata Loader</h2>
         </div>
         <div className="header-right">
           <img alt="Members" src={link} />
           <div className="header-right-text">
-            <span className="header-right-title">Data Loader</span> allows you to validate, upload
-            and harvest STAC files directly into your workspace.
+            <span className="header-right-title">Metadata Loader</span> allows you to validate,
+            upload and harvest STAC files directly into your workspace.
             <span
               className="header-right-title data-loader-tutorial-text"
               onClick={() => setTutorialModal(true)}
             >
-              How to use the data loader
+              How to use the Metadata Loader
             </span>
           </div>
         </div>
@@ -160,54 +160,11 @@ const DataLoader = () => {
   };
 
   const renderButton = () => {
-    const buttonData = {
-      validate: {
-        method: validate,
-        text: 'Validate',
-      },
-      upload: {
-        method: upload,
-        text: 'Upload',
-      },
-      harvest: {
-        method: harvest,
-        text: 'Load',
-      },
-      view: {
-        method: view,
-        text: 'View data',
-      },
-    };
-
     return (
-      <Button disabled={running} onClick={buttonData[state].method}>
-        {running ? 'Running' : buttonData[state].text}
+      <Button className="data-loader-run-button" disabled={running} onClick={runAll}>
+        {running ? 'Running…' : 'Run'}
       </Button>
     );
-  };
-
-  const validate = async () => {
-    if (!files) {
-      setMessage('Please select at least one file before running validation');
-      return;
-    }
-
-    setRunning(true);
-    setMessage('Validating file');
-    try {
-      if (fileType === 'access-policy') validateAccessPolicy();
-      if (fileType === 'stac') {
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          await validateSTAC(file);
-        }
-      }
-      setMessage('File(s) successfully validated');
-      setState('upload');
-    } catch (error) {
-      console.error(error);
-    }
-    setRunning(false);
   };
 
   const validateAccessPolicy = async () => {
@@ -434,6 +391,55 @@ const DataLoader = () => {
     setState('validate');
   };
 
+  const runAll = async () => {
+    // (1) Validate step
+    if (!files) {
+      setMessage('Please select at least one file before running validation');
+      return;
+    }
+
+    setRunning(true);
+    setMessage('Starting validation…');
+    try {
+      if (fileType === 'access-policy') {
+        // reuse existing validateAccessPolicy
+        await validateAccessPolicy();
+      } else {
+        // validate all STAC files in series
+        for (let i = 0; i < files.length; i++) {
+          await validateSTAC(files[i]);
+        }
+      }
+    } catch (err) {
+      // validation setMessage internally if it fails
+      setRunning(false);
+      return;
+    }
+
+    // (2) Upload step
+    setMessage('Validation passed. Uploading file(s)…');
+    try {
+      await upload();
+    } catch (err) {
+      // upload already logs and calls setMessage on error
+      setRunning(false);
+      return;
+    }
+
+    // (3) Harvest step
+    setMessage('Upload succeeded. Harvesting data…');
+    try {
+      await harvest();
+    } catch (err) {
+      // harvest already logs and calls setMessage if it fails
+      setRunning(false);
+      return;
+    }
+
+    setRunning(false);
+    setMessage('Done.');
+  };
+
   const renderTabs = () => {
     return (
       <div className="data-loader-tabs">
@@ -441,7 +447,7 @@ const DataLoader = () => {
           className={`data-loader-tabs__tab ${pageState === 'data-loader' ? 'active' : null}`}
           onClick={() => setPageState('data-loader')}
         >
-          Data Loader
+          Metadata Loader
         </div>
         <div
           className={`data-loader-tabs__tab ${pageState === 'logs' ? 'active' : null}`}
@@ -486,6 +492,16 @@ const DataLoader = () => {
           </ul>
         )}
         {renderButton()}
+        {fileType === 'stac' && state === 'view' && (
+          <Button
+            className="data-loader-view-button"
+            onClick={() => {
+              view();
+            }}
+          >
+            View data
+          </Button>
+        )}
       </div>
     );
   };
