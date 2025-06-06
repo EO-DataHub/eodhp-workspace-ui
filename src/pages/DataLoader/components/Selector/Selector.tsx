@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import type { Catalog } from 'stac-js';
 
 import Refresh from '@/assets/icons/refresh.svg';
+import Warning from '@/assets/icons/warning.svg';
 import { Button } from '@/components/Button/Button';
 import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
@@ -56,7 +57,6 @@ const Selector = ({ catalogues }: SelectorProps) => {
     })[0];
     setSelectedCatalog(catalog);
 
-    setMessage('Catalogue not found'); // Warning message
     if (!catalog.links.length) return;
 
     const collectionLink = catalog.links.filter((link) => link.rel === 'collections')[0]?.href;
@@ -91,28 +91,42 @@ const Selector = ({ catalogues }: SelectorProps) => {
   const renderCataloguesSelector = () => {
     if (!selectedCatalog) return;
 
-    const selfLink = selectedCatalog.links.filter((link) => {
-      return link.rel === 'self';
-    })[0];
-    const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
-
+    // If there are no collections, show a warning above the dropdown
     return (
-      <div className="selector-catalogs">
-        <h3>Please select a Catalogue</h3>
-        <select value={selectedId} onChange={(e) => onCatalogueSelect(e.target.value)}>
-          {catalogues.map((catalog) => {
-            const selfLink = catalog.links.filter((link) => {
-              return link.rel === 'self';
-            })[0];
-            const id = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+      <div>
+        {collections.length === 0 && (
+          <div className="selector-warning-container">
+            <div className="selector-warning">
+              <img alt="Warning Icon" src={Warning} />
+              <span>
+                No collections found in <strong>{selectedCatalog.id}</strong>.<br />
+                Please add a new collection or click refresh—to populate collections.
+              </span>
+            </div>
+          </div>
+        )}
+
+        <div className="selector-catalogs">
+          <h3>Please select a Catalogue</h3>
+          {(() => {
+            const selfLink = selectedCatalog.links.filter((link) => link.rel === 'self')[0];
+            const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
             return (
-              <option key={id} value={id}>
-                {id}
-              </option>
+              <select value={selectedId} onChange={(e) => onCatalogueSelect(e.target.value)}>
+                {catalogues.map((catalog) => {
+                  const selfLinkInner = catalog.links.filter((link) => link.rel === 'self')[0];
+                  const id = selfLinkInner.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+                  return (
+                    <option key={id} value={id}>
+                      {id}
+                    </option>
+                  );
+                })}
+              </select>
             );
-          })}
-        </select>
-        <ToastContainer hideProgressBar position="bottom-left" theme="light" />
+          })()}
+          <ToastContainer hideProgressBar position="bottom-left" theme="light" />
+        </div>
       </div>
     );
   };
@@ -240,19 +254,22 @@ const Selector = ({ catalogues }: SelectorProps) => {
 
     if (selectedCatalog) {
       buttons.push(
-        <Button onClick={() => window.open(catalogSelf.href, '_blank')}>
+        <Button key="view-catalog" onClick={() => window.open(catalogSelf.href, '_blank')}>
           View {selectedCatalog.id} catalog data
         </Button>,
       );
     }
     if (selectedCollection) {
       buttons.push(
-        <Button onClick={() => window.open(collectionSelf.href, '_blank')}>
+        <Button key="view-collection" onClick={() => window.open(collectionSelf.href, '_blank')}>
           View {selectedCollection.id} collection data
         </Button>,
       );
       buttons.push(
-        <Button onClick={() => window.open(`${collectionSelf.href}/items`, '_blank')}>
+        <Button
+          key="view-item"
+          onClick={() => window.open(`${collectionSelf.href}/items`, '_blank')}
+        >
           View {selectedCollection.id} item data
         </Button>,
       );

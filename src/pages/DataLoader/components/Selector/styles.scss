@@ -25,6 +25,48 @@ $width: 600px;
     }
   }
 
+  &-warning {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff3cd;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: #856404;
+    text-align: center;
+    margin-top: 25px;
+
+    .selector-warning img {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      border: 0;
+    }
+
+    span {
+      order: 1;
+      line-height: 1.4;
+      margin-left: 32px;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  }
+
+  & &-warning img {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+  }
+
   select {
     background-color: var(--background);
     color: var(--text-primary);
