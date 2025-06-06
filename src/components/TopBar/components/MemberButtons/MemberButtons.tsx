@@ -12,6 +12,7 @@ import Form from '@/components/Form/Form';
 import Modal from '@/components/Modal/Modal';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { addMember } from '@/services/members/members';
+import { deleteWorkspace } from '@/services/workspaces/workspaces';
 
 import DeleteRow from '../DeleteRow/DeleteRow';
 
@@ -32,8 +33,9 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
   const { activeWorkspace, members, getAndSetMembers } = useWorkspace();
 
   const [modal, setModal] = useState<boolean>(false);
-  const [modalStatus, setModalStatus] = useState<'add' | 'remove'>();
+  const [modalStatus, setModalStatus] = useState<'add' | 'remove' | 'delete_workspace'>();
   const [formErrors, setFormErrors] = useState<string[]>([]);
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
   const setMessage = (message: string) => {
     toast(message);
@@ -97,6 +99,31 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
         </div>
       );
     }
+    if (modalStatus === 'delete_workspace') {
+      return (
+        <div className="delete-workspace-confirmation">
+          <p>
+            Deleting this workspace will <strong>permanently remove all associated data</strong>,
+            including members and resources. This action cannot be undone.
+          </p>
+          <label>
+            <input
+              checked={confirmDelete}
+              type="checkbox"
+              onChange={(e) => setConfirmDelete(e.target.checked)}
+            />{' '}
+            I understand that this action will delete everything permanently.
+          </label>
+          {formErrors.length > 0 && (
+            <ul className="top-bar-form-container__errors">
+              {formErrors.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    }
   };
 
   const validateAddMember = () => {
@@ -114,24 +141,53 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
         <Modal
           cancelText="Close"
           content={renderModalContent()}
-          hideSubmit={modalStatus === 'add' ? false : true}
+          //hideSubmit={modalStatus === 'add' ? false : true}
           onCancel={() => {
             setModal(false);
             setFormData(initialFormData);
             setFormErrors([]);
+            setConfirmDelete(false);
           }}
           onSubmit={async () => {
-            if (!validateAddMember()) return;
-            try {
-              await addMember(activeWorkspace.name, formData['username']);
-              await getAndSetMembers();
-              setFormData(initialFormData());
-              setModal(false);
-            } catch (error) {
-              setFormErrors(['Error adding member']);
-              setMessage('Error adding member');
+            if (modalStatus === 'add') {
+              if (!validateAddMember()) return;
+              try {
+                await addMember(activeWorkspace.name, formData['username']);
+                await getAndSetMembers();
+                setFormData(initialFormData());
+                setModal(false);
+              } catch (error) {
+                setFormErrors(['Error adding member']);
+                setMessage('Error adding member');
+              }
+            } else if (modalStatus === 'delete_workspace') {
+              if (!confirmDelete) {
+                setFormErrors(['You must confirm deletion by ticking the checkbox.']);
+                return;
+              }
+              try {
+                await deleteWorkspace(activeWorkspace.name);
+                setMessage('Workspace deleted successfully.');
+                setModal(false);
+                // You can redirect user or refresh list depending on the app flow
+              } catch (error) {
+                setFormErrors(['Error deleting workspace']);
+                setMessage('Error deleting workspace');
+              }
             }
           }}
+          // onSubmit={async () => {
+          //   if (!validateAddMember()) return;
+          //   try {
+          //     await addMember(activeWorkspace.name, formData['username']);
+          //     await getAndSetMembers();
+          //     setFormData(initialFormData());
+          //     setModal(false);
+          //   } catch (error) {
+          //     setFormErrors(['Error adding member']);
+          //     setMessage('Error adding member');
+          //   }
+          // }}
         />
       )}
       <div className="member-buttons">
@@ -153,6 +209,17 @@ const MemberButtons = ({ hideRemoveButton }: MemberButtonsProps) => {
             }}
           >
             Remove Member
+          </Button>
+        )}
+        {hideRemoveButton ? null : (
+          <Button
+            icon={<MdPersonRemove />}
+            onClick={() => {
+              setModalStatus('delete_workspace');
+              setModal(true);
+            }}
+          >
+            Delete Workspace
           </Button>
         )}
         <ToastContainer hideProgressBar position="bottom-left" theme="light" />
