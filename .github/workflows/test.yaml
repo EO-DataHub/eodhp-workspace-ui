@@ -5,10 +5,14 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Test Code
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4

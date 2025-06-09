@@ -6,6 +6,9 @@ on:
     tags:
       - v\d.*
 
+permissions:
+  contents: read
+
 jobs:
   prechecks:
     name: Prechecks
