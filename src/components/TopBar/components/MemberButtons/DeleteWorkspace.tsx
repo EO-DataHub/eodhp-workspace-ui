@@ -10,7 +10,7 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import { deleteWorkspace } from '@/services/workspaces/workspaces';
 
 const DeleteWorkspaceButton = () => {
-  const { activeWorkspace, getAndSetWorkspaces } = useWorkspace();
+  const { activeWorkspace } = useWorkspace();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>([]);
@@ -37,9 +37,9 @@ const DeleteWorkspaceButton = () => {
       setModalOpen(false);
       setConfirmDelete(false);
 
-    //   await new Promise((resolve) => setTimeout(resolve, 3000));
+      //   await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    //   await getAndSetWorkspaces();
+      //   await getAndSetWorkspaces();
     } catch {
       setFormErrors(['Error deleting workspace']);
       setMessage('Error deleting workspace');
