@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
 import './styles.scss';
 import '../../styles/main.scss';
@@ -13,6 +13,8 @@ interface ModalProps {
   submitText?: string;
   hideCancel?: boolean;
   hideSubmit?: boolean;
+  isLoading?: boolean; // New prop to control loading state
+  loadingDuration?: number; // New prop for optional timeout in milliseconds
 }
 
 const Modal = ({
@@ -24,8 +26,24 @@ const Modal = ({
   submitText,
   hideCancel,
   hideSubmit,
+  isLoading = false,
+  loadingDuration,
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const [internalLoading, setInternalLoading] = useState(isLoading);
+
+  useEffect(() => {
+    // Sync internal state with isLoading prop
+    setInternalLoading(isLoading);
+
+    // If loadingDuration is provided, set a timeout to stop loading
+    if (loadingDuration && isLoading) {
+      const timer = setTimeout(() => {
+        setInternalLoading(false);
+      }, loadingDuration);
+      return () => clearTimeout(timer); // Cleanup on unmount or prop change
+    }
+  }, [isLoading, loadingDuration]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -44,15 +62,38 @@ const Modal = ({
   return (
     <div className="modal">
       <div ref={modalRef} className="modal-content-container">
-        <div className="modal-content">{content}</div>
-        <div className="modal-content-buttons">
-          {!hideCancel && <Button onClick={() => onCancel()}>{cancelText || 'Cancel'}</Button>}
-          {!hideSubmit && (
-            <Button disabled={submitDisabled} onClick={() => onSubmit()}>
-              {submitText || 'Submit'}
-            </Button>
-          )}
-        </div>
+        {internalLoading ? (
+          <div className="modal-loading">
+            <div
+              style={{
+                border: '4px solid #f3f3f3',
+                borderTop: '4px solid #3498db',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                animation: 'spin 1s linear infinite',
+                margin: '20px auto',
+              }}
+            ></div>
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <>
+            <div className="modal-content">{content}</div>
+            <div className="modal-content-buttons">
+              {!hideCancel && (
+                <Button disabled={internalLoading} onClick={() => onCancel()}>
+                  {cancelText || 'Cancel'}
+                </Button>
+              )}
+              {!hideSubmit && (
+                <Button disabled={submitDisabled || internalLoading} onClick={() => onSubmit()}>
+                  {submitText || 'Submit'}
+                </Button>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
