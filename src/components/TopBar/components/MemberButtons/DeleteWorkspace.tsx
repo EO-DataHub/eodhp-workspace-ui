@@ -53,8 +53,8 @@ const DeleteWorkspaceButton = () => {
       <div>
         <div className="delete-workspace-confirmation">
           <p>
-            Deleting this workspace will <strong>permanently remove all associated data</strong>,
-            including members and resources. This action cannot be undone.
+            Deleting this workspace will <strong>permanently remove all associated data</strong>.
+            This action cannot be undone.
           </p>
           <label>
             <input

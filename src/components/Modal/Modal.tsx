@@ -13,8 +13,8 @@ interface ModalProps {
   submitText?: string;
   hideCancel?: boolean;
   hideSubmit?: boolean;
-  isLoading?: boolean; // New prop to control loading state
-  loadingDuration?: number; // New prop for optional timeout in milliseconds
+  isLoading?: boolean;
+  loadingDuration?: number;
 }
 
 const Modal = ({
@@ -33,15 +33,13 @@ const Modal = ({
   const [internalLoading, setInternalLoading] = useState(isLoading);
 
   useEffect(() => {
-    // Sync internal state with isLoading prop
     setInternalLoading(isLoading);
 
-    // If loadingDuration is provided, set a timeout to stop loading
     if (loadingDuration && isLoading) {
       const timer = setTimeout(() => {
         setInternalLoading(false);
       }, loadingDuration);
-      return () => clearTimeout(timer); // Cleanup on unmount or prop change
+      return () => clearTimeout(timer);
     }
   }, [isLoading, loadingDuration]);
 
