@@ -64,17 +64,7 @@ const Modal = ({
       <div ref={modalRef} className="modal-content-container">
         {internalLoading ? (
           <div className="modal-loading">
-            <div
-              style={{
-                border: '4px solid #f3f3f3',
-                borderTop: '4px solid #3498db',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                animation: 'spin 1s linear infinite',
-                margin: '20px auto',
-              }}
-            ></div>
+            <div className="modal-loading-spinner"></div>
             <p>Loading...</p>
           </div>
         ) : (

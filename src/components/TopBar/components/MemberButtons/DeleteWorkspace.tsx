@@ -10,7 +10,7 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import { deleteWorkspace } from '@/services/workspaces/workspaces';
 
 const DeleteWorkspaceButton = () => {
-  const { activeWorkspace } = useWorkspace();
+  const { activeWorkspace, getAndSetWorkspaces } = useWorkspace();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<string[]>([]);
@@ -32,15 +32,17 @@ const DeleteWorkspaceButton = () => {
     if (!validate()) return;
 
     try {
+      setIsLoading(true);
       await deleteWorkspace(activeWorkspace.name);
       setMessage('Workspace deleted successfully.');
+
+      await new Promise((resolve) => setTimeout(resolve, 10000));
       setModalOpen(false);
       setConfirmDelete(false);
-
-      //   await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      //   await getAndSetWorkspaces();
+      setIsLoading(false);
+      await getAndSetWorkspaces();
     } catch {
+      setIsLoading(false);
       setFormErrors(['Error deleting workspace']);
       setMessage('Error deleting workspace');
     }
@@ -91,8 +93,7 @@ const DeleteWorkspaceButton = () => {
         <Modal
           cancelText="Close"
           content={getModalContent()}
-          isLoading={isLoading} // Control loading state
-          loadingDuration={5000} // Optional: 5-second timeout for spinner
+          isLoading={isLoading}
           submitDisabled={!confirmDelete}
           onCancel={() => {
             setModalOpen(false);
