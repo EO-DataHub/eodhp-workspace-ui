@@ -97,7 +97,7 @@ const DataLoader = () => {
   };
 
   const renderFileSelector = () => {
-    if (!selectedCollection && fileType === 'stac') return;
+    if (!selectedCollection) return;
     return (
       <div className="data-loader__file">
         <h2>
@@ -107,7 +107,7 @@ const DataLoader = () => {
         <input
           ref={fileInputRef}
           accept=".json"
-          multiple={fileType === 'stac'}
+          multiple="true"
           type="file"
           onChange={(e) => {
             setFiles(e.target.files);
@@ -119,7 +119,6 @@ const DataLoader = () => {
   };
 
   const renderCatalogCollectionSelector = () => {
-    if (fileType !== 'stac') return;
     if (!catalogues.length) {
       return;
     }
@@ -238,11 +237,7 @@ const DataLoader = () => {
           stacObject.collection = `${selectedCollection.id}`;
 
           let _fileName;
-          if (fileType === 'access-policy') {
-            _fileName = 'access-policy.json';
-          } else {
-            _fileName = `${generateRandomString()}.json`;
-          }
+        _fileName = `${generateRandomString()}.json`;
 
           const body = {
             fileContent: JSON.stringify(stacObject),
@@ -285,12 +280,7 @@ const DataLoader = () => {
       setMessage(error);
     }
     setRunning(false);
-
-    if (fileType === 'access-policy') {
-      setState('validate');
-    } else {
-      setState('view');
-    }
+    setState('view');
 
     setValidationErrors([]);
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -403,7 +393,7 @@ const DataLoader = () => {
           </ul>
         )}
         {renderButton()}
-        {fileType === 'stac' && state === 'view' && (
+        {state === 'view' && (
           <Button
             className="data-loader-view-button"
             onClick={() => {
