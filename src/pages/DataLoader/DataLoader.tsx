@@ -107,7 +107,7 @@ const DataLoader = () => {
         <input
           ref={fileInputRef}
           accept=".json"
-          multiple="true"
+          multiple={true}
           type="file"
           onChange={(e) => {
             setFiles(e.target.files);

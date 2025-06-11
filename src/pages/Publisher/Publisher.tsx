@@ -112,7 +112,6 @@ const Publisher = () => {
   };
 
 
-
   const renderDescription = () => {
     return <AccessPolicyDescription />;
   };
