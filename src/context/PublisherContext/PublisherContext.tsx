@@ -110,7 +110,6 @@ export const PublisherProvider = ({ initialState = {}, children }: PublisherProv
   };
 
   useEffect(() => {
-//     if (pageState !== 'logs') return;
     if (pollingRef.current) return;
     // Poll  the endpoint every 10 seconds
     pollingRef.current = setInterval(() => {
