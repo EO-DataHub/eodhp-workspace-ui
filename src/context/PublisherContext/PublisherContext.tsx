@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 import type { Catalog, Collection } from 'stac-js';
 
 import { useWorkspace } from '@/hooks/useWorkspace';
-// import { logsPlaceholder } from '@/pages/Publisher/components/Logs/logsPlaceholder';
-// import { Log, LogResponse } from '@/pages/Publisher/components/Logs/types';
+import { logsPlaceholder } from '@/pages/Publisher/components/Logs/logsPlaceholder';
+import { Log, LogResponse } from '@/pages/Publisher/components/Logs/types';
 import { displayUTCTime } from '@/utils/time';
 
 export type PublisherContextType = {
@@ -39,12 +39,12 @@ export type PublisherContextType = {
   selectedCollection: Collection;
   setSelectedCollection: (value: Collection) => void;
 
-//   pageState: string;
-//   setPageState: (value: 'data-loader' | 'logs') => void;
+  pageState: string;
+  setPageState: (value: 'data-loader' | 'logs') => void;
 
   pollingRef: React.MutableRefObject<() => void>;
-//   logs: Log[];
-//   logsError: string;
+  logs: Log[];
+  logsError: string;
 };
 
 type PublisherProviderProps = {
@@ -65,58 +65,58 @@ export const PublisherProvider = ({ initialState = {}, children }: PublisherProv
   const [running, setRunning] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [fileType, setFileType] = useState<string>('stac');
-//   const [selectedCatalog, setSelectedCatalog] = useState<Catalog>();
-//   const [collections, setCollections] = useState<Collection[]>([]);
-//   const [selectedCollection, setSelectedCollection] = useState<Collection>();
-//   const [pageState, setPageState] = useState<'data-loader' | 'logs'>('data-loader');
+  const [selectedCatalog, setSelectedCatalog] = useState<Catalog>();
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [selectedCollection, setSelectedCollection] = useState<Collection>();
+  const [pageState, setPageState] = useState<'data-loader' | 'logs'>('data-loader');
 
-//   const defaultLog = [
-//     {
-//       datetime: displayUTCTime(new Date().toISOString()),
-//       message: 'No logs to display',
-//       level: 'Error',
-//     },
-//   ];
+  const defaultLog = [
+    {
+      datetime: displayUTCTime(new Date().toISOString()),
+      message: 'No logs to display',
+      level: 'Error',
+    },
+  ];
 
-//   const [logs, setLogs] = useState<Log[]>(defaultLog);
-//   const [logsError, setLogsError] = useState<string>();
+  const [logs, setLogs] = useState<Log[]>(defaultLog);
+  const [logsError, setLogsError] = useState<string>();
 
-//   const pollingRef = useRef(null);
+  const pollingRef = useRef(null);
 
-//   const getLogs = async () => {
-//     if (import.meta.env.VITE_WORKSPACE_LOCAL) {
-//       setLogs(logsPlaceholder.messages);
-//       return;
-//     }
-//
-//     const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest_logs`, {
-//       method: 'POST',
-//     });
-//
-//     if (!res.ok) {
-//       setLogsError('Failed to get Logs');
-//       return;
-//     }
-//
-//     const json: LogResponse = await res.json();
+  const getLogs = async () => {
+    if (import.meta.env.VITE_WORKSPACE_LOCAL) {
+      setLogs(logsPlaceholder.messages);
+      return;
+    }
 
-//     let messages = defaultLog;
+    const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest_logs`, {
+      method: 'POST',
+    });
 
-//     if (json.messages.length > 0) {
-//       messages = json.messages;
-//     }
-//
-//     setLogs(messages);
+    if (!res.ok) {
+      setLogsError('Failed to get Logs');
+      return;
+    }
+
+    const json: LogResponse = await res.json();
+
+    let messages = defaultLog;
+
+    if (json.messages.length > 0) {
+      messages = json.messages;
+    }
+
+    setLogs(messages);
   };
 
-//   useEffect(() => {
-// //     if (pageState !== 'logs') return;
-//     if (pollingRef.current) return;
-//     // Poll  the endpoint every 10 seconds
-//     pollingRef.current = setInterval(() => {
-//       getLogs();
-//     }, 10000);
-//   }, [pageState]);
+  useEffect(() => {
+//     if (pageState !== 'logs') return;
+    if (pollingRef.current) return;
+    // Poll  the endpoint every 10 seconds
+    pollingRef.current = setInterval(() => {
+      getLogs();
+    }, 10000);
+  }, [pageState]);
 
   useEffect(() => {
     if (!activeWorkspace) return;
@@ -143,17 +143,17 @@ export const PublisherProvider = ({ initialState = {}, children }: PublisherProv
         setValidationErrors,
         fileType,
         setFileType,
-//         selectedCatalog,
-//         setSelectedCatalog,
-//         collections,
-//         setCollections,
-//         selectedCollection,
-//         setSelectedCollection,
-//         pageState,
-//         setPageState,
-//         pollingRef,
-//         logs,
-//         logsError,
+        selectedCatalog,
+        setSelectedCatalog,
+        collections,
+        setCollections,
+        selectedCollection,
+        setSelectedCollection,
+        pageState,
+        setPageState,
+        pollingRef,
+        logs,
+        logsError,
         ...initialState,
       }}
     >
