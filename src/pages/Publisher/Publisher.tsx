@@ -1,11 +1,8 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useRef, useState } from 'react';
 
 import './styles.scss';
 
 import { ToastContainer } from 'react-toastify';
-import type { Catalog } from 'stac-js';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
@@ -29,9 +26,7 @@ const Publisher = () => {
     setRunning,
     validationErrors,
     setValidationErrors,
-    selectedCollection,
     pageState,
-    setPageState,
   } = useDataLoader();
 
   const [tutorialModal, setTutorialModal] = useState<boolean>(false);
@@ -50,7 +45,6 @@ const Publisher = () => {
             <span className="header-right-title">Publisher</span> allows you to publish your
             workflows and data into the EODH public catalogue by setting an Access Policy. This
             means any EODH users can search and find your workflow(s) and/or data.
-
           </div>
         </div>
       </div>
