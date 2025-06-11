@@ -46,34 +46,6 @@ const Publisher = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const getCatalogues = async () => {
-      if (import.meta.env.VITE_WORKSPACE_LOCAL) {
-        setCatalogues(catalogPlaceholder.catalogs);
-      } else {
-        const res = await fetch(
-          `/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs`,
-        );
-        const json = await res.json();
-
-        const filteredCatalogs = json.catalogs.filter(
-          (catalog) => catalog.id !== 'processing-results',
-        );
-        setCatalogues(filteredCatalogs);
-      }
-    };
-    getCatalogues();
-  }, [activeWorkspace.name]);
-
-  const generateRandomString = (length = 16) => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
-
   const renderHeader = () => {
     return (
       <div className="header">
@@ -94,7 +66,6 @@ const Publisher = () => {
   };
 
   const renderFileSelector = () => {
-    if (!selectedCollection && fileType === 'stac') return;
     return (
       <div className="data-loader__file">
         <h2>Please select your Access Policy file</h2>
@@ -123,7 +94,7 @@ const Publisher = () => {
   const renderButton = () => {
     return (
       <Button className="data-loader-run-button" disabled={running} onClick={runAll}>
-        {running ? 'Running…' : 'Run'}
+        {running ? 'Running…' : 'Submit'}
       </Button>
     );
   };
@@ -148,63 +119,6 @@ const Publisher = () => {
     setRunning(false);
   };
 
-  const validateSTAC = async (file: File) => {
-    const stacContent = await file.text();
-    let stac;
-    try {
-      stac = JSON.parse(stacContent);
-    } catch (e) {
-      setMessage(`❌ Invalid JSON format in file ${file.name}`);
-      throw new Error();
-    }
-
-    let data;
-
-    try {
-      const res = await fetch(`/api/validate-stac`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          credentials: 'include',
-        },
-        body: JSON.stringify({
-          content: stac,
-        }),
-      });
-      const dataAndCode = await res.json();
-      data = dataAndCode[0];
-    } catch (error) {
-      setMessage('Failed to send request');
-      throw new Error();
-    }
-
-    const errors = [];
-    data.content.forEach((error) => {
-      if (Array.isArray(error)) {
-        error.forEach((e) => errors.push(e));
-      } else {
-        errors.push(error);
-      }
-    });
-
-    if (data.status === 'error') {
-      if (!data.content) {
-        setMessage(`❌ Failed to validate STAC in file ${file.name}`);
-        setValidationErrors([data.message]);
-        throw new Error();
-      }
-      setMessage(`❌ Failed to validate STAC in file ${file.name}`);
-      setValidationErrors(errors);
-      throw new Error();
-    } else {
-      if (data.type !== 'ITEM') {
-        setMessage(`❌ ${file.name} is of type ${data.type} it must be a STAC Item`);
-        throw new Error();
-      }
-      setMessage('✅ STAC item is valid!');
-      setValidationErrors(errors);
-    }
-  };
 
   const upload = async () => {
     for (let i = 0; i < files.length; i++) {

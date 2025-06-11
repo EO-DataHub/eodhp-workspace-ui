@@ -128,7 +128,7 @@ const DataLoader = () => {
   const renderButton = () => {
     return (
       <Button className="data-loader-run-button" disabled={running} onClick={runAll}>
-        {running ? 'Running…' : 'Run'}
+        {running ? 'Running…' : 'Submit'}
       </Button>
     );
   };
