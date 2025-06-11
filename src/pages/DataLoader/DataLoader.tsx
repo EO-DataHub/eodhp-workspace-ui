@@ -77,18 +77,18 @@ const DataLoader = () => {
     return (
       <div className="header">
         <div className="header-left">
-          <h2>Metadata Loader</h2>
+          <h2>STAC Metadata Loader</h2>
         </div>
         <div className="header-right">
           <img alt="Members" src={link} />
           <div className="header-right-text">
-            <span className="header-right-title">Metadata Loader</span> allows you to validate,
+            <span className="header-right-title">STAC Metadata Loader</span> allows you to validate,
             upload and harvest STAC files directly into your workspace.
             <span
               className="header-right-title data-loader-tutorial-text"
               onClick={() => setTutorialModal(true)}
             >
-              How to use the Metadata Loader
+              How to use the STAC Metadata Loader
             </span>
           </div>
         </div>
@@ -196,7 +196,6 @@ const DataLoader = () => {
       const file = files[i];
       setRunning(true);
       setMessage('Uploading file');
-
 
         try {
           const stacContent = await file.text();
