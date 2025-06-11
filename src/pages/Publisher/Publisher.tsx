@@ -16,9 +16,10 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import Logs from './components/Logs/Logs';
 import Selector from './components/Selector/Selector';
 import DataLoaderTutorial from './components/Tutorial/DataLoaderTutorial';
+import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
 import { catalogPlaceholder } from './placeholders/catalogPlaceholder';
 
-const DataLoader = () => {
+const Publisher = () => {
   const { activeWorkspace } = useWorkspace();
   const {
     files,
@@ -77,19 +78,15 @@ const DataLoader = () => {
     return (
       <div className="header">
         <div className="header-left">
-          <h2>Metadata Loader</h2>
+          <h2>Publisher</h2>
         </div>
         <div className="header-right">
           <img alt="Members" src={link} />
           <div className="header-right-text">
-            <span className="header-right-title">Metadata Loader</span> allows you to validate,
-            upload and harvest STAC files directly into your workspace.
-            <span
-              className="header-right-title data-loader-tutorial-text"
-              onClick={() => setTutorialModal(true)}
-            >
-              How to use the Metadata Loader
-            </span>
+            <span className="header-right-title">Publisher</span> allows you to publish your workflows and data into
+            the EODH public catalogue by setting an Access Policy. This means any EODH users can search and find your
+            workflow(s) and/or data.
+
           </div>
         </div>
       </div>
@@ -100,14 +97,10 @@ const DataLoader = () => {
     if (!selectedCollection && fileType === 'stac') return;
     return (
       <div className="data-loader__file">
-        <h2>
-          Please select all STAC items you wish you load into {selectedCatalog.id}/
-          {selectedCollection.id}
-        </h2>
+        <h2>Please select your Access Policy file</h2>
         <input
           ref={fileInputRef}
           accept=".json"
-          multiple={fileType === 'stac'}
           type="file"
           onChange={(e) => {
             setFiles(e.target.files);
@@ -118,12 +111,15 @@ const DataLoader = () => {
     );
   };
 
+
+
+  const renderDescription = () => {
+      setFileType('access-policy');
+    return <AccessPolicyDescription />;
+  };
+
   const renderCatalogCollectionSelector = () => {
-    if (fileType !== 'stac') return;
-    if (!catalogues.length) {
-      return;
-    }
-    return <Selector catalogues={catalogues} />;
+
   };
 
   const renderButton = () => {
@@ -132,6 +128,26 @@ const DataLoader = () => {
         {running ? 'Running…' : 'Run'}
       </Button>
     );
+  };
+
+  const validateAccessPolicy = async () => {
+    if (!files) {
+      setMessage('Please select a file before running validation');
+      return;
+    }
+
+    setRunning(true);
+    setMessage('Validating Access Policy');
+    try {
+      const text = await files[0].text();
+      JSON.parse(text);
+      setMessage('File successfully validated');
+      setState('upload');
+      setFileName('access-policy.json');
+    } catch {
+      setMessage('Invalid JSON');
+    }
+    setRunning(false);
   };
 
   const validateSTAC = async (file: File) => {
@@ -198,7 +214,36 @@ const DataLoader = () => {
       setRunning(true);
       setMessage('Uploading file');
 
+      if (fileType === 'access-policy') {
+        try {
+          const fileContent = await file.text();
+          const fileObject = JSON.parse(fileContent);
 
+          const _fileName = 'access-policy.json';
+
+          const body = {
+            fileContent: JSON.stringify(fileObject),
+            fileName: _fileName,
+          };
+
+          const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (!res.ok) {
+            setMessage(`Failed to upload ${file.name} to s3`);
+            throw new Error();
+          }
+
+          setState('harvest');
+          setMessage('File successfully uploaded');
+        } catch (error) {
+          console.error(error);
+          setMessage('File not uploaded');
+        }
+      } else {
         try {
           const stacContent = await file.text();
           const stacObject = JSON.parse(stacContent);
@@ -266,7 +311,7 @@ const DataLoader = () => {
           console.error(error);
           setMessage('File not uploaded');
         }
-
+      }
     }
     setRunning(false);
   };
@@ -319,9 +364,15 @@ const DataLoader = () => {
     setRunning(true);
     setMessage('Starting validation…');
     try {
+      if (fileType === 'access-policy') {
+        // reuse existing validateAccessPolicy
+        await validateAccessPolicy();
+      } else {
+        // validate all STAC files in series
         for (let i = 0; i < files.length; i++) {
           await validateSTAC(files[i]);
         }
+      }
     } catch (err) {
       // validation setMessage internally if it fails
       setRunning(false);
@@ -361,12 +412,6 @@ const DataLoader = () => {
         >
           Metadata Loader
         </div>
-        <div
-          className={`data-loader-tabs__tab ${pageState === 'logs' ? 'active' : null}`}
-          onClick={() => setPageState('logs')}
-        >
-          Logs
-        </div>
       </div>
     );
   };
@@ -387,8 +432,7 @@ const DataLoader = () => {
   const renderDataLoader = () => {
     return (
       <div className="data-loader">
-
-        {renderCatalogCollectionSelector()}
+        {renderDescription()}
         {renderFileSelector()}
         {validationErrors.length > 0 && (
           <ul className="data-loader__errors">
@@ -434,7 +478,7 @@ const DataLoader = () => {
       )}
       <div className="content-page">
         {renderHeader()}
-        {renderTabs()}
+
         {renderContent()}
         <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
@@ -442,4 +486,4 @@ const DataLoader = () => {
   );
 };
 
-export default DataLoader;
+export default Publisher;

@@ -8,6 +8,7 @@ import DataLoader from '@/pages/DataLoader/DataLoader';
 import Invoices from '@/pages/Invoices/Invoices';
 import LinkedAccounts from '@/pages/LinkedAccounts/LinkedAccounts';
 import Members from '@/pages/Members/Members';
+import Publisher from '@/pages/Publisher/Publisher';
 
 export interface NavItem {
   label: string;
@@ -22,4 +23,5 @@ export const navItems: NavItem[] = [
   { label: 'Linked accounts', icon: linkedAccountsIcon, content: <LinkedAccounts /> },
   { label: 'Invoices', icon: invoicesIcon, content: <Invoices /> },
   { label: 'Credentials', icon: credentialsIcon, content: <Credentials /> },
+  { label: 'Publisher', icon: uploadIcon, content: <Publisher /> },
 ];
