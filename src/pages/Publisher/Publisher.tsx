@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import './styles.scss';
 
@@ -14,10 +14,8 @@ import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import Logs from './components/Logs/Logs';
-import Selector from './components/Selector/Selector';
 import DataLoaderTutorial from './components/Tutorial/DataLoaderTutorial';
 import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
-import { catalogPlaceholder } from './placeholders/catalogPlaceholder';
 
 const Publisher = () => {
   const { activeWorkspace } = useWorkspace();
@@ -25,24 +23,18 @@ const Publisher = () => {
     files,
     setFiles,
     setFileName,
-    state,
     setState,
     setMessage,
     running,
     setRunning,
     validationErrors,
     setValidationErrors,
-    fileType,
-    setFileType,
     selectedCollection,
-    selectedCatalog,
     pageState,
     setPageState,
   } = useDataLoader();
 
   const [tutorialModal, setTutorialModal] = useState<boolean>(false);
-
-  const [catalogues, setCatalogues] = useState<Catalog[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,9 +47,9 @@ const Publisher = () => {
         <div className="header-right">
           <img alt="Members" src={link} />
           <div className="header-right-text">
-            <span className="header-right-title">Publisher</span> allows you to publish your workflows and data into
-            the EODH public catalogue by setting an Access Policy. This means any EODH users can search and find your
-            workflow(s) and/or data.
+            <span className="header-right-title">Publisher</span> allows you to publish your
+            workflows and data into the EODH public catalogue by setting an Access Policy. This
+            means any EODH users can search and find your workflow(s) and/or data.
 
           </div>
         </div>
@@ -82,13 +74,8 @@ const Publisher = () => {
     );
   };
 
-
   const renderDescription = () => {
     return <AccessPolicyDescription />;
-  };
-
-  const renderCatalogCollectionSelector = () => {
-
   };
 
   const renderButton = () => {
@@ -119,41 +106,40 @@ const Publisher = () => {
     setRunning(false);
   };
 
-
   const upload = async () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       setRunning(true);
       setMessage('Uploading file');
 
-        try {
-          const fileContent = await file.text();
-          const fileObject = JSON.parse(fileContent);
+      try {
+        const fileContent = await file.text();
+        const fileObject = JSON.parse(fileContent);
 
-          const _fileName = 'access-policy.json';
+        const _fileName = 'access-policy.json';
 
-          const body = {
-            fileContent: JSON.stringify(fileObject),
-            fileName: _fileName,
-          };
+        const body = {
+          fileContent: JSON.stringify(fileObject),
+          fileName: _fileName,
+        };
 
-          const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: { 'Content-Type': 'application/json' },
-          });
+        const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        });
 
-          if (!res.ok) {
-            setMessage(`Failed to upload ${file.name} to s3`);
-            throw new Error();
-          }
-
-          setState('harvest');
-          setMessage('File successfully uploaded');
-        } catch (error) {
-          console.error(error);
-          setMessage('File not uploaded');
+        if (!res.ok) {
+          setMessage(`Failed to upload ${file.name} to s3`);
+          throw new Error();
         }
+
+        setState('harvest');
+        setMessage('File successfully uploaded');
+      } catch (error) {
+        console.error(error);
+        setMessage('File not uploaded');
+      }
     }
     setRunning(false);
   };
@@ -178,19 +164,6 @@ const Publisher = () => {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const view = () => {
-    let collectionSelf;
-
-    if (selectedCollection) {
-      collectionSelf = selectedCollection.links.filter((link) => {
-        return link.rel === 'self';
-      })[0];
-    }
-
-    window.open(`${collectionSelf.href}/items`, '_blank');
-    setState('validate');
-  };
-
   const runAll = async () => {
     // (1) Validate step
     if (!files) {
@@ -201,7 +174,7 @@ const Publisher = () => {
     setRunning(true);
     setMessage('Starting validation…');
     try {
-        await validateAccessPolicy();
+      await validateAccessPolicy();
     } catch (err) {
       // validation setMessage internally if it fails
       setRunning(false);
@@ -230,19 +203,6 @@ const Publisher = () => {
 
     setRunning(false);
     setMessage('Done.');
-  };
-
-  const renderTabs = () => {
-    return (
-      <div className="data-loader-tabs">
-        <div
-          className={`data-loader-tabs__tab ${pageState === 'data-loader' ? 'active' : null}`}
-          onClick={() => setPageState('data-loader')}
-        >
-          Metadata Loader
-        </div>
-      </div>
-    );
   };
 
   const renderContent = () => {
@@ -276,7 +236,6 @@ const Publisher = () => {
           </ul>
         )}
         {renderButton()}
-
       </div>
     );
   };

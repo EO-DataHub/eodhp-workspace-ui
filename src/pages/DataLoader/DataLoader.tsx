@@ -31,8 +31,6 @@ const DataLoader = () => {
     setRunning,
     validationErrors,
     setValidationErrors,
-    fileType,
-    setFileType,
     selectedCollection,
     selectedCatalog,
     pageState,
@@ -197,70 +195,66 @@ const DataLoader = () => {
       setRunning(true);
       setMessage('Uploading file');
 
-        try {
-          const stacContent = await file.text();
-          const stacObject = JSON.parse(stacContent);
+      try {
+        const stacContent = await file.text();
+        const stacObject = JSON.parse(stacContent);
 
-          const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
-          if (parentLinkObject) {
-            const selfLink = selectedCatalog.links.filter((link) => {
-              return link.rel === 'self';
-            })[0];
-            const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+        const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
+        if (parentLinkObject) {
+          const selfLink = selectedCatalog.links.filter((link) => {
+            return link.rel === 'self';
+          })[0];
+          const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
 
-            if (!selectedId.includes('/')) {
-              parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
-            } else {
-              parentLinkObject.href = `catalogs/${selectedId}/collections/${selectedCollection.id}`;
-            }
-
-            const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
-            stacObject.links[parentLinkIndex] = parentLinkObject;
+          if (!selectedId.includes('/')) {
+            parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
           } else {
-            stacObject.links.push({
-              rel: 'parent',
-              href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
-              type: 'application/json',
-            });
+            parentLinkObject.href = `catalogs/${selectedId}/collections/${selectedCollection.id}`;
           }
 
-          const selfLinkObject = stacObject.links.filter((link) => link.rel === 'self')[0];
-          if (!selfLinkObject) {
-            stacObject.links.push({
-              rel: 'self',
-              href: 'catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}',
-              type: 'application/json',
-            });
-          }
-
-          stacObject.collection = `${selectedCollection.id}`;
-
-          let _fileName;
-        _fileName = `${generateRandomString()}.json`;
-
-          const body = {
-            fileContent: JSON.stringify(stacObject),
-            fileName: _fileName,
-          };
-
-          const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: { 'Content-Type': 'application/json' },
+          const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
+          stacObject.links[parentLinkIndex] = parentLinkObject;
+        } else {
+          stacObject.links.push({
+            rel: 'parent',
+            href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
+            type: 'application/json',
           });
-
-          if (!res.ok) {
-            setMessage(`Failed to upload ${file.name} to s3`);
-            throw new Error();
-          }
-
-          setState('harvest');
-          setMessage('File successfully uploaded');
-        } catch (error) {
-          console.error(error);
-          setMessage('File not uploaded');
         }
 
+        const selfLinkObject = stacObject.links.filter((link) => link.rel === 'self')[0];
+        if (!selfLinkObject) {
+          stacObject.links.push({
+            rel: 'self',
+            href: 'catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}',
+            type: 'application/json',
+          });
+        }
+
+        stacObject.collection = `${selectedCollection.id}`;
+
+        const _fileName = `${generateRandomString()}.json`;
+
+        const body = {
+          fileContent: JSON.stringify(stacObject),
+          fileName: _fileName,
+        };
+
+        const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (!res.ok) {
+          setMessage(`Failed to upload ${file.name} to s3`);
+          throw new Error();
+        }
+        setState('harvest');
+        setMessage('File successfully uploaded');
+      } catch (error) {
+        console.error(error);
+        setMessage('File not uploaded');
+      }
     }
     setRunning(false);
   };
@@ -308,9 +302,9 @@ const DataLoader = () => {
     setRunning(true);
     setMessage('Starting validation…');
     try {
-        for (let i = 0; i < files.length; i++) {
-          await validateSTAC(files[i]);
-        }
+      for (let i = 0; i < files.length; i++) {
+        await validateSTAC(files[i]);
+      }
     } catch (err) {
       // validation setMessage internally if it fails
       setRunning(false);
@@ -376,7 +370,6 @@ const DataLoader = () => {
   const renderDataLoader = () => {
     return (
       <div className="data-loader">
-
         {renderCatalogCollectionSelector()}
         {renderFileSelector()}
         {validationErrors.length > 0 && (
