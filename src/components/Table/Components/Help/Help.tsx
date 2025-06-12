@@ -13,7 +13,7 @@ import QuestionMark from '../../../../assets/icons/question-mark.svg';
 
 interface HelpProps {
   type: 'Tooltip' | 'Modal';
-  content: string;
+  content: string | JSX.Element;
 }
 
 const Help = ({ type = 'Tooltip', content }: HelpProps) => {
@@ -41,7 +41,7 @@ const Help = ({ type = 'Tooltip', content }: HelpProps) => {
       );
     }
     return (
-      <div className="help" data-tooltip-content={content} data-tooltip-id={`tooltip`}>
+      <div className="help" data-tooltip-id="tooltip">
         <img alt="Help icon" src={QuestionMark} />
         {tooltipPortal}
       </div>

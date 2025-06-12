@@ -24,7 +24,7 @@ type AccountMetaData = {
   message: string;
   internalName: string;
   externalName: string;
-  docs: string;
+  docs: JSX.Element;
   valid?: boolean;
 };
 
