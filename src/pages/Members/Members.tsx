@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { MdDelete } from 'react-icons/md';
 import './styles.scss';
-
+import deleteIcon from '@/assets/icons/Delete.svg';
 import memberGroupIcon from '@/assets/icons/member-group.svg';
 import Help from '@/components/Table/Components/Help/Help';
 import Table from '@/components/Table/Table';
@@ -53,7 +52,7 @@ const Members = () => {
         style={{ all: 'unset', cursor: 'pointer' }}
         onClick={() => handleDelete(member)}
       >
-        <MdDelete size={22} />
+        <img alt="delete" className="table-column-delete" src={deleteIcon} />
       </button>
     );
   };
