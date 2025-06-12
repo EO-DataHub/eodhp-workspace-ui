@@ -1,12 +1,11 @@
 import React from 'react';
 
-import { MdDelete } from 'react-icons/md';
 import './styles.scss';
-
+import deleteIcon from '@/assets/icons/Delete.svg';
 import memberGroupIcon from '@/assets/icons/member-group.svg';
 import Help from '@/components/Table/Components/Help/Help';
 import Table from '@/components/Table/Table';
-import MemberButtons from '@/components/TopBar/components/MemberButtons/MemberButtons';
+import AddMemberButton from '@/components/TopBar/components/MemberButtons/AddMember';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { deleteMember } from '@/services/members/members';
 import { Member } from '@/services/members/types';
@@ -53,7 +52,7 @@ const Members = () => {
         style={{ all: 'unset', cursor: 'pointer' }}
         onClick={() => handleDelete(member)}
       >
-        <MdDelete size={22} />
+        <img alt="delete" className="table-column-delete" src={deleteIcon} />
       </button>
     );
   };
@@ -85,8 +84,7 @@ const Members = () => {
           </div>
         </div>
       </div>
-
-      <MemberButtons hideRemoveButton />
+      {isWorkspaceOwner && <AddMemberButton />}
 
       <Table headers={headers} maxRowsPerPage={10} rows={rows} />
     </div>

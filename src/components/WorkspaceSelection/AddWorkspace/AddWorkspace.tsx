@@ -13,6 +13,7 @@ import { createWorkspace } from '@/services/workspaces/workspaces';
 const AddWorkspace = () => {
   const { getAndSetWorkspaces, accounts } = useWorkspace();
   const [addWorkspaceFields, setAddWorkspaceFields] = useState<Field[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!accounts.length) return;
@@ -125,12 +126,17 @@ const AddWorkspace = () => {
       name: formData.name,
     };
     try {
+      setIsLoading(true);
       await createWorkspace(workspaceAdd);
+
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       await getAndSetWorkspaces();
       setShowModal(false);
       setFormData(getInitialFormData());
       setFormErrors([]);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       setFormErrors([error.message]);
     }
   };
@@ -140,10 +146,13 @@ const AddWorkspace = () => {
       {showModal ? (
         <Modal
           content={renderModalContent()}
+          isLoading={isLoading}
+          submitDisabled={!formData['name'] || !formData['account']}
           onCancel={() => {
             setShowModal(false);
             setFormData(getInitialFormData());
             setFormErrors([]);
+            setIsLoading(false);
           }}
           onSubmit={async () => await onSubmit()}
         />

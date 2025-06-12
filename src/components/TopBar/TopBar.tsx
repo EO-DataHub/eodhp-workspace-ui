@@ -3,13 +3,11 @@ import './TopBar.scss';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import MemberButtons from './components/MemberButtons/MemberButtons';
-import { WorkspaceMembers } from './components/WorkspaceMembers/WorkspaceMembers';
 import Warning from '../../assets/icons/warning.svg';
 import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 export const TopBar = () => {
-  const { activeWorkspace, isWorkspaceOwner, members, availableWorkspaces, accounts } =
-    useWorkspace();
+  const { activeWorkspace, isWorkspaceOwner, availableWorkspaces, accounts } = useWorkspace();
 
   const renderMemberButtons = () => {
     if (!isWorkspaceOwner) return null;
@@ -33,10 +31,7 @@ export const TopBar = () => {
           </div>
         )}
 
-        <div className="top-bar__right">
-          {renderMemberButtons()}
-          {members && <WorkspaceMembers members={members} />}
-        </div>
+        <div className="top-bar__right">{renderMemberButtons()}</div>
       </div>
       {accounts?.length ? null : (
         <div className="top-bar__warning-container">

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from 'react';
-import './styles.scss';
 
+import './styles.scss';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Cross from '@/assets/icons/cross.svg';
@@ -15,7 +15,7 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 type LinkableAccount = {
   internalName: string;
   externalName: string;
-  docs: string;
+  docs: JSX.Element;
 };
 
 type AccountMetaData = {
@@ -24,7 +24,7 @@ type AccountMetaData = {
   message: string;
   internalName: string;
   externalName: string;
-  docs: string;
+  docs: JSX.Element;
   valid?: boolean;
 };
 
@@ -47,12 +47,33 @@ const linkableAccounts: LinkableAccount[] = [
   {
     internalName: 'airbus',
     externalName: 'Airbus',
-    docs: 'Airbus Account Required for using Airbus data on the Hub. To access Airbus data, please request a OneAtlas account via the website. This account will need to be linked to the EODH, so that any data ordered is delivered to the EODH. To do this, please email a request to ukintelligence-imagerysupport@airbus.com. More information about linking an existing account can be found here.',
+    docs: (
+      <p>
+        Airbus Account Required for using Airbus data on the Hub. To access Airbus data, please
+        request a OneAtlas account via the{' '}
+        <a href="https://space-solutions.airbus.com/" rel="noopener noreferrer" target="_blank">
+          website
+        </a>
+        . This account will need to be linked to the EODH, so that any data ordered is delivered to
+        the EODH. To do this, please email a request to ukintelligence-imagerysupport@airbus.com.
+        More information about linking an existing account can be found{' '}
+        <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
+      </p>
+    ),
   },
   {
     internalName: 'planet',
     externalName: 'Planet',
-    docs: "Planet Account Required for using Planet data on the Hub. If you don't currently have a Planet account with active data access and are exploring solutions with budget allocated, please contact us at eodatahub@planet.com to discuss access options. To help us tailor our recommendations, kindly include a brief description of your intended use of Planet's data and your specific area of interest. More information about linking an existing account can be found here.",
+    docs: (
+      <p>
+        Planet Account Required for using Planet data on the Hub. If you don't currently have a
+        Planet account with active data access and are exploring solutions with budget allocated,
+        please contact us at eodatahub@planet.com to discuss access options. To help us tailor our
+        recommendations, kindly include a brief description of your intended use of Planet's data
+        and your specific area of interest. More information about linking an existing account can
+        be found <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
+      </p>
+    ),
   },
 ];
 
@@ -168,7 +189,9 @@ const LinkedAccounts = () => {
       <div className="linked-accounts__account">
         <div className="linked-accounts__account-header">
           {account.externalName} <span>| {account.message}</span>
-          <Help content={account.docs} type="Modal" />
+          <div className="linked-accounts__account-modal">
+            <Help content={account.docs} type="Modal" />
+          </div>
         </div>
         <div className="linked-accounts__account-input">
           <input

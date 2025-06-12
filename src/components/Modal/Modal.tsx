@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
 import './styles.scss';
 import '../../styles/main.scss';
@@ -13,6 +13,8 @@ interface ModalProps {
   submitText?: string;
   hideCancel?: boolean;
   hideSubmit?: boolean;
+  isLoading?: boolean;
+  loadingDuration?: number;
 }
 
 const Modal = ({
@@ -24,8 +26,22 @@ const Modal = ({
   submitText,
   hideCancel,
   hideSubmit,
+  isLoading = false,
+  loadingDuration,
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const [internalLoading, setInternalLoading] = useState(isLoading);
+
+  useEffect(() => {
+    setInternalLoading(isLoading);
+
+    if (loadingDuration && isLoading) {
+      const timer = setTimeout(() => {
+        setInternalLoading(false);
+      }, loadingDuration);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, loadingDuration]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -44,15 +60,28 @@ const Modal = ({
   return (
     <div className="modal">
       <div ref={modalRef} className="modal-content-container">
-        <div className="modal-content">{content}</div>
-        <div className="modal-content-buttons">
-          {!hideCancel && <Button onClick={() => onCancel()}>{cancelText || 'Cancel'}</Button>}
-          {!hideSubmit && (
-            <Button disabled={submitDisabled} onClick={() => onSubmit()}>
-              {submitText || 'Submit'}
-            </Button>
-          )}
-        </div>
+        {internalLoading ? (
+          <div className="modal-loading">
+            <div className="modal-loading-spinner"></div>
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <div>
+            <div className="modal-content">{content}</div>
+            <div className="modal-content-buttons">
+              {!hideCancel && (
+                <Button disabled={internalLoading} onClick={() => onCancel()}>
+                  {cancelText || 'Cancel'}
+                </Button>
+              )}
+              {!hideSubmit && (
+                <Button disabled={submitDisabled || internalLoading} onClick={() => onSubmit()}>
+                  {submitText || 'Submit'}
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

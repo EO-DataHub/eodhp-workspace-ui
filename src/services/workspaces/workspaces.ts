@@ -13,3 +13,16 @@ export const createWorkspace = async (workspace: WorkspaceAdd) => {
     throw new Error(error);
   }
 };
+
+export const deleteWorkspace = async (workspaceName: string) => {
+  try {
+    const res = await fetch(`/api/workspaces/${workspaceName}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) {
+      throw new Error();
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
