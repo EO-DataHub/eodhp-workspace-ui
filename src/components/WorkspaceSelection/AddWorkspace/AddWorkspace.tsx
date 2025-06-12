@@ -147,6 +147,7 @@ const AddWorkspace = () => {
         <Modal
           content={renderModalContent()}
           isLoading={isLoading}
+          submitDisabled={!formData['name'] || !formData['account']}
           onCancel={() => {
             setShowModal(false);
             setFormData(getInitialFormData());

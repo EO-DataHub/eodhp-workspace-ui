@@ -66,7 +66,7 @@ const Modal = ({
             <p>Loading...</p>
           </div>
         ) : (
-          <>
+          <div>
             <div className="modal-content">{content}</div>
             <div className="modal-content-buttons">
               {!hideCancel && (
@@ -80,7 +80,7 @@ const Modal = ({
                 </Button>
               )}
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

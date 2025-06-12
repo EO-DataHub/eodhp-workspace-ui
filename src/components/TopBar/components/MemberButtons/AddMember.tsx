@@ -68,7 +68,7 @@ const AddMemberButton = () => {
   };
 
   return (
-    <>
+    <div>
       {modalOpen && (
         <Modal
           cancelText="Close"
@@ -100,7 +100,7 @@ const AddMemberButton = () => {
         Add Member
       </Button>
       <ToastContainer hideProgressBar position="bottom-left" theme="light" />
-    </>
+    </div>
   );
 };
 
