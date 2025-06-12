@@ -5,13 +5,14 @@ import './styles.scss';
 const DataLoaderTutorial = () => {
   return (
     <div className="data-loader-tutorial">
-      <h1>Data Loader</h1>
+      <h1>Metadata Loader</h1>
       <div className="data-loader__tutorial">
-        <h2>How to Use the STAC Data Loader</h2>
+        <h2>How to Use the STAC Metadata Loader</h2>
         <p>
-          The STAC Data Loader helps you create STAC Collections and load STAC Items in bulk. Each
-          STAC Item is automatically validated to ensure it meets the required format, then uploaded
-          to your workspace, which stores the data and makes it accessible via a unique URL.
+          The STAC Metadata Loader helps you create STAC Collections and load STAC Items in bulk.
+          Each STAC Item is automatically validated to ensure it meets the required format, then
+          uploaded to your workspace, which stores the data and makes it accessible via a unique
+          URL.
         </p>
 
         <div>

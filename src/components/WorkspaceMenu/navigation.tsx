@@ -18,7 +18,7 @@ export interface NavItem {
 
 export const navItems: NavItem[] = [
   { label: 'Members', icon: membersIcon, content: <Members /> },
-  { label: 'Data Loader', icon: uploadIcon, content: <DataLoader /> },
+  { label: 'Metadata Loader', icon: uploadIcon, content: <DataLoader /> },
   { label: 'Linked accounts', icon: linkedAccountsIcon, content: <LinkedAccounts /> },
   { label: 'Invoices', icon: invoicesIcon, content: <Invoices /> },
   { label: 'Credentials', icon: credentialsIcon, content: <Credentials /> },
