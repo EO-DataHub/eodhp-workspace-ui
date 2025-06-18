@@ -50,8 +50,8 @@ const linkableAccounts: LinkableAccount[] = [
     docs: (
       <p>
         To access certain imagery, view accurate pricing, and to order commercial data from Airbus,
-        you need to link a OneAtlas account to your EODH workspace.
-        For detailed instructions on setting up and linking accounts, please refer to our guide{' '}
+        you need to link a OneAtlas account to your EODH workspace. For detailed instructions on
+        setting up and linking accounts, please refer to our guide{' '}
         <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
       </p>
     ),
@@ -61,9 +61,9 @@ const linkableAccounts: LinkableAccount[] = [
     externalName: 'Planet',
     docs: (
       <p>
-        To view pricing information, and to order commercial data from Planet,
-        you need to link a Planet account to your EODH workspace.
-        For detailed instructions on setting up and linking accounts, please refer to our guide{' '}
+        To view pricing information, and to order commercial data from Planet, you need to link a
+        Planet account to your EODH workspace.For detailed instructions on setting up and linking
+        accounts, please refer to our guide{' '}
         <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
       </p>
     ),
