@@ -49,14 +49,9 @@ const linkableAccounts: LinkableAccount[] = [
     externalName: 'Airbus',
     docs: (
       <p>
-        Airbus Account Required for using Airbus data on the Hub. To access Airbus data, please
-        request a OneAtlas account via the{' '}
-        <a href="https://space-solutions.airbus.com/" rel="noopener noreferrer" target="_blank">
-          website
-        </a>
-        . This account will need to be linked to the EODH, so that any data ordered is delivered to
-        the EODH. To do this, please email a request to ukintelligence-imagerysupport@airbus.com.
-        More information about linking an existing account can be found{' '}
+        To access certain imagery, view accurate pricing, and to order commercial data from Airbus,
+        you need to link a OneAtlas account to your EODH workspace. For detailed instructions on
+        setting up and linking accounts, please refer to our guide{' '}
         <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
       </p>
     ),
@@ -66,12 +61,10 @@ const linkableAccounts: LinkableAccount[] = [
     externalName: 'Planet',
     docs: (
       <p>
-        Planet Account Required for using Planet data on the Hub. If you don't currently have a
-        Planet account with active data access and are exploring solutions with budget allocated,
-        please contact us at eodatahub@planet.com to discuss access options. To help us tailor our
-        recommendations, kindly include a brief description of your intended use of Planet's data
-        and your specific area of interest. More information about linking an existing account can
-        be found <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
+        To view pricing information, and to order commercial data from Planet, you need to link a
+        Planet account to your EODH workspace. For detailed instructions on setting up and linking
+        accounts, please refer to our guide{' '}
+        <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
       </p>
     ),
   },
