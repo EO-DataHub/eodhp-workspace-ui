@@ -62,7 +62,7 @@ const linkableAccounts: LinkableAccount[] = [
     docs: (
       <p>
         To view pricing information, and to order commercial data from Planet, you need to link a
-        Planet account to your EODH workspace.For detailed instructions on setting up and linking
+        Planet account to your EODH workspace. For detailed instructions on setting up and linking
         accounts, please refer to our guide{' '}
         <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
       </p>
