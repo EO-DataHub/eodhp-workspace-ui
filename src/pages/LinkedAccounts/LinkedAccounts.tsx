@@ -57,14 +57,14 @@ const linkableAccounts: LinkableAccount[] = [
         . Self-serve an API key from the{' '}
         <a href="https://space-solutions.airbus.com/" rel="noopener noreferrer" target="_blank">
           OneAtlas Developer Portal
-        </a>
-        {' '}under <strong>Get your API Key</strong>, and input it below. Follow{' '}
-        <a href="/docs/account-setup/workspaces/linked-accounts/">this guide</a>{' '}for more
+        </a>{' '}
+        under <strong>Get your API Key</strong>, and input it below. Follow{' '}
+        <a href="/docs/account-setup/workspaces/linked-accounts/">this guide</a> for more
         information. Contact{' '}
         <a href="mailto:ukintelligence-imagerysupport@airbus.com">
           ukintelligence-imagerysupport@airbus.com
-        </a>
-        {' '}for support.
+        </a>{' '}
+        for support.
       </p>
     ),
   },
@@ -85,14 +85,10 @@ const linkableAccounts: LinkableAccount[] = [
           target="_blank"
         >
           your Planet account
-        </a>
-        {' '}under 'My Settings', and input below. More information can be found{' '}
-        <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>
-        . Contact{' '}
-        <a href="mailto:eodatahub@planet.com">
-          eodatahub@planet.com
-        </a>
-        {' '}for support."
+        </a>{' '}
+        under 'My Settings', and input below. More information can be found{' '}
+        <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>. Contact{' '}
+        <a href="mailto:eodatahub@planet.com">eodatahub@planet.com</a> for support."
       </p>
     ),
   },
