@@ -55,10 +55,10 @@ const linkableAccounts: LinkableAccount[] = [
           website
         </a>
         . Self-serve an API key from the{' '}
-        <a href="https://space-solutions.airbus.com/" rel="noopener noreferrer" target="_blank">
+        <a href="https://www.geoapi-airbusds.com/" rel="noopener noreferrer" target="_blank">
           OneAtlas Developer Portal
         </a>{' '}
-        under <strong>Get your API Key</strong>, and input it below. Follow{' '}
+        under 'Get your API Key', and input it below. Follow{' '}
         <a href="/docs/account-setup/workspaces/linked-accounts/">this guide</a> for more
         information. Contact{' '}
         <a href="mailto:ukintelligence-imagerysupport@airbus.com">
