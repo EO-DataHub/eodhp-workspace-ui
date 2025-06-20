@@ -49,10 +49,22 @@ const linkableAccounts: LinkableAccount[] = [
     externalName: 'Airbus',
     docs: (
       <p>
-        To access certain imagery, view accurate pricing, and to order commercial data from Airbus,
-        you need to link a OneAtlas account to your EODH workspace. For detailed instructions on
-        setting up and linking accounts, please refer to our guide{' '}
-        <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
+        Connect your Airbus account to order Airbus data through the EODH. Request a OneAtlas
+        account via the{' '}
+        <a href="https://space-solutions.airbus.com/" rel="noopener noreferrer" target="_blank">
+          website
+        </a>
+        . Self-serve an API key from the{' '}
+        <a href="https://www.geoapi-airbusds.com/" rel="noopener noreferrer" target="_blank">
+          OneAtlas Developer Portal
+        </a>{' '}
+        under 'Get your API Key', and input it below. Follow{' '}
+        <a href="/docs/account-setup/workspaces/linked-accounts/">this guide</a> for more
+        information. Contact{' '}
+        <a href="mailto:ukintelligence-imagerysupport@airbus.com">
+          ukintelligence-imagerysupport@airbus.com
+        </a>{' '}
+        for support.
       </p>
     ),
   },
@@ -61,10 +73,22 @@ const linkableAccounts: LinkableAccount[] = [
     externalName: 'Planet',
     docs: (
       <p>
-        To view pricing information, and to order commercial data from Planet, you need to link a
-        Planet account to your EODH workspace. For detailed instructions on setting up and linking
-        accounts, please refer to our guide{' '}
-        <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>.
+        Connect your Planet account to order Planet data through the EODH. Sign up for a Planet
+        account via the{' '}
+        <a href="https://www.planet.com/" rel="noopener noreferrer" target="_blank">
+          website
+        </a>
+        . Self-serve an API key from{' '}
+        <a
+          href="https://support.planet.com/hc/en-us/articles/4572497499421-How-to-find-your-API-Key"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          your Planet account
+        </a>{' '}
+        under 'My Settings', and input below. More information can be found{' '}
+        <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>. Contact{' '}
+        <a href="mailto:eodatahub@planet.com">eodatahub@planet.com</a> for support."
       </p>
     ),
   },
