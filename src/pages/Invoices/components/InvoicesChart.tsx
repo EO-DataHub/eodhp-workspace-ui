@@ -47,7 +47,7 @@ const InvoicesChart = () => {
         <div className="invoices-info__text">
           <p>
             The chart below shows the usage for the current and previous month. The costs are
-            calculated based on the SKU definitions. If the unit or pice is unavailable, the usage
+            calculated based on the SKU definitions. If the unit or price is unavailable, the usage
             will be used instead of the final cost.
           </p>
         </div>
