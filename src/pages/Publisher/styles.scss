@@ -1,0 +1,132 @@
+$width: 600px;
+
+.data-loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 25px;
+  align-items: center;
+  width: 100%;
+
+  &-tutorial-text {
+    padding-left: 5px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  &__file {
+    border: 1px solid var(--background-secondary);
+    border-radius: 12px;
+    padding: 25px;
+    width: $width;
+  }
+
+  .button {
+    width: $width;
+  }
+
+  &__message {
+    display: flex;
+    border: 1px solid var(--background-secondary);
+    border-radius: 12px;
+    padding: 25px;
+    width: $width;
+  }
+
+  &__input {
+    display: flex;
+    flex-direction: column;
+    width: $width;
+    margin-top: -20px;
+
+    input {
+      background-color: var(--background);
+      color: var(--text-primary);
+      outline: none;
+      padding: 3px 5px;
+      border-radius: 2px;
+      border: 1px solid lightgrey;
+
+      &:disabled {
+        cursor: not-allowed;
+        background-color: lightgrey;
+      }
+    }
+  }
+
+  &__dropdown {
+    display: flex;
+    flex-direction: column;
+    width: $width;
+
+    select {
+      background-color: var(--background);
+      color: var(--text-primary);
+      padding: 3px;
+    }
+  }
+
+  &__errors {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--background-secondary);
+    border-radius: 12px;
+    padding: 25px;
+    width: $width;
+    overflow-x: auto;
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--background-secondary);
+    border-radius: 12px;
+    padding: 25px;
+    width: $width;
+    overflow-y: auto;
+    max-height: 250px;
+
+    code {
+      font-size: 10px;
+    }
+  }
+
+  &__selector {
+    width: $width;
+
+    ul {
+      display: flex;
+      width: inherit;
+      overflow-x: auto;
+    }
+  }
+
+  &-tabs {
+    display: flex;
+    justify-content: left;
+    margin-bottom: 25px;
+    width: 100%;
+
+    &__tab {
+      width: 150px;
+      display: flex;
+      justify-content: center;
+      transition: all 0.2s linear;
+      background-color: #fff;
+      color: black;
+      cursor: pointer;
+    }
+
+    &__tab.active {
+      background-color: white;
+      border-bottom: 2px solid var(--button-bg);
+      color: black;
+      font-weight: 600;
+      cursor: not-allowed;
+    }
+  }
+
+  .data-loader-run-button {
+    min-width: 120px;
+  }
+}
