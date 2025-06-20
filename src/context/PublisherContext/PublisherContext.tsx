@@ -19,7 +19,6 @@ export type PublisherContextType = {
 
   validationErrors: string[];
   setValidationErrors: (value: string[]) => void;
-
 };
 
 type PublisherProviderProps = {
@@ -32,7 +31,6 @@ export const PublisherContext = createContext<PublisherContextType | null>(null)
 PublisherContext.displayName = 'PublisherContext';
 
 export const PublisherProvider = ({ initialState = {}, children }: PublisherProviderProps) => {
-
   const [files, setFiles] = useState<FileList>();
   const [fileName, setFileName] = useState<string>('');
   const [state, setState] = useState<State>('validate');
