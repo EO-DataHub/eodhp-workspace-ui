@@ -307,12 +307,11 @@ const DataLoader = () => {
       }
     } catch (err) {
       // validation setMessage internally if it fails
-      setRunning(false);
-      return;
+      setMessage(`Continuing with upload…`);
     }
 
     // (2) Upload step
-    setMessage('Validation passed. Uploading file(s)…');
+    setMessage('Uploading file(s)…');
     try {
       await upload();
     } catch (err) {
