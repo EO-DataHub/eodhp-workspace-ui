@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import './styles.scss';
 
@@ -6,12 +6,9 @@ import { ToastContainer } from 'react-toastify';
 
 import link from '@/assets/icons/link.svg';
 import { Button } from '@/components/Button/Button';
-import Modal from '@/components/Modal/Modal';
 import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
-import Logs from './components/Logs/Logs';
-import DataLoaderTutorial from './components/Tutorial/DataLoaderTutorial';
 import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
 
 const Publisher = () => {
@@ -28,8 +25,6 @@ const Publisher = () => {
     setValidationErrors,
     pageState,
   } = useDataLoader();
-
-  const [tutorialModal, setTutorialModal] = useState<boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -202,14 +197,9 @@ const Publisher = () => {
   const renderContent = () => {
     const componentMap = {
       'data-loader': renderDataLoader,
-      logs: renderLogs,
     };
 
     return componentMap[pageState]();
-  };
-
-  const renderLogs = () => {
-    return <Logs />;
   };
 
   const renderDataLoader = () => {
@@ -236,19 +226,6 @@ const Publisher = () => {
 
   return (
     <>
-      {tutorialModal && (
-        <Modal
-          hideSubmit
-          cancelText="Close"
-          content={<DataLoaderTutorial />}
-          onCancel={() => {
-            setTutorialModal(false);
-          }}
-          onSubmit={() => {
-            setTutorialModal(false);
-          }}
-        />
-      )}
       <div className="content-page">
         {renderHeader()}
 
