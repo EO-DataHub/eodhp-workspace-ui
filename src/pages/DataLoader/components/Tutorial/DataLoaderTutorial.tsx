@@ -81,16 +81,9 @@ const DataLoaderTutorial = () => {
             files. You can upload multiple files if needed.
           </li>
           <li>
-            <strong>Validate:</strong> Click “Validate” to run automated checks on your STAC Items.
-            The tool will highlight any issues so you can correct them.
-          </li>
-          <li>
-            <strong>Upload:</strong> Once validated, click “Upload” to store your files in S3.
-          </li>
-          <li>
-            <strong>Harvest:</strong> Finally, trigger the “Harvest” process, which extracts the
-            data from your STAC Items and saves it into our custom server/database, making it
-            accessible via a URL.
+            <strong>Submit:</strong> Click “Submit” to run automated checks on your STAC Items. The
+            tool will validate the files, upload them to S3 then extract the data from your STAC
+            Items and save it into our custom server/database, making it accessible via a URL.
           </li>
         </ol>
 

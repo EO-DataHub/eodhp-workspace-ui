@@ -16,7 +16,6 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import Logs from './components/Logs/Logs';
 import Selector from './components/Selector/Selector';
 import DataLoaderTutorial from './components/Tutorial/DataLoaderTutorial';
-import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
 import { catalogPlaceholder } from './placeholders/catalogPlaceholder';
 
 const DataLoader = () => {
@@ -32,8 +31,6 @@ const DataLoader = () => {
     setRunning,
     validationErrors,
     setValidationErrors,
-    fileType,
-    setFileType,
     selectedCollection,
     selectedCatalog,
     pageState,
@@ -78,19 +75,21 @@ const DataLoader = () => {
     return (
       <div className="header">
         <div className="header-left">
-          <h2>Metadata Loader</h2>
+          <h2>STAC Metadata Loader</h2>
         </div>
         <div className="header-right">
           <img alt="Members" src={link} />
           <div className="header-right-text">
-            <span className="header-right-title">Metadata Loader</span> allows you to validate,
+            <span className="header-right-title">STAC Metadata Loader</span> allows you to validate,
             upload and harvest STAC files directly into your workspace.
             <span
               className="header-right-title data-loader-tutorial-text"
               onClick={() => setTutorialModal(true)}
             >
-              How to use the Metadata Loader
+              How to use the STAC Metadata Loader
             </span>
+            . See <a href="/docs/documentation/data-publishing/">documentation</a> for more
+            information.
           </div>
         </div>
       </div>
@@ -98,21 +97,17 @@ const DataLoader = () => {
   };
 
   const renderFileSelector = () => {
-    if (!selectedCollection && fileType === 'stac') return;
+    if (!selectedCollection) return;
     return (
       <div className="data-loader__file">
-        {fileType === 'stac' ? (
-          <h2>
-            Please select all STAC items you wish you load into {selectedCatalog.id}/
-            {selectedCollection.id}
-          </h2>
-        ) : (
-          <h2>Please select your Access Policy file</h2>
-        )}
+        <h2>
+          Please select all STAC items you wish you load into {selectedCatalog.id}/
+          {selectedCollection.id}
+        </h2>
         <input
           ref={fileInputRef}
           accept=".json"
-          multiple={fileType === 'stac'}
+          multiple={true}
           type="file"
           onChange={(e) => {
             setFiles(e.target.files);
@@ -123,36 +118,7 @@ const DataLoader = () => {
     );
   };
 
-  const renderDropdown = () => {
-    return (
-      <div className="data-loader__dropdown">
-        <span>Upload type</span>
-        <select
-          className="data-loader__select"
-          value={fileType}
-          onChange={(e) => {
-            setFiles(null);
-            setFileName('');
-            if (fileInputRef.current) fileInputRef.current.value = '';
-            setState('validate');
-            setMessage('');
-            setValidationErrors([]);
-            setFileType(e.target.value);
-          }}
-        >
-          <option value={'stac'}>STAC</option>
-          <option value={'access-policy'}>Access Policy</option>
-        </select>
-      </div>
-    );
-  };
-
-  const renderDescription = () => {
-    return <AccessPolicyDescription />;
-  };
-
   const renderCatalogCollectionSelector = () => {
-    if (fileType !== 'stac') return;
     if (!catalogues.length) {
       return;
     }
@@ -162,29 +128,9 @@ const DataLoader = () => {
   const renderButton = () => {
     return (
       <Button className="data-loader-run-button" disabled={running} onClick={runAll}>
-        {running ? 'Running…' : 'Run'}
+        {running ? 'Running…' : 'Submit'}
       </Button>
     );
-  };
-
-  const validateAccessPolicy = async () => {
-    if (!files) {
-      setMessage('Please select a file before running validation');
-      return;
-    }
-
-    setRunning(true);
-    setMessage('Validating Access Policy');
-    try {
-      const text = await files[0].text();
-      JSON.parse(text);
-      setMessage('File successfully validated');
-      setState('upload');
-      setFileName('access-policy.json');
-    } catch {
-      setMessage('Invalid JSON');
-    }
-    setRunning(false);
   };
 
   const validateSTAC = async (file: File) => {
@@ -251,103 +197,65 @@ const DataLoader = () => {
       setRunning(true);
       setMessage('Uploading file');
 
-      if (fileType === 'access-policy') {
-        try {
-          const fileContent = await file.text();
-          const fileObject = JSON.parse(fileContent);
+      try {
+        const stacContent = await file.text();
+        const stacObject = JSON.parse(stacContent);
 
-          const _fileName = 'access-policy.json';
+        const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
+        if (parentLinkObject) {
+          const selfLink = selectedCatalog.links.filter((link) => {
+            return link.rel === 'self';
+          })[0];
+          const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
 
-          const body = {
-            fileContent: JSON.stringify(fileObject),
-            fileName: _fileName,
-          };
-
-          const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: { 'Content-Type': 'application/json' },
-          });
-
-          if (!res.ok) {
-            setMessage(`Failed to upload ${file.name} to s3`);
-            throw new Error();
-          }
-
-          setState('harvest');
-          setMessage('File successfully uploaded');
-        } catch (error) {
-          console.error(error);
-          setMessage('File not uploaded');
-        }
-      } else {
-        try {
-          const stacContent = await file.text();
-          const stacObject = JSON.parse(stacContent);
-
-          const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
-          if (parentLinkObject) {
-            const selfLink = selectedCatalog.links.filter((link) => {
-              return link.rel === 'self';
-            })[0];
-            const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
-
-            if (!selectedId.includes('/')) {
-              parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
-            } else {
-              parentLinkObject.href = `catalogs/${selectedId}/collections/${selectedCollection.id}`;
-            }
-
-            const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
-            stacObject.links[parentLinkIndex] = parentLinkObject;
+          if (!selectedId.includes('/')) {
+            parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
           } else {
-            stacObject.links.push({
-              rel: 'parent',
-              href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
-              type: 'application/json',
-            });
+            parentLinkObject.href = `catalogs/${selectedId}/collections/${selectedCollection.id}`;
           }
 
-          const selfLinkObject = stacObject.links.filter((link) => link.rel === 'self')[0];
-          if (!selfLinkObject) {
-            stacObject.links.push({
-              rel: 'self',
-              href: 'catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}',
-              type: 'application/json',
-            });
-          }
-
-          stacObject.collection = `${selectedCollection.id}`;
-
-          let _fileName;
-          if (fileType === 'access-policy') {
-            _fileName = 'access-policy.json';
-          } else {
-            _fileName = `${generateRandomString()}.json`;
-          }
-
-          const body = {
-            fileContent: JSON.stringify(stacObject),
-            fileName: _fileName,
-          };
-
-          const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: { 'Content-Type': 'application/json' },
+          const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
+          stacObject.links[parentLinkIndex] = parentLinkObject;
+        } else {
+          stacObject.links.push({
+            rel: 'parent',
+            href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
+            type: 'application/json',
           });
-
-          if (!res.ok) {
-            setMessage(`Failed to upload ${file.name} to s3`);
-            throw new Error();
-          }
-
-          setState('harvest');
-          setMessage('File successfully uploaded');
-        } catch (error) {
-          console.error(error);
-          setMessage('File not uploaded');
         }
+
+        const selfLinkObject = stacObject.links.filter((link) => link.rel === 'self')[0];
+        if (!selfLinkObject) {
+          stacObject.links.push({
+            rel: 'self',
+            href: 'catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}',
+            type: 'application/json',
+          });
+        }
+
+        stacObject.collection = `${selectedCollection.id}`;
+
+        const _fileName = `${generateRandomString()}.json`;
+
+        const body = {
+          fileContent: JSON.stringify(stacObject),
+          fileName: _fileName,
+        };
+
+        const res = await fetch(`/api/workspaces/${activeWorkspace.name}/data-loader`, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (!res.ok) {
+          setMessage(`Failed to upload ${file.name} to s3`);
+          throw new Error();
+        }
+        setState('harvest');
+        setMessage('File successfully uploaded');
+      } catch (error) {
+        console.error(error);
+        setMessage('File not uploaded');
       }
     }
     setRunning(false);
@@ -367,12 +275,7 @@ const DataLoader = () => {
       setMessage(error);
     }
     setRunning(false);
-
-    if (fileType === 'access-policy') {
-      setState('validate');
-    } else {
-      setState('view');
-    }
+    setState('view');
 
     setValidationErrors([]);
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -401,23 +304,16 @@ const DataLoader = () => {
     setRunning(true);
     setMessage('Starting validation…');
     try {
-      if (fileType === 'access-policy') {
-        // reuse existing validateAccessPolicy
-        await validateAccessPolicy();
-      } else {
-        // validate all STAC files in series
-        for (let i = 0; i < files.length; i++) {
-          await validateSTAC(files[i]);
-        }
+      for (let i = 0; i < files.length; i++) {
+        await validateSTAC(files[i]);
       }
     } catch (err) {
       // validation setMessage internally if it fails
-      setRunning(false);
-      return;
+      setMessage(`Continuing with upload…`);
     }
 
     // (2) Upload step
-    setMessage('Validation passed. Uploading file(s)…');
+    setMessage('Uploading file(s)…');
     try {
       await upload();
     } catch (err) {
@@ -475,8 +371,6 @@ const DataLoader = () => {
   const renderDataLoader = () => {
     return (
       <div className="data-loader">
-        {renderDropdown()}
-        {fileType === 'access-policy' && renderDescription()}
         {renderCatalogCollectionSelector()}
         {renderFileSelector()}
         {validationErrors.length > 0 && (
@@ -492,7 +386,7 @@ const DataLoader = () => {
           </ul>
         )}
         {renderButton()}
-        {fileType === 'stac' && state === 'view' && (
+        {state === 'view' && (
           <Button
             className="data-loader-view-button"
             onClick={() => {
