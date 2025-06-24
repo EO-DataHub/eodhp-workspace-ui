@@ -39,7 +39,8 @@ const Publisher = () => {
           <div className="header-right-text">
             <span className="header-right-title">Publisher</span> allows you to publish your
             workflows and data into the EODH public catalogue by setting an Access Policy. This
-            means any EODH users can search and find your workflow(s) and/or data.
+            means any EODH users can search and find your workflow(s) and/or data. See{' '}
+            <a href="/docs/documentation/data-publishing/">documentation</a> for more information.
           </div>
         </div>
       </div>

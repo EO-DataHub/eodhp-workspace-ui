@@ -88,6 +88,8 @@ const DataLoader = () => {
             >
               How to use the STAC Metadata Loader
             </span>
+            . See <a href="/docs/documentation/data-publishing/">documentation</a> for more
+            information.
           </div>
         </div>
       </div>
