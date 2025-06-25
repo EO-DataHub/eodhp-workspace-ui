@@ -138,8 +138,9 @@ const DataLoader = () => {
     let stac;
     try {
       stac = JSON.parse(stacContent);
+      setMessage(`Validation complete`);
     } catch (e) {
-      setMessage(`❌ Invalid JSON format in file ${file.name}`);
+      setMessage(`Validation indicates file ${file.name} not fully compliant. Proceeding with file upload`);
       throw new Error();
     }
 
@@ -173,20 +174,18 @@ const DataLoader = () => {
     });
 
     if (data.status === 'error') {
+      setMessage(`Validation indicates file ${file.name} not fully compliant`);
       if (!data.content) {
-        setMessage(`❌ Failed to validate STAC in file ${file.name}`);
         setValidationErrors([data.message]);
         throw new Error();
       }
-      setMessage(`❌ Failed to validate STAC in file ${file.name}`);
       setValidationErrors(errors);
       throw new Error();
     } else {
       if (data.type !== 'ITEM') {
-        setMessage(`❌ ${file.name} is of type ${data.type} it must be a STAC Item`);
+        setMessage(`${file.name} is of type ${data.type} it must be a STAC Item`);
         throw new Error();
       }
-      setMessage('✅ STAC item is valid!');
       setValidationErrors(errors);
     }
   };
@@ -195,7 +194,6 @@ const DataLoader = () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       setRunning(true);
-      setMessage('Uploading file');
 
       try {
         const stacContent = await file.text();
@@ -252,7 +250,6 @@ const DataLoader = () => {
           throw new Error();
         }
         setState('harvest');
-        setMessage('File successfully uploaded');
       } catch (error) {
         console.error(error);
         setMessage('File not uploaded');
@@ -264,7 +261,7 @@ const DataLoader = () => {
   const harvest = async () => {
     setRunning(true);
     setMessage(
-      'In progress... There may be a slight delay while your data is processed. In the meantime, please use the buttons below to view available data.',
+      'Metadata upload in progress. There may be a delay while your data is processed. Check the Logs tab to view progress and look for the Updated Feature entry',
     );
     try {
       const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
@@ -302,18 +299,17 @@ const DataLoader = () => {
     }
 
     setRunning(true);
-    setMessage('Starting validation…');
+    setMessage('Starting…');
     try {
       for (let i = 0; i < files.length; i++) {
         await validateSTAC(files[i]);
       }
     } catch (err) {
       // validation setMessage internally if it fails
-      setMessage(`Continuing with upload…`);
+      continue;
     }
 
     // (2) Upload step
-    setMessage('Uploading file(s)…');
     try {
       await upload();
     } catch (err) {
@@ -323,7 +319,6 @@ const DataLoader = () => {
     }
 
     // (3) Harvest step
-    setMessage('Upload succeeded. Harvesting data…');
     try {
       await harvest();
     } catch (err) {
@@ -333,7 +328,6 @@ const DataLoader = () => {
     }
 
     setRunning(false);
-    setMessage('Done.');
   };
 
   const renderTabs = () => {

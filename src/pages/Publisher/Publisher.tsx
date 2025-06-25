@@ -89,11 +89,10 @@ const Publisher = () => {
     try {
       const text = await files[0].text();
       JSON.parse(text);
-      setMessage('File successfully validated');
       setState('upload');
       setFileName('access-policy.json');
     } catch {
-      setMessage('Invalid JSON');
+      setMessage(`Validation indicates file ${file.name} contains invalid JSON. Proceeding with file upload`);
     }
     setRunning(false);
   };
@@ -102,7 +101,6 @@ const Publisher = () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       setRunning(true);
-      setMessage('Uploading file');
 
       try {
         const fileContent = await file.text();
@@ -127,7 +125,6 @@ const Publisher = () => {
         }
 
         setState('harvest');
-        setMessage('File successfully uploaded');
       } catch (error) {
         console.error(error);
         setMessage('File not uploaded');
@@ -139,7 +136,7 @@ const Publisher = () => {
   const harvest = async () => {
     setRunning(true);
     setMessage(
-      'In progress... There may be a slight delay while your data is processed. In the meantime, please use the buttons below to view available data.',
+      'Access policy update in progress. There may be a delay while your data is processed. Check the Logs tab to view progress and look for the Updated Feature entry',
     );
     try {
       const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
@@ -164,7 +161,7 @@ const Publisher = () => {
     }
 
     setRunning(true);
-    setMessage('Starting validation…');
+    setMessage('Starting…');
     try {
       await validateAccessPolicy();
     } catch (err) {
@@ -184,7 +181,6 @@ const Publisher = () => {
     }
 
     // (3) Harvest step
-    setMessage('Upload succeeded. Harvesting data…');
     try {
       await harvest();
     } catch (err) {
@@ -194,7 +190,6 @@ const Publisher = () => {
     }
 
     setRunning(false);
-    setMessage('Done.');
   };
 
   const renderTabs = () => {
