@@ -140,7 +140,9 @@ const DataLoader = () => {
       stac = JSON.parse(stacContent);
       setMessage(`Validation complete`);
     } catch (e) {
-      setMessage(`Validation indicates file ${file.name} not fully compliant. Proceeding with file upload`);
+      setMessage(
+        `Validation indicates file ${file.name} not fully compliant. Proceeding with file upload`,
+      );
       throw new Error();
     }
 
