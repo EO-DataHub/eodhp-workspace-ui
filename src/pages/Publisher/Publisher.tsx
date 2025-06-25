@@ -92,6 +92,7 @@ const Publisher = () => {
       JSON.parse(text);
       setState('upload');
       setFileName('access-policy.json');
+      setMessage(`Validation successful`);
     } catch {
       setMessage(`Validation indicates file contains invalid JSON. Proceeding with file upload`);
     }
