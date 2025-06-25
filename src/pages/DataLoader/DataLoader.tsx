@@ -306,7 +306,6 @@ const DataLoader = () => {
       }
     } catch (err) {
       // validation setMessage internally if it fails
-      continue;
     }
 
     // (2) Upload step
