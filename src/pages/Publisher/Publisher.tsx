@@ -137,7 +137,7 @@ const Publisher = () => {
   const harvest = async () => {
     setRunning(true);
     setMessage(
-      'Access policy update in progress. There may be a delay while your data is processed. Check the Logs tab to view progress and look for the Updated Feature entry',
+      'Access policy update in progress. There may be a delay while your data is processed. Check the Logs tab to view progress and look for entries relating to access policies',
     );
     try {
       const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
