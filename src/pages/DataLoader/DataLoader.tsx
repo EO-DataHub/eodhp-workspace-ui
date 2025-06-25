@@ -138,7 +138,6 @@ const DataLoader = () => {
     let stac;
     try {
       stac = JSON.parse(stacContent);
-      setMessage(`Validation complete`);
     } catch (e) {
       setMessage(
         `Validation indicates file ${file.name} not fully compliant. Proceeding with file upload`,
@@ -176,7 +175,7 @@ const DataLoader = () => {
     });
 
     if (data.status === 'error') {
-      setMessage(`Validation indicates file ${file.name} not fully compliant`);
+      setMessage(`Validation indicates file ${file.name} not fully compliant. Proceeding with file upload`);
       if (!data.content) {
         setValidationErrors([data.message]);
         throw new Error();
