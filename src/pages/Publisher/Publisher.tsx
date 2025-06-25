@@ -87,7 +87,6 @@ const Publisher = () => {
     }
 
     setRunning(true);
-    setMessage('Validating Access Policy');
     try {
       const text = await files[0].text();
       JSON.parse(text);
@@ -173,7 +172,6 @@ const Publisher = () => {
     }
 
     // (2) Upload step
-    setMessage('Validation passed. Uploading file(s)…');
     try {
       await upload();
     } catch (err) {
