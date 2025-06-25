@@ -9,8 +9,8 @@ import { Button } from '@/components/Button/Button';
 import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
-import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
 import Logs from './components/Logs/Logs';
+import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
 
 const Publisher = () => {
   const { activeWorkspace } = useWorkspace();
@@ -214,7 +214,7 @@ const Publisher = () => {
   const renderContent = () => {
     const componentMap = {
       'data-loader': renderDataLoader,
-      'logs': renderLogs,
+      logs: renderLogs,
     };
 
     return componentMap[pageState]();
