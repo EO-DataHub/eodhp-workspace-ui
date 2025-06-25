@@ -10,6 +10,7 @@ import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
+import Logs from './components/Logs/Logs';
 
 const Publisher = () => {
   const { activeWorkspace } = useWorkspace();
@@ -24,6 +25,7 @@ const Publisher = () => {
     validationErrors,
     setValidationErrors,
     pageState,
+    setPageState,
   } = useDataLoader();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -195,12 +197,36 @@ const Publisher = () => {
     setMessage('Done.');
   };
 
+  const renderTabs = () => {
+    return (
+      <div className="data-loader-tabs">
+        <div
+          className={`data-loader-tabs__tab ${pageState === 'data-loader' ? 'active' : null}`}
+          onClick={() => setPageState('data-loader')}
+        >
+          Publisher
+        </div>
+        <div
+          className={`data-loader-tabs__tab ${pageState === 'logs' ? 'active' : null}`}
+          onClick={() => setPageState('logs')}
+        >
+          Logs
+        </div>
+      </div>
+    );
+  };
+
   const renderContent = () => {
     const componentMap = {
       'data-loader': renderDataLoader,
+      'logs': renderLogs,
     };
 
     return componentMap[pageState]();
+  };
+
+  const renderLogs = () => {
+    return <Logs />;
   };
 
   const renderDataLoader = () => {
@@ -229,7 +255,7 @@ const Publisher = () => {
     <>
       <div className="content-page">
         {renderHeader()}
-
+        {renderTabs()}
         {renderContent()}
         <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
