@@ -138,11 +138,11 @@ const DataLoader = () => {
     let stac;
     try {
       stac = JSON.parse(stacContent);
+      setMessage('File validation complete');
     } catch (e) {
       setMessage(
-        `Validation indicates file ${file.name} not fully compliant. Proceeding with file upload`,
+        `Validation indicates file ${file.name} not fully compliant. Attempting to proceed with file upload`,
       );
-      throw new Error();
     }
 
     let data;
@@ -256,6 +256,7 @@ const DataLoader = () => {
       } catch (error) {
         console.error(error);
         setMessage('File not uploaded');
+        throw new Error();
       }
     }
     setRunning(false);
