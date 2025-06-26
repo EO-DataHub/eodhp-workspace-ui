@@ -102,7 +102,13 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
         workspaces = await res.json();
       }
 
-      setAvailableWorkspaces(workspaces);
+      const sortedWorkspaces = workspaces.sort((s1, s2) => {
+        if (s1.name < s2.name) return -1;
+        if (s1.name > s2.name) return 1;
+        return 0;
+      });
+
+      setAvailableWorkspaces(sortedWorkspaces);
 
       const newWorkspace =
         workspaces.filter((workspace) => {
