@@ -70,7 +70,7 @@ const DataLoader = () => {
           );
         });
 
-        setCatalogues(sortedCatalogs);
+        setCatalogues(sortedCatalogs.slice(0, 10));
       }
     };
     getCatalogues();
