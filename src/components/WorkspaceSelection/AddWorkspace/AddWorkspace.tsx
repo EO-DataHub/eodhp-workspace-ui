@@ -135,6 +135,11 @@ const AddWorkspace = () => {
       setFormData(getInitialFormData());
       setFormErrors([]);
       setIsLoading(false);
+      // Trigger OAuth2 flow to refresh the token
+      await fetch('/oauth2/start', {
+        method: 'POST',
+        credentials: 'include',
+      });
     } catch (error) {
       setIsLoading(false);
       setFormErrors([error.message]);
