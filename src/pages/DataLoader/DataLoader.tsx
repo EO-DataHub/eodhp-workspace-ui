@@ -273,9 +273,6 @@ const DataLoader = () => {
       setMessage(error);
     }
     setRunning(false);
-    setState('view');
-
-    setValidationErrors([]);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
