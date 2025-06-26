@@ -94,7 +94,7 @@ const Publisher = () => {
       setFileName('access-policy.json');
       setMessage(`Validation successful`);
     } catch {
-      setMessage(`Validation indicates file contains invalid JSON.`);
+      setMessage(`Validation indicates file contains invalid JSON. Please upload corrected file`);
       throw new Error();
     }
     setRunning(false);
