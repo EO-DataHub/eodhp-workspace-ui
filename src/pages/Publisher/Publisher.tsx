@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useRef } from 'react';
 
 import './styles.scss';
@@ -9,6 +11,7 @@ import { Button } from '@/components/Button/Button';
 import { useDataLoader } from '@/hooks/useDataLoader';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
+import Logs from './components/Logs/Logs';
 import AccessPolicyDescription from './descriptions/AccessPolicyDescription';
 
 const Publisher = () => {
@@ -24,6 +27,7 @@ const Publisher = () => {
     validationErrors,
     setValidationErrors,
     pageState,
+    setPageState,
   } = useDataLoader();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -83,15 +87,15 @@ const Publisher = () => {
     }
 
     setRunning(true);
-    setMessage('Validating Access Policy');
     try {
       const text = await files[0].text();
       JSON.parse(text);
-      setMessage('File successfully validated');
       setState('upload');
       setFileName('access-policy.json');
+      setMessage(`Validation successful`);
     } catch {
-      setMessage('Invalid JSON');
+      setMessage(`Validation indicates file contains invalid JSON. Please upload corrected file`);
+      throw new Error();
     }
     setRunning(false);
   };
@@ -100,7 +104,6 @@ const Publisher = () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       setRunning(true);
-      setMessage('Uploading file');
 
       try {
         const fileContent = await file.text();
@@ -125,10 +128,10 @@ const Publisher = () => {
         }
 
         setState('harvest');
-        setMessage('File successfully uploaded');
       } catch (error) {
         console.error(error);
         setMessage('File not uploaded');
+        throw new Error();
       }
     }
     setRunning(false);
@@ -137,7 +140,7 @@ const Publisher = () => {
   const harvest = async () => {
     setRunning(true);
     setMessage(
-      'In progress... There may be a slight delay while your data is processed. In the meantime, please use the buttons below to view available data.',
+      'Access policy update in progress. There may be a delay while your data is processed. Check the Logs tab to view progress and look for entries relating to access policies',
     );
     try {
       const res = await fetch(`/workspaces/${activeWorkspace.name}/harvest`, { method: 'POST' });
@@ -162,7 +165,7 @@ const Publisher = () => {
     }
 
     setRunning(true);
-    setMessage('Starting validation…');
+    setMessage('Starting…');
     try {
       await validateAccessPolicy();
     } catch (err) {
@@ -172,7 +175,6 @@ const Publisher = () => {
     }
 
     // (2) Upload step
-    setMessage('Validation passed. Uploading file(s)…');
     try {
       await upload();
     } catch (err) {
@@ -182,7 +184,6 @@ const Publisher = () => {
     }
 
     // (3) Harvest step
-    setMessage('Upload succeeded. Harvesting data…');
     try {
       await harvest();
     } catch (err) {
@@ -192,15 +193,38 @@ const Publisher = () => {
     }
 
     setRunning(false);
-    setMessage('Done.');
+  };
+
+  const renderTabs = () => {
+    return (
+      <div className="data-loader-tabs">
+        <div
+          className={`data-loader-tabs__tab ${pageState === 'data-loader' ? 'active' : null}`}
+          onClick={() => setPageState('data-loader')}
+        >
+          Publisher
+        </div>
+        <div
+          className={`data-loader-tabs__tab ${pageState === 'logs' ? 'active' : null}`}
+          onClick={() => setPageState('logs')}
+        >
+          Logs
+        </div>
+      </div>
+    );
   };
 
   const renderContent = () => {
     const componentMap = {
       'data-loader': renderDataLoader,
+      logs: renderLogs,
     };
 
     return componentMap[pageState]();
+  };
+
+  const renderLogs = () => {
+    return <Logs />;
   };
 
   const renderDataLoader = () => {
@@ -229,7 +253,7 @@ const Publisher = () => {
     <>
       <div className="content-page">
         {renderHeader()}
-
+        {renderTabs()}
         {renderContent()}
         <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
