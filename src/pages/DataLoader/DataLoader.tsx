@@ -149,14 +149,73 @@ const DataLoader = () => {
 
   const validateSTAC = async (file: File) => {
     const stacContent = await file.text();
-    let stac;
+    let stacObject;
     try {
-      stac = JSON.parse(stacContent);
-      setMessage('File validation complete');
+      stacObject = JSON.parse(stacContent);
+
+      const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
+      if (parentLinkObject) {
+        const selfParentLink = selectedCatalog.links.filter((link) => {
+          return link.rel === 'self';
+        })[0];
+        const selectedParentId = selfParentLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+
+        if (!selectedParentId.includes('/')) {
+          parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
+        } else {
+          parentLinkObject.href = `catalogs/${selectedParentId}/collections/${selectedCollection.id}`;
+        }
+
+        const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
+        stacObject.links[parentLinkIndex] = parentLinkObject;
+      } else {
+        stacObject.links.push({
+          rel: 'parent',
+          href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
+          type: 'application/json',
+        });
+      }
+
+      const collectionLinkObject = stacObject.links.filter((link) => link.rel === 'collection')[0];
+      if (collectionLinkObject) {
+        const selfCollectionLink = selectedCatalog.links.filter((link) => {
+          return link.rel === 'self';
+        })[0];
+        const selectedCollectionId = selfCollectionLink.href.split(
+          `${activeWorkspace.name}/catalogs/`,
+        )[1];
+
+        if (!selectedCollectionId.includes('/')) {
+          collectionLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
+        } else {
+          collectionLinkObject.href = `catalogs/${selectedCollectionId}/collections/${selectedCollection.id}`;
+        }
+
+        const collectionLinkIndex = stacObject.links.findIndex((link) => link.rel === 'collection');
+        stacObject.links[collectionLinkIndex] = collectionLinkObject;
+      } else {
+        stacObject.links.push({
+          rel: 'collection',
+          href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
+          type: 'application/json',
+        });
+      }
+
+      const selfLinkObject = stacObject.links.filter((link) => link.rel === 'self')[0];
+      if (!selfLinkObject) {
+        stacObject.links.push({
+          rel: 'self',
+          href: 'catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}',
+          type: 'application/json',
+        });
+      }
+
+      stacObject.collection = `${selectedCollection.id}`;
     } catch (e) {
       setMessage(
-        `Validation indicates file ${file.name} not fully compliant. Attempting to proceed with file upload`,
+        `Validation indicates file ${file.name} not valid JSON. Attempting to proceed with file upload`,
       );
+      throw new Error();
     }
 
     let data;
@@ -169,7 +228,7 @@ const DataLoader = () => {
           credentials: 'include',
         },
         body: JSON.stringify({
-          content: stac,
+          content: stacObject,
         }),
       });
       const dataAndCode = await res.json();
@@ -218,15 +277,17 @@ const DataLoader = () => {
 
         const parentLinkObject = stacObject.links.filter((link) => link.rel === 'parent')[0];
         if (parentLinkObject) {
-          const selfLink = selectedCatalog.links.filter((link) => {
+          const selfParentLink = selectedCatalog.links.filter((link) => {
             return link.rel === 'self';
           })[0];
-          const selectedId = selfLink.href.split(`${activeWorkspace.name}/catalogs/`)[1];
+          const selectedParentId = selfParentLink.href.split(
+            `${activeWorkspace.name}/catalogs/`,
+          )[1];
 
-          if (!selectedId.includes('/')) {
+          if (!selectedParentId.includes('/')) {
             parentLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
           } else {
-            parentLinkObject.href = `catalogs/${selectedId}/collections/${selectedCollection.id}`;
+            parentLinkObject.href = `catalogs/${selectedParentId}/collections/${selectedCollection.id}`;
           }
 
           const parentLinkIndex = stacObject.links.findIndex((link) => link.rel === 'parent');
@@ -234,6 +295,35 @@ const DataLoader = () => {
         } else {
           stacObject.links.push({
             rel: 'parent',
+            href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
+            type: 'application/json',
+          });
+        }
+
+        const collectionLinkObject = stacObject.links.filter(
+          (link) => link.rel === 'collection',
+        )[0];
+        if (collectionLinkObject) {
+          const selfCollectionLink = selectedCatalog.links.filter((link) => {
+            return link.rel === 'self';
+          })[0];
+          const selectedCollectionId = selfCollectionLink.href.split(
+            `${activeWorkspace.name}/catalogs/`,
+          )[1];
+
+          if (!selectedCollectionId.includes('/')) {
+            collectionLinkObject.href = `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`;
+          } else {
+            collectionLinkObject.href = `catalogs/${selectedCollectionId}/collections/${selectedCollection.id}`;
+          }
+
+          const collectionLinkIndex = stacObject.links.findIndex(
+            (link) => link.rel === 'collection',
+          );
+          stacObject.links[collectionLinkIndex] = collectionLinkObject;
+        } else {
+          stacObject.links.push({
+            rel: 'collection',
             href: `catalogs/${selectedCatalog.id}/collections/${selectedCollection.id}`,
             type: 'application/json',
           });
