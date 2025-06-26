@@ -49,14 +49,28 @@ const DataLoader = () => {
         setCatalogues(catalogPlaceholder.catalogs);
       } else {
         const res = await fetch(
-          `/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs`,
+          `/api/catalogue/stac/catalogs/user/catalogs/${activeWorkspace.name}/catalogs?limit=100`,
         );
         const json = await res.json();
 
         const filteredCatalogs = json.catalogs.filter(
           (catalog) => catalog.id !== 'processing-results',
         );
-        setCatalogues(filteredCatalogs);
+
+        const sortedCatalogs = filteredCatalogs.sort((s1, s2) => {
+          const selfLink1 = s1.links.filter((link) => {
+            return link.rel === 'self';
+          })[0];
+          console.log(selfLink1);
+          const selfLink2 = s2.links.filter((link) => {
+            return link.rel === 'self';
+          })[0];
+          return (
+            (selfLink1.href.match(/\//g) || []).length - (selfLink2.href.match(/\//g) || []).length
+          );
+        });
+
+        setCatalogues(sortedCatalogs.slice(0, 10));
       }
     };
     getCatalogues();
