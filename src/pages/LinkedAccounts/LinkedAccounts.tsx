@@ -88,7 +88,7 @@ const linkableAccounts: LinkableAccount[] = [
         </a>{' '}
         under 'My Settings', and input below. More information can be found{' '}
         <a href="/docs/account-setup/workspaces/linked-accounts/">here</a>. Contact{' '}
-        <a href="mailto:eodatahub@planet.com">eodatahub@planet.com</a> for support."
+        <a href="mailto:eodatahub@planet.com">eodatahub@planet.com</a> for support.
       </p>
     ),
   },
