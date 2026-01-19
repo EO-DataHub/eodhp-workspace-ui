@@ -4,10 +4,10 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 
 import MemberButtons from './components/MemberButtons/MemberButtons';
 import Warning from '../../assets/icons/warning.svg';
-import { ProfileTile } from '../ProfileTile/ProfileTile';
+import { WorkspaceSelection } from '../WorkspaceSelection/WorkspaceSelection';
 
 export const TopBar = () => {
-  const { activeWorkspace, isWorkspaceOwner, availableWorkspaces, accounts } = useWorkspace();
+  const { isWorkspaceOwner, availableWorkspaces, accounts } = useWorkspace();
 
   const renderMemberButtons = () => {
     if (!isWorkspaceOwner) return null;
@@ -18,19 +18,11 @@ export const TopBar = () => {
   return (
     <div className="top-bar__container">
       <div className="top-bar">
-        {activeWorkspace ? (
-          <div className="top-bar__left">
-            <ProfileTile borderColor="#a19d9d" color="#4c72ba" username={activeWorkspace.name} />
-            <h2>{activeWorkspace.name}</h2>
+        <div className="top-bar__left">
+          <div className="top-bar__workspace-selection">
+            <WorkspaceSelection />
           </div>
-        ) : (
-          <div className="top-bar__left">
-            <ProfileTile borderColor="#a19d9d" color="#4c72ba" username={'EO'} />
-
-            <h2>EODH Workspace Management</h2>
-          </div>
-        )}
-
+        </div>
         <div className="top-bar__right">{renderMemberButtons()}</div>
       </div>
       {accounts?.length ? null : (

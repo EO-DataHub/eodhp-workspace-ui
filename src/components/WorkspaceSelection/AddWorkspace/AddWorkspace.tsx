@@ -3,6 +3,7 @@ import './styles.scss';
 
 import { MdAddCircleOutline } from 'react-icons/md';
 
+import { Button } from '@/components/Button/Button';
 import { Field } from '@/components/Form/Fields/types';
 import Form from '@/components/Form/Form';
 import Modal from '@/components/Modal/Modal';
@@ -162,13 +163,16 @@ const AddWorkspace = () => {
           onSubmit={async () => await onSubmit()}
         />
       ) : null}
-      <MdAddCircleOutline
-        className={`workspace-selection__add icon-primary ${accounts?.length ? '' : 'disabled'}`}
+      <Button
+        disabled={!accounts.length}
+        icon={<MdAddCircleOutline />}
         onClick={() => {
           if (!accounts.length) return;
           setShowModal(true);
         }}
-      />
+      >
+        Add Workspace
+      </Button>
     </>
   );
 };
