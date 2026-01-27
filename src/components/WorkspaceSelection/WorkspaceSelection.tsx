@@ -1,24 +1,41 @@
+import { Select } from '@radix-ui/themes';
+
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 import AddWorkspace from './AddWorkspace/AddWorkspace';
-import { ProfileTile } from '../ProfileTile/ProfileTile';
 
 import './WorkspaceSelection.scss';
 
 export const WorkspaceSelection = () => {
-  const { availableWorkspaces, selectWorkspace } = useWorkspace();
+  const { availableWorkspaces, activeWorkspace, selectWorkspace } = useWorkspace();
+
+  const handleWorkspaceChange = (workspaceId: string) => {
+    const nextWorkspace = availableWorkspaces?.find((workspace) => workspace.id === workspaceId);
+    if (nextWorkspace) {
+      selectWorkspace(nextWorkspace);
+    }
+  };
 
   return (
-    <div className="workspace-selection content-border">
+    <div className="workspace-selection">
       <p className="workspace-selection__title">Select Workspace</p>
-      <div className="workspace-selection__tiles">
-        {availableWorkspaces?.map((workspace) => (
-          <ProfileTile
-            key={workspace.id}
-            username={workspace.name}
-            onClick={() => selectWorkspace(workspace)}
-          />
-        ))}
+      <div className="workspace-selection__controls">
+        <Select.Root value={activeWorkspace?.id} onValueChange={handleWorkspaceChange}>
+          <Select.Trigger className="workspace-selection__trigger"></Select.Trigger>
+          <Select.Content className="workspace-selection__content" position="popper">
+            <Select.Group>
+              {availableWorkspaces?.map((workspace) => (
+                <Select.Item
+                  key={workspace.id}
+                  className="workspace-selection__item"
+                  value={workspace.id}
+                >
+                  {workspace.name}
+                </Select.Item>
+              ))}
+            </Select.Group>
+          </Select.Content>
+        </Select.Root>
         <AddWorkspace />
       </div>
     </div>

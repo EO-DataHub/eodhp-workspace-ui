@@ -83,12 +83,32 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
     func();
   }, []);
 
-  const getAndSetWorkspaces = async () => {
+  const getWorkspaceQueryParam = () => {
+    if (typeof window === 'undefined') return undefined;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('workspace') ?? undefined;
+  };
+
+  const readStoredWorkspace = () => {
     const storedWorkspaceStr = localStorage.getItem('activeWorkspace');
-    let storedWorkspace: Workspace;
-    if (storedWorkspaceStr) {
-      storedWorkspace = JSON.parse(storedWorkspaceStr);
+    if (!storedWorkspaceStr) return undefined;
+    try {
+      return JSON.parse(storedWorkspaceStr) as Workspace;
+    } catch (error) {
+      return undefined;
     }
+  };
+
+  // activeWorkspace keeps the full workspace object for this UI; selectedWorkspace is the name used to sync with RC UI.
+  const persistWorkspace = (workspace: Workspace) => {
+    localStorage.setItem('activeWorkspace', JSON.stringify(workspace));
+    localStorage.setItem('selectedWorkspace', workspace.name);
+  };
+
+  const getAndSetWorkspaces = async () => {
+    const storedWorkspace = readStoredWorkspace();
+    const storedWorkspaceName = localStorage.getItem('selectedWorkspace');
+    const queryWorkspaceName = getWorkspaceQueryParam();
 
     try {
       let workspaces: Workspace[];
@@ -110,12 +130,23 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
 
       setAvailableWorkspaces(sortedWorkspaces);
 
+      const matchByNameOrId = (value?: string | null) => {
+        if (!value) return undefined;
+        return sortedWorkspaces.find(
+          (workspace) => workspace.name === value || workspace.id === value,
+        );
+      };
+
       const newWorkspace =
-        workspaces.filter((workspace) => {
-          return storedWorkspace?.id === workspace.id;
-        })[0] || workspaces[0];
+        matchByNameOrId(queryWorkspaceName) ||
+        matchByNameOrId(storedWorkspaceName) ||
+        sortedWorkspaces.find((workspace) => workspace.id === storedWorkspace?.id) ||
+        sortedWorkspaces[0];
 
       setActiveWorkspace(newWorkspace);
+      if (newWorkspace) {
+        persistWorkspace(newWorkspace);
+      }
     } catch (error) {
       console.error('Error retrieving workspaces');
       setMessage('Error retrieving workspaces');
@@ -185,7 +216,7 @@ export const WorkspaceProvider = ({ initialState = {}, children }: WorkspaceProv
   };
 
   const selectWorkspace = (workspace: Workspace) => {
-    window.localStorage.setItem('activeWorkspace', JSON.stringify(workspace));
+    persistWorkspace(workspace);
     setActiveWorkspace(workspace);
   };
 
