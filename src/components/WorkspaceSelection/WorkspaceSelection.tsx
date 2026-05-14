@@ -18,10 +18,17 @@ export const WorkspaceSelection = () => {
 
   return (
     <div className="workspace-selection">
-      <p className="workspace-selection__title">Select Workspace</p>
+      <p id="workspace-select-label" className="workspace-selection__title">
+        Select Workspace
+      </p>
       <div className="workspace-selection__controls">
         <Select.Root value={activeWorkspace?.id} onValueChange={handleWorkspaceChange}>
-          <Select.Trigger className="workspace-selection__trigger"></Select.Trigger>
+          <Select.Trigger
+            className="workspace-selection__trigger"
+            aria-labelledby="workspace-select-label"
+          >
+            <Select.Value placeholder="Select a workspace" />
+          </Select.Trigger>
           <Select.Content className="workspace-selection__content" position="popper">
             <Select.Group>
               {availableWorkspaces?.map((workspace) => (
