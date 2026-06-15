@@ -6,6 +6,7 @@ import { App } from './App';
 import './index.scss';
 import { DataLoaderProvider } from './context/DataLoaderContext/DataLoaderContext';
 import { InvoicesProvider } from './context/InvoicesContext/InvoicesContext';
+import { OpenCosmosAuthProvider } from './context/OpenCosmosAuthContext/OpenCosmosAuthContext';
 import { WorkspaceProvider } from './context/WorkspaceContext/WorkspaceContext';
 
 const enableMocking = async () => {
@@ -26,11 +27,13 @@ enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <WorkspaceProvider>
-        <DataLoaderProvider>
-          <InvoicesProvider>
-            <App />
-          </InvoicesProvider>
-        </DataLoaderProvider>
+        <OpenCosmosAuthProvider>
+          <DataLoaderProvider>
+            <InvoicesProvider>
+              <App />
+            </InvoicesProvider>
+          </DataLoaderProvider>
+        </OpenCosmosAuthProvider>
       </WorkspaceProvider>
     </StrictMode>,
   );

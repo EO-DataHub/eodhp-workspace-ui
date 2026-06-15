@@ -10,6 +10,7 @@ import Tick from '@/assets/icons/tick.svg';
 import { Button } from '@/components/Button/Button';
 import Modal from '@/components/Modal/Modal';
 import Help from '@/components/Table/Components/Help/Help';
+import { useOpenCosmosAuth } from '@/hooks/useOpenCosmosAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 type LinkableAccount = {
@@ -96,6 +97,15 @@ const linkableAccounts: LinkableAccount[] = [
 
 const LinkedAccounts = () => {
   const { activeWorkspace, isWorkspaceOwner } = useWorkspace();
+  const {
+    isConnected: isOpenCosmosConnected,
+    isLoading: isOpenCosmosLoading,
+    hasConfiguration: hasOpenCosmosConfiguration,
+    user: openCosmosUser,
+    error: openCosmosError,
+    connect: connectOpenCosmos,
+    disconnect: disconnectOpenCosmos,
+  } = useOpenCosmosAuth();
 
   const [error, setError] = useState('');
   const [data, setData] = useState<AccountMetaData[]>([]);
@@ -226,6 +236,60 @@ const LinkedAccounts = () => {
           <div className="linked-accounts__success">API key is valid</div>
         )}
         {renderButton(account)}
+      </div>
+    );
+  };
+
+  const renderOpenCosmosAccount = () => {
+    const statusText = !hasOpenCosmosConfiguration
+      ? 'Unavailable'
+      : isOpenCosmosConnected
+        ? 'Connected'
+        : 'Not connected';
+
+    const description = isOpenCosmosConnected
+      ? openCosmosUser?.email ||
+        openCosmosUser?.name ||
+        'Open Cosmos is connected for this workspace'
+      : 'Sign in to enable Open Cosmos services for this workspace.';
+
+    return (
+      <div className="linked-accounts__account linked-accounts__account--oauth">
+        <div className="linked-accounts__account-header">
+          Open Cosmos <span>| {statusText}</span>
+          <div className="linked-accounts__account-modal">
+            <Help
+              content={
+                <p>
+                  Sign in with your Open Cosmos account to make your credentials available to EODH
+                  commercial data flows. The credentials are stored securely for your Open Cosmos
+                  user in the selected workspace.
+                </p>
+              }
+              type="Modal"
+            />
+          </div>
+        </div>
+        <div className="linked-accounts__account-note">{description}</div>
+        {openCosmosError ? (
+          <div className="linked-accounts__error linked-accounts__error--inline">
+            {openCosmosError}
+          </div>
+        ) : null}
+        <div className="linked-accounts__account-actions">
+          {isOpenCosmosConnected ? (
+            <Button disabled={isOpenCosmosLoading} onClick={disconnectOpenCosmos}>
+              Disconnect
+            </Button>
+          ) : (
+            <Button
+              disabled={!hasOpenCosmosConfiguration || isOpenCosmosLoading}
+              onClick={() => connectOpenCosmos(window.location.href)}
+            >
+              Connect Open Cosmos
+            </Button>
+          )}
+        </div>
       </div>
     );
   };
@@ -526,7 +590,8 @@ const LinkedAccounts = () => {
               border: '1px solid #faebcc',
             }}
           >
-            You have view-only access. Only workspace owners can edit or link API keys.
+            You have view-only access. Only workspace owners can edit or link provider API keys.
+            Open Cosmos credentials are stored per user in the selected workspace.
           </div>
         )}
         {<div className="linked-accounts__error">{error}</div>}
@@ -534,6 +599,7 @@ const LinkedAccounts = () => {
           {data.map((account) => (
             <div key={account.internalName}>{renderAccount(account)}</div>
           ))}
+          {renderOpenCosmosAccount()}
         </div>
         <ToastContainer hideProgressBar position="bottom-left" theme="light" />
       </div>
