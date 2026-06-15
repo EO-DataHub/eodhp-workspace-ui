@@ -185,16 +185,21 @@ export const OpenCosmosAuthProvider = ({
       if (!nextSession.refreshToken) {
         throw new Error('Open Cosmos did not return a refresh token.');
       }
-      if (!nextSession.user?.sub) {
-        throw new Error('Open Cosmos did not return a user subject.');
-      }
+
+      const sessionPayload = {
+        accessToken: nextSession.accessToken,
+        refreshToken: nextSession.refreshToken,
+        expiresAt: nextSession.expiresAt,
+        scope: nextSession.scope,
+        tokenType: nextSession.tokenType,
+      };
 
       const response = await fetch(
         `/api/workspaces/${encodeURIComponent(workspaceName)}/open-cosmos/session`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(nextSession),
+          body: JSON.stringify(sessionPayload),
         },
       );
 

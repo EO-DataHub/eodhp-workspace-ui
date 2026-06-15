@@ -262,8 +262,7 @@ const LinkedAccounts = () => {
               content={
                 <p>
                   Sign in with your Open Cosmos account to make your credentials available to EODH
-                  commercial data flows. The credentials are stored securely for your Open Cosmos
-                  user in the selected workspace.
+                  commercial data flows. The session is stored for the selected workspace.
                 </p>
               }
               type="Modal"
@@ -591,7 +590,7 @@ const LinkedAccounts = () => {
             }}
           >
             You have view-only access. Only workspace owners can edit or link provider API keys.
-            Open Cosmos credentials are stored per user in the selected workspace.
+            Open Cosmos sign-in is stored for the selected workspace.
           </div>
         )}
         {<div className="linked-accounts__error">{error}</div>}
