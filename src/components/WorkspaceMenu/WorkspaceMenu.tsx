@@ -10,6 +10,23 @@ import { useWorkspace } from '../../hooks/useWorkspace';
 
 import './WorkspaceMenu.scss';
 
+const SELECTED_MENU_PATH_STORAGE_KEY = 'workspaceUiSelectedMenuPath';
+
+const findNavItemByPath = (items: NavItem[], path: string[]): NavItem | undefined => {
+  if (!path.length) return undefined;
+
+  let currentItems = items;
+  let foundItem: NavItem | undefined;
+
+  for (const segment of path) {
+    foundItem = currentItems.find((item) => item.label === segment);
+    if (!foundItem) return undefined;
+    currentItems = foundItem.subItems ?? [];
+  }
+
+  return foundItem;
+};
+
 export const WorkspaceMenu = () => {
   const { selectedItemPath, setSelectedItemPath, setContent } = useWorkspace();
 
@@ -17,10 +34,22 @@ export const WorkspaceMenu = () => {
 
   useEffect(() => {
     if (navItems.length > 0) {
-      setSelectedItemPath([navItems[0].label]);
-      setContent(navItems[0].content || <ComingSoon title={navItems[0].label} />);
+      const storedPath = localStorage.getItem(SELECTED_MENU_PATH_STORAGE_KEY);
+      const parsedPath = storedPath ? storedPath.split('/').filter(Boolean) : [];
+      const matchedItem = findNavItemByPath(navItems, parsedPath);
+
+      const initialPath = matchedItem ? parsedPath : [navItems[0].label];
+      const initialItem = matchedItem ?? navItems[0];
+
+      setSelectedItemPath(initialPath);
+      setContent(initialItem.content || <ComingSoon title={initialItem.label} />);
     }
   }, [setContent, setSelectedItemPath]);
+
+  useEffect(() => {
+    if (!selectedItemPath.length) return;
+    localStorage.setItem(SELECTED_MENU_PATH_STORAGE_KEY, selectedItemPath.join('/'));
+  }, [selectedItemPath]);
 
   const handleToggle = (label: string) => {
     setExpandedSet((prev) => {
