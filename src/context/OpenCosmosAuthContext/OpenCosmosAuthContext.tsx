@@ -16,7 +16,7 @@ type OpenCosmosAuthContextType = {
   hasConfiguration: boolean;
   error?: string;
   user?: OpenCosmosUser;
-  connect: (returnTo?: string) => Promise<void>;
+  connect: (returnTo?: string, organizationId?: number) => Promise<void>;
   disconnect: () => void;
   getAccessToken: () => Promise<string | undefined>;
 };
@@ -33,12 +33,14 @@ interface OpenCosmosSession {
   scope?: string;
   tokenType?: string;
   user?: OpenCosmosUser;
+  organizationId?: number;
 }
 
 interface OpenCosmosTransaction {
   codeVerifier: string;
   returnTo: string;
   workspaceName: string;
+  organizationId: number;
 }
 
 interface TokenExchangeResponse {
@@ -185,6 +187,9 @@ export const OpenCosmosAuthProvider = ({
       if (!nextSession.refreshToken) {
         throw new Error('Open Cosmos did not return a refresh token.');
       }
+      if (nextSession.organizationId === undefined) {
+        throw new Error('Open Cosmos organization ID is required.');
+      }
 
       const sessionPayload = {
         accessToken: nextSession.accessToken,
@@ -192,6 +197,7 @@ export const OpenCosmosAuthProvider = ({
         expiresAt: nextSession.expiresAt,
         scope: nextSession.scope,
         tokenType: nextSession.tokenType,
+        organization_id: nextSession.organizationId,
       };
 
       const response = await fetch(
@@ -223,7 +229,10 @@ export const OpenCosmosAuthProvider = ({
     });
 
     const tokenResponse = await exchangeToken(params);
-    const nextSession = buildSession(tokenResponse, session.user);
+    const nextSession = {
+      ...buildSession(tokenResponse, session.user),
+      organizationId: session.organizationId,
+    };
     if (!nextSession.refreshToken) {
       nextSession.refreshToken = session.refreshToken;
     }
@@ -283,7 +292,10 @@ export const OpenCosmosAuthProvider = ({
         });
 
         const tokenResponse = await exchangeToken(body);
-        const nextSession = buildSession(tokenResponse);
+        const nextSession = {
+          ...buildSession(tokenResponse),
+          organizationId: transaction.organizationId,
+        };
 
         await storeSession(transaction.workspaceName, nextSession);
         setSession(nextSession);
@@ -313,7 +325,7 @@ export const OpenCosmosAuthProvider = ({
   }, [exchangeToken, hasConfiguration, storeSession]);
 
   const connect = useCallback(
-    async (returnTo?: string) => {
+    async (returnTo?: string, organizationId?: number) => {
       if (!hasConfiguration || !OPEN_COSMOS_AUTH_DOMAIN || !OPEN_COSMOS_CLIENT_ID) {
         const message = 'Open Cosmos authentication is not configured.';
         setError(message);
@@ -328,6 +340,9 @@ export const OpenCosmosAuthProvider = ({
         if (!activeWorkspace?.name) {
           throw new Error('Select a workspace before connecting Open Cosmos.');
         }
+        if (organizationId === undefined || organizationId < 0) {
+          throw new Error('Enter a valid Open Cosmos organization ID before connecting.');
+        }
 
         const codeVerifier = generateRandomString(CODE_VERIFIER_BYTE_LENGTH);
         const codeChallenge = await createCodeChallenge(codeVerifier);
@@ -336,6 +351,7 @@ export const OpenCosmosAuthProvider = ({
           codeVerifier,
           returnTo: returnTo ?? getDefaultReturnTo(),
           workspaceName: activeWorkspace.name,
+          organizationId,
         });
 
         const authorizeUrl = new URL('/authorize', OPEN_COSMOS_AUTH_DOMAIN);
