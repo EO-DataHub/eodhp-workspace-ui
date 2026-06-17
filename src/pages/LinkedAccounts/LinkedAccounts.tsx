@@ -112,6 +112,7 @@ const LinkedAccounts = () => {
   const [running, setRunning] = useState<boolean>();
   const [modal, setModal] = useState<boolean>(false);
   const [accountToUnlink, setAccountToUnlink] = useState<AccountMetaData>();
+  const [openCosmosOrganizationId, setOpenCosmosOrganizationId] = useState('');
 
   const setMessage = (message: string) => {
     toast(message);
@@ -241,6 +242,8 @@ const LinkedAccounts = () => {
   };
 
   const renderOpenCosmosAccount = () => {
+    const parsedOrganizationId = Number(openCosmosOrganizationId);
+    const hasValidOrganizationId = /^\d+$/.test(openCosmosOrganizationId);
     const statusText = !hasOpenCosmosConfiguration
       ? 'Unavailable'
       : isOpenCosmosConnected
@@ -275,6 +278,20 @@ const LinkedAccounts = () => {
             {openCosmosError}
           </div>
         ) : null}
+        {!isOpenCosmosConnected ? (
+          <div className="linked-accounts__account-input">
+            <input
+              inputMode="numeric"
+              pattern="[0-9]*"
+              placeholder="Enter your Open Cosmos organization ID"
+              type="text"
+              value={openCosmosOrganizationId}
+              onChange={(event) => {
+                setOpenCosmosOrganizationId(event.target.value.replace(/\D/g, ''));
+              }}
+            />
+          </div>
+        ) : null}
         <div className="linked-accounts__account-actions">
           {isOpenCosmosConnected ? (
             <Button disabled={isOpenCosmosLoading} onClick={disconnectOpenCosmos}>
@@ -282,8 +299,10 @@ const LinkedAccounts = () => {
             </Button>
           ) : (
             <Button
-              disabled={!hasOpenCosmosConfiguration || isOpenCosmosLoading}
-              onClick={() => connectOpenCosmos(window.location.href)}
+              disabled={
+                !hasOpenCosmosConfiguration || isOpenCosmosLoading || !hasValidOrganizationId
+              }
+              onClick={() => connectOpenCosmos(window.location.href, parsedOrganizationId)}
             >
               Connect Open Cosmos
             </Button>
