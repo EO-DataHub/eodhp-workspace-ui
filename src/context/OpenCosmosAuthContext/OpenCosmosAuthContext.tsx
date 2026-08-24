@@ -17,7 +17,7 @@ type OpenCosmosAuthContextType = {
   error?: string;
   user?: OpenCosmosUser;
   connect: (returnTo?: string, organizationId?: number) => Promise<void>;
-  disconnect: () => void;
+  disconnect: () => Promise<void>;
   getAccessToken: () => Promise<string | undefined>;
 };
 
@@ -152,7 +152,9 @@ export const OpenCosmosAuthProvider = ({
 }: OpenCosmosProviderProps) => {
   const { activeWorkspace } = useWorkspace();
   const callbackHandledRef = useRef(false);
+  const checkedWorkspaceNameRef = useRef<string>();
   const [session, setSession] = useState<OpenCosmosSession>();
+  const [hasStoredSession, setHasStoredSession] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
 
@@ -216,6 +218,54 @@ export const OpenCosmosAuthProvider = ({
     },
     [],
   );
+
+  const fetchSessionStatus = useCallback(async (workspaceName: string) => {
+    const response = await fetch(
+      `/api/workspaces/${encodeURIComponent(workspaceName)}/open-cosmos/session`,
+    );
+
+    if (!response.ok) {
+      throw new Error('Unable to check the Open Cosmos session status.');
+    }
+
+    const status = (await response.json()) as { connected: boolean };
+    return status.connected;
+  }, []);
+
+  // Detect a session already stored for the workspace so "Connected" survives a page
+  // reload. Runs once per workspace (mount or switch); switching workspaces also drops
+  // the previous workspace's local session, since it was never valid for the new one.
+  useEffect(() => {
+    const workspaceName = activeWorkspace?.name;
+    if (!hasConfiguration || !workspaceName) return;
+    if (checkedWorkspaceNameRef.current === workspaceName) return;
+
+    const isWorkspaceSwitch = checkedWorkspaceNameRef.current !== undefined;
+    checkedWorkspaceNameRef.current = workspaceName;
+
+    if (isWorkspaceSwitch) {
+      setSession(undefined);
+      setError(undefined);
+    }
+
+    let cancelled = false;
+    setIsLoading(true);
+
+    fetchSessionStatus(workspaceName)
+      .then((connected) => {
+        if (!cancelled) setHasStoredSession(connected);
+      })
+      .catch(() => {
+        if (!cancelled) setHasStoredSession(false);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeWorkspace?.name, fetchSessionStatus, hasConfiguration]);
 
   const refreshSession = useCallback(async () => {
     if (!session?.refreshToken || !OPEN_COSMOS_CLIENT_ID) {
@@ -380,11 +430,51 @@ export const OpenCosmosAuthProvider = ({
     [activeWorkspace?.name, hasConfiguration],
   );
 
-  const disconnect = useCallback(() => {
+  // Drops this browser's copy of the token without touching the backend-stored,
+  // workspace-shared session. Used when the local token is unusable (e.g. a failed
+  // refresh) — that says nothing about whether the shared session is still valid, so
+  // it must never attempt to revoke it.
+  const clearLocalSession = useCallback(() => {
     clearTransaction();
     setSession(undefined);
+    setHasStoredSession(false);
     setError(undefined);
   }, []);
+
+  const disconnect = useCallback(async () => {
+    const workspaceName = activeWorkspace?.name;
+
+    if (workspaceName) {
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(
+          `/api/workspaces/${encodeURIComponent(workspaceName)}/open-cosmos/session`,
+          { method: 'DELETE' },
+        );
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || 'Unable to disconnect Open Cosmos.');
+        }
+      } catch (disconnectError) {
+        // Deliberately leaves local/reported state untouched: the backend session may
+        // still be live (e.g. this user isn't the account owner), so we must not claim
+        // disconnected when we can't confirm it was actually revoked.
+        const message =
+          disconnectError instanceof Error
+            ? disconnectError.message
+            : 'Unable to disconnect Open Cosmos.';
+        setError(message);
+        toast.error(message);
+        return;
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    clearLocalSession();
+  }, [activeWorkspace?.name, clearLocalSession]);
 
   const getAccessToken = useCallback(async () => {
     if (isSessionActive(session)) {
@@ -395,7 +485,7 @@ export const OpenCosmosAuthProvider = ({
       const refreshedSession = await refreshSession();
       return refreshedSession?.accessToken;
     } catch (refreshError) {
-      disconnect();
+      clearLocalSession();
       const message =
         refreshError instanceof Error
           ? refreshError.message
@@ -404,12 +494,12 @@ export const OpenCosmosAuthProvider = ({
       toast.error(message);
       return undefined;
     }
-  }, [disconnect, refreshSession, session]);
+  }, [clearLocalSession, refreshSession, session]);
 
   return (
     <OpenCosmosAuthContext.Provider
       value={{
-        isConnected: Boolean(session?.accessToken),
+        isConnected: Boolean(session?.accessToken) || hasStoredSession,
         isLoading,
         hasConfiguration,
         error,
