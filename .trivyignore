@@ -1,0 +1,7 @@
+# immutable@3.8.3 is pinned in package.json overrides for react-lazylog, which hard-requires
+# immutable@^3.8.2 and uses its 3.x API directly. No 3.x release fixes these CVEs (fix requires
+# the breaking 4.3.9/5.1.8 API). Both are DoS bugs triggered by attacker-controlled indices/keys
+# passed into List/Map operations; immutable here only backs react-lazylog's internal log-line
+# state, not an externally-controlled input boundary, so exploitability in this app is low.
+CVE-2026-59879
+CVE-2026-59880
